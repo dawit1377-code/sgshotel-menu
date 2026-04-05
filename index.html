@@ -3,68 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SGS Hotel - Multi-Language Menu</title>
+    <title>SGS Hotel - Menu</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --dark: #2d1b18; --card: #3d2b27; --cream: #fff8e1; --green: #1b3022; }
         body { font-family: 'Poppins', sans-serif; background: var(--dark); color: var(--cream); margin: 0; padding-bottom: 160px; overflow-x: hidden; }
 
-        /* LANGUAGE OVERLAY */
-        #lang-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 5000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        .lang-btn { background: var(--gold); color: #000; border: none; padding: 20px 50px; margin: 15px; border-radius: 15px; font-weight: 900; font-size: 1.4rem; cursor: pointer; width: 250px; }
+        /* LANGUAGE SELECTOR ON HOMEPAGE */
+        .lang-switcher { display: flex; justify-content: center; gap: 10px; padding: 15px; background: rgba(0,0,0,0.3); border-bottom: 1px solid var(--gold); }
+        .lang-toggle { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        .lang-toggle.active { background: var(--gold); color: #000; }
 
         /* HEADER */
-        header { text-align: center; padding: 25px 10px; border-bottom: 5px solid var(--gold); background: var(--dark); }
+        header { text-align: center; padding: 25px 10px; border-bottom: 5px solid var(--gold); }
         .logo-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
         .side-img { width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; }
         .sgs-text { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 900; color: var(--green); text-shadow: 2px 2px var(--gold); line-height: 1; }
         .g-btn { background: var(--green); color: var(--gold); width: 55px; height: 55px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2.2rem; border: 2px dashed var(--gold); font-weight: bold; }
-        .hotel-label { background: var(--green); color: var(--gold); padding: 5px 30px; font-weight: 900; letter-spacing: 4px; border-radius: 4px; display: inline-block; margin-top: 10px; border: 1px solid var(--gold); }
 
         /* INPUTS */
-        .loc-area { display: flex; flex-wrap: wrap; gap: 10px; padding: 15px; max-width: 450px; margin: 0 auto; }
-        .input-box { flex: 1; min-width: 120px; background: var(--card); padding: 10px; border-radius: 8px; border: 1px solid var(--gold); text-align: center; }
+        .loc-area { display: flex; gap: 10px; padding: 15px; max-width: 450px; margin: 0 auto; flex-wrap: wrap; }
+        .input-box { flex: 1; min-width: 140px; background: var(--card); padding: 10px; border-radius: 8px; border: 1px solid var(--gold); text-align: center; }
         .input-box label { color: var(--gold); font-size: 0.7rem; display: block; font-weight: bold; margin-bottom: 5px; }
-        .input-box input { width: 85%; border: none; padding: 6px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 1.1rem; color: #000; }
+        .input-box input { width: 85%; border: none; padding: 6px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 1.1rem; }
 
         /* MENU */
-        .cat-head { font-family: 'Playfair Display', serif; color: var(--gold); text-align: center; font-size: 1.8rem; margin: 25px 0 10px; border-bottom: 1px solid var(--gold); padding-bottom: 5px; }
+        .cat-head { font-family: 'Playfair Display', serif; color: var(--gold); text-align: center; font-size: 1.8rem; margin: 25px 0 10px; border-bottom: 1px solid var(--gold); }
         .item-row { display: flex; align-items: center; background: var(--card); margin: 10px; padding: 12px; border-radius: 15px; border: 1px solid rgba(212,175,55,0.2); }
         .item-img { width: 65px; height: 65px; border-radius: 10px; object-fit: cover; border: 1px solid var(--gold); flex-shrink: 0; }
-        .item-details { flex: 1; padding: 0 10px; min-width: 0; }
-        .item-name { color: var(--gold); font-weight: 600; font-size: 0.95rem; display: block; }
+        .item-details { flex: 1; padding: 0 10px; }
+        .item-name { color: var(--gold); font-weight: 600; display: block; }
         .qty-container { display: flex; background: #fff; border-radius: 6px; border: 2px solid var(--gold); width: 105px; height: 38px; align-items: center; justify-content: space-between; flex-shrink: 0; }
-        .qty-control { background: var(--gold); border: none; width: 32px; height: 100%; font-weight: 900; font-size: 1.4rem; color: #000; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .qty-num { width: 35px; text-align: center; border: none; font-weight: 900; font-size: 1.1rem; color: #000; background: transparent; }
+        .qty-control { background: var(--gold); border: none; width: 32px; height: 100%; font-weight: 900; color: #000; cursor: pointer; }
+        .qty-num { width: 35px; text-align: center; border: none; font-weight: 900; background: transparent; color: #000; }
 
-        /* FOOTER & MODAL */
-        .bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); padding: 20px; display: flex; justify-content: space-between; align-items: center; border-top: 4px solid var(--gold); z-index: 1000; }
-        .order-btn { background: var(--gold); color: #000; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 900; font-size: 1rem; cursor: pointer; }
+        /* MODAL */
         .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-ui { background: var(--card); width: 88%; max-width: 380px; padding: 20px; border-radius: 20px; border: 2px solid var(--gold); text-align: center; max-height: 85vh; overflow-y: auto; }
-        .phone-input { width: 90%; padding: 12px; margin: 15px 0; border-radius: 8px; border: 2px solid var(--gold); font-size: 1.1rem; text-align: center; font-weight: bold; }
-        .sms-trigger { display: block; background: var(--gold); color: #000; text-decoration: none; padding: 16px; border-radius: 10px; font-weight: 900; margin-top: 10px; font-size: 1.1rem; border: none; width: 100%; cursor: pointer; }
+        .modal-ui { background: var(--card); width: 88%; max-width: 380px; padding: 25px; border-radius: 20px; border: 3px solid var(--gold); text-align: center; }
+        
+        /* THE SMS BUTTON (DIRECT LINK) */
+        .sms-btn { display: block; background: var(--gold); color: #000 !important; text-decoration: none; padding: 18px; border-radius: 12px; font-weight: 900; margin-top: 20px; font-size: 1.2rem; border: none; cursor: pointer; }
+        
+        .footer-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); padding: 20px; display: flex; justify-content: space-between; align-items: center; border-top: 4px solid var(--gold); }
     </style>
 </head>
 <body>
 
-<div id="lang-overlay">
-    <div class="sgs-text" style="margin-bottom:20px;">S<div class="g-btn">G</div>S</div>
-    <h2 style="color:var(--gold); font-family:'Playfair Display';">SELECT LANGUAGE / ቋንቋ ይምረጡ</h2>
-    <button class="lang-btn" onclick="setLang('en')">ENGLISH</button>
-    <button class="lang-btn" onclick="setLang('am')">አማርኛ</button>
+<div class="lang-switcher">
+    <button class="lang-toggle active" id="en-btn" onclick="setLang('en')">English</button>
+    <button class="lang-toggle" id="am-btn" onclick="setLang('am')">አማርኛ</button>
 </div>
 
 <div class="modal-bg" id="confirmBox">
     <div class="modal-ui">
-        <h2 id="modal-title" style="color:var(--gold); margin-top:0;">Confirm Order</h2>
-        <div id="orderList" style="text-align:left; font-size:0.9rem; margin:10px 0; background:rgba(0,0,0,0.2); padding:10px; border-radius:8px;"></div>
+        <h2 id="modal-title" style="color:var(--gold);">Confirm Order</h2>
+        <div id="orderList" style="text-align:left; background:rgba(0,0,0,0.2); padding:10px; border-radius:8px; margin-bottom:15px;"></div>
         
-        <label id="phone-label" style="color:var(--gold); font-weight:bold; font-size:0.8rem;"></label>
-        <input type="tel" id="custPhone" class="phone-input" placeholder="09........">
+        <a id="sms-direct-link" href="#" class="sms-btn">SEND SMS NOW</a>
         
-        <button onclick="sendOrderFinal()" class="sms-trigger" id="sms-btn-text">SEND SMS NOW</button>
-        <button onclick="closeModal()" style="background:none; color:var(--gold); border:1px solid var(--gold); width:100%; padding:10px; margin-top:10px; border-radius:8px; font-weight:bold;" id="edit-btn-text">EDIT</button>
+        <button onclick="closeModal()" style="background:none; color:var(--gold); border:1px solid var(--gold); width:100%; padding:10px; margin-top:10px; border-radius:8px; font-weight:bold;" id="edit-text">EDIT</button>
     </div>
 </div>
 
@@ -74,78 +71,60 @@
         <div class="sgs-text">S<div class="g-btn">G</div>S</div>
         <img src="logo-right.jpg" class="side-img">
     </div>
-    <div class="hotel-label">HOTEL</div>
-    <p id="welcome-msg" class="welcome-note"></p>
+    <div style="background: var(--green); color: var(--gold); padding: 5px 30px; font-weight: 900; letter-spacing: 4px; border-radius: 4px; display: inline-block; border: 1px solid var(--gold);">HOTEL</div>
+    <p id="welcome-msg" style="font-size: 0.85rem; font-style: italic; opacity: 0.9; margin-top: 15px;"></p>
 </header>
 
 <div class="loc-area">
     <div class="input-box"><label id="lbl-room"></label><input type="text" id="rm" placeholder="-"></div>
     <div class="input-box"><label id="lbl-table"></label><input type="text" id="tb" placeholder="-"></div>
+    <div class="input-box" style="width:100%; min-width:100%; margin-top:10px;">
+        <label id="lbl-phone" style="color:#ff4d4d;"></label>
+        <input type="tel" id="custPhone" placeholder="09........" style="width:90%">
+    </div>
 </div>
 
 <div style="max-width: 600px; margin: 0 auto;">
-    <h2 class="cat-head" id="cat-food">Food Items</h2>
+    <h2 class="cat-head" id="cat-food">Food</h2>
     <div id="food-list"></div>
     <h2 class="cat-head" id="cat-drink">Drinks</h2>
     <div id="drink-list"></div>
 </div>
 
-<div class="bar">
-    <div style="font-weight:bold; color:var(--gold); font-size:1.1rem;"><span id="lbl-total">Total</span>: <span id="grand">0</span> ETB</div>
-    <button class="order-btn" onclick="openModal()" id="btn-order-now">ORDER NOW</button>
+<div class="footer-bar">
+    <div style="font-weight:bold; color:var(--gold); font-size:1.1rem;"><span id="lbl-total"></span>: <span id="grand">0</span> ETB</div>
+    <button style="background:var(--gold); color:#00; border:none; padding:12px 25px; border-radius:8px; font-weight:900;" onclick="openModal()" id="btn-order">ORDER NOW</button>
 </div>
 
 <script>
-    const translations = {
-        en: {
-            welcome: "Welcome to SGS Hotel. Please select your choices.",
-            room: "ROOM NO", table: "TABLE NO", food: "Food Items", drinks: "Drinks",
-            total: "Total", orderNow: "ORDER NOW", confirm: "Confirm Order",
-            phone: "ENTER YOUR PHONE NUMBER", send: "SEND SMS NOW", edit: "EDIT ORDER",
-            alertLoc: "Please enter Room or Table No.", alertItem: "Please select items!", alertPhone: "Please enter your phone number!"
-        },
-        am: {
-            welcome: "እንኳን ወደ ኤስጂኤስ ሆቴል በደህና መጡ። እባክዎ ምርጫዎን ይምረጡ።",
-            room: "ክፍል ቁጥር", table: "ጠረጴዛ ቁጥር", food: "ምግቦች", drinks: "መጠጦች",
-            total: "ጠቅላላ", orderNow: "አሁን እዘዝ", confirm: "ትዕዛዝዎን ያረጋግጡ",
-            phone: "የስልክ ቁጥርዎን ያስገቡ", send: "በአጭር መልዕክት ላክ", edit: "አስተካክል",
-            alertLoc: "እባክዎ የክፍል ወይም የጠረጴዛ ቁጥር ያስገቡ", alertItem: "እባክዎ መጀመሪያ ንጥሎችን ይምረጡ", alertPhone: "እባክዎ የስልክ ቁጥርዎን ያስገቡ"
-        }
+    const trans = {
+        en: { welcome: "Welcome to SGS Hotel.", room: "ROOM NO", table: "TABLE NO", phone: "PHONE NO (REQUIRED)", food: "Food Items", drinks: "Drinks", total: "Total", order: "ORDER NOW", confirm: "Confirm Order", edit: "EDIT", alertLoc: "Enter Room/Table No!", alertItem: "Select items!", alertPhone: "Phone number is required!" },
+        am: { welcome: "እንኳን ወደ ኤስጂኤስ ሆቴል በደህና መጡ።", room: "ክፍል ቁጥር", table: "ጠረጴዛ ቁጥር", phone: "ስልክ ቁጥር (ግዴታ ነው)", food: "ምግቦች", drinks: "መጠጦች", total: "ጠቅላላ", order: "አሁን እዘዝ", confirm: "ትዕዛዝዎን ያረጋግጡ", edit: "አስተካክል", alertLoc: "እባክዎ የክፍል ወይም የጠረጴዛ ቁጥር ያስገቡ!", alertItem: "እባክዎ መጀመሪያ ንጥሎችን ይምረጡ!", alertPhone: "እባክዎ የስልክ ቁጥርዎን ያስገቡ!" }
     };
 
-    let currentLang = 'en';
-
-    function setLang(lang) {
-        currentLang = lang;
-        const t = translations[lang];
+    let curLang = 'en';
+    function setLang(l) {
+        curLang = l;
+        const t = trans[l];
         document.getElementById('welcome-msg').innerText = t.welcome;
         document.getElementById('lbl-room').innerText = t.room;
         document.getElementById('lbl-table').innerText = t.table;
+        document.getElementById('lbl-phone').innerText = t.phone;
         document.getElementById('cat-food').innerText = t.food;
         document.getElementById('cat-drink').innerText = t.drinks;
         document.getElementById('lbl-total').innerText = t.total;
-        document.getElementById('btn-order-now').innerText = t.orderNow;
+        document.getElementById('btn-order').innerText = t.order;
         document.getElementById('modal-title').innerText = t.confirm;
-        document.getElementById('phone-label').innerText = t.phone;
-        document.getElementById('sms-btn-text').innerText = t.send;
-        document.getElementById('edit-btn-text').innerText = t.edit;
-        document.getElementById('lang-overlay').style.display = 'none';
+        document.getElementById('edit-text').innerText = t.edit;
+        document.getElementById('sms-direct-link').innerText = (l === 'en' ? "SEND SMS NOW" : "በአጭር መልዕክት ላክ");
+        
+        document.getElementById('en-btn').classList.toggle('active', l === 'en');
+        document.getElementById('am-btn').classList.toggle('active', l === 'am');
     }
+    setLang('en');
 
-    const foods = [
-        {n:"Beyayentu", p:450, img:"beyayentu.jpg", i:"Injera, Shiro, Misir"},
-        {n:"Egg Sandwich", p:280, img:"egg-sandwich.jpg", i:"Toast, Eggs, Veggies"},
-        {n:"Pizza Margarita", p:550, img:"pizza.jpg", i:"Cheese, Tomato, Basil"},
-        {n:"Shiro Tegabino", p:350, img:"tegabino.jpg", i:"Pot Shiro, Injera"},
-        {n:"Special Burger", p:650, img:"burger.jpg", i:"Beef, Cheese, Sauce"}
-    ];
-    const drinks = [
-        {n:"Bottled Water", p:60, img:"water.jpg", i:"500ml Mineral"},
-        {n:"Tea", p:80, img:"tea.jpg", i:"Black Tea, Ginger"},
-        {n:"Machiato", p:120, img:"macchiato.jpg", i:"Espresso, Milk"},
-        {n:"American Coffee", p:110, img:"americano.jpg", i:"Black Coffee"},
-        {n:"Soft Drinks", p:90, img:"soda.jpg", i:"Coke, Sprite, Fanta"}
-    ];
+    const foods = [{n:"Beyayentu", p:450, img:"beyayentu.jpg"}, {n:"Egg Sandwich", p:280, img:"egg-sandwich.jpg"}, {n:"Pizza Margarita", p:550, img:"pizza.jpg"}, {n:"Shiro Tegabino", p:350, img:"tegabino.jpg"}, {n:"Special Burger", p:650, img:"burger.jpg"}];
+    const drinks = [{n:"Bottled Water", p:60, img:"water.jpg"}, {n:"Tea", p:80, img:"tea.jpg"}, {n:"Machiato", p:120, img:"macchiato.jpg"}, {n:"American Coffee", p:110, img:"americano.jpg"}, {n:"Soft Drinks", p:90, img:"soda.jpg"}];
 
     function build(data, id) {
         let h = "";
@@ -155,8 +134,7 @@
                 <img src="${x.img}" class="item-img" style="margin: 0 10px;">
                 <div class="item-details">
                     <span class="item-name">${x.n}</span>
-                    <span style="font-size:0.7rem; color:#bbb; font-style:italic;">${x.i}</span><br>
-                    <span class="item-price" data-p="${x.p}">${x.p} ETB</span>
+                    <span class="item-price" data-p="${x.p}" style="font-weight:bold;">${x.p} ETB</span>
                 </div>
                 <div class="qty-container">
                     <button class="qty-control" onclick="q(this,-1)">-</button>
@@ -167,70 +145,44 @@
         });
         document.getElementById(id).innerHTML = h;
     }
+    build(foods, "food-list"); build(drinks, "drink-list");
 
-    build(foods, "food-list");
-    build(drinks, "drink-list");
-
-    function q(b, n) {
-        let i = b.parentElement.querySelector('.qty-num');
-        let v = parseInt(i.value) + n;
-        if(v < 1) v = 1; i.value = v; calc();
-    }
+    function q(b, n) { let i = b.parentElement.querySelector('.qty-num'); let v = parseInt(i.value) + n; if(v < 1) v = 1; i.value = v; calc(); }
 
     function calc() {
         let t = 0;
-        document.querySelectorAll('.item-row').forEach(row => {
-            if(row.querySelector('.chk').checked) {
-                t += parseInt(row.querySelector('.item-price').dataset.p) * parseInt(row.querySelector('.qty-num').value);
-            }
-        });
+        document.querySelectorAll('.item-row').forEach(row => { if(row.querySelector('.chk').checked) { t += parseInt(row.querySelector('.item-price').dataset.p) * parseInt(row.querySelector('.qty-num').value); } });
         document.getElementById('grand').innerText = t;
     }
-
-    let smsBody = "";
 
     function openModal() {
         let r = document.getElementById('rm').value.trim();
         let b = document.getElementById('tb').value.trim();
-        if(!r && !b) { alert(translations[currentLang].alertLoc); return; }
+        let p = document.getElementById('custPhone').value.trim();
+        if(!r && !b) { alert(trans[curLang].alertLoc); return; }
+        if(!p) { alert(trans[curLang].alertPhone); return; }
         
-        let list = ""; let msgText = ""; let total = 0;
+        let list = ""; let msg = ""; let total = 0;
         document.querySelectorAll('.item-row').forEach(row => {
             if(row.querySelector('.chk').checked) {
                 let n = row.querySelector('.item-name').innerText;
                 let v = row.querySelector('.qty-num').value;
-                let p = parseInt(row.querySelector('.item-price').dataset.p);
                 list += `• ${v}x ${n}<br>`;
-                msgText += `${v}x${n}, `;
-                total += (p * parseInt(v));
+                msg += `${v}x${n}, `;
+                total += (parseInt(row.querySelector('.item-price').dataset.p) * parseInt(v));
             }
         });
 
-        if(total === 0) { alert(translations[currentLang].alertItem); return; }
-        let loc = (r ? "Rm "+r : "") + (b ? " Tb "+b : "");
-        document.getElementById('orderList').innerHTML = list + `<br><b>TOTAL: ${total} ETB</b><br>LOC: ${loc}`;
-        smsBody = `SGS Order: ${msgText}Total:${total}ETB. Loc:${loc}`;
-        document.getElementById('confirmBox').style.display = 'flex';
-    }
-
-    function sendOrderFinal() {
-        const custPh = document.getElementById('custPhone').value.trim();
-        if(!custPh) { alert(translations[currentLang].alertPhone); return; }
-
+        if(total === 0) { alert(trans[curLang].alertItem); return; }
+        document.getElementById('orderList').innerHTML = list + `<br><b>TOTAL: ${total} ETB</b>`;
+        
+        // UPDATE THE SMS LINK
         const phone = "0954954591";
         const isiOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
-        const finalMsg = `${smsBody}. Customer PH: ${custPh}`;
-        const finalUrl = `sms:${phone}${isiOS ? '&' : '?'}body=${encodeURIComponent(finalMsg)}`;
-
-        // Clipboard Backup
-        const textArea = document.createElement("textarea");
-        textArea.value = finalMsg;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-
-        window.location.href = finalUrl;
+        const fullMsg = `SGS Order: ${msg}Total:${total}ETB. Loc:${r||b}. Ph:${p}`;
+        document.getElementById('sms-direct-link').href = `sms:${phone}${isiOS ? '&' : '?'}body=${encodeURIComponent(fullMsg)}`;
+        
+        document.getElementById('confirmBox').style.display = 'flex';
     }
 
     function closeModal() { document.getElementById('confirmBox').style.display = 'none'; }
