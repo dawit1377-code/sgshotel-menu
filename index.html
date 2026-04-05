@@ -9,7 +9,6 @@
         :root { --gold: #d4af37; --dark: #2d1b18; --card: #3d2b27; --cream: #fff8e1; --green: #1b3022; }
         body { font-family: 'Poppins', sans-serif; background: var(--dark); color: var(--cream); margin: 0; padding-bottom: 160px; overflow-x: hidden; }
 
-        /* HEADER & MASTER BRANDING */
         header { text-align: center; padding: 25px 10px; border-bottom: 5px solid var(--gold); background: var(--dark); }
         .logo-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
         .side-img { width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; }
@@ -17,22 +16,17 @@
         .g-btn { background: var(--green); color: var(--gold); width: 55px; height: 55px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2.2rem; border: 2px dashed var(--gold); font-weight: bold; }
         .hotel-label { background: var(--green); color: var(--gold); padding: 5px 30px; font-weight: 900; letter-spacing: 4px; border-radius: 4px; display: inline-block; margin-top: 10px; border: 1px solid var(--gold); }
         .welcome-note { font-size: 0.85rem; max-width: 300px; margin: 15px auto 0; font-style: italic; line-height: 1.4; opacity: 0.9; }
+        .luxury-title { color: var(--gold); font-family: 'Playfair Display', serif; font-weight: 900; letter-spacing: 4px; font-size: 1.3rem; margin-top: 15px; text-transform: uppercase; }
 
-        /* LUXURY TITLE UNDER WELCOME */
-        .luxury-title { color: var(--gold); font-family: 'Playfair Display', serif; font-weight: 900; letter-spacing: 4px; font-size: 1.3rem; margin-top: 15px; text-transform: uppercase; text-shadow: 1px 1px #000; }
-
-        /* LANGUAGE SELECTOR */
         .lang-container { display: flex; justify-content: center; gap: 10px; margin: 20px 0 10px; }
         .lang-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
         .lang-btn.active { background: var(--gold); color: #000; }
 
-        /* INPUTS */
         .loc-area { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 15px; max-width: 450px; margin: 0 auto; }
         .input-box { flex: 1; min-width: 140px; background: var(--card); padding: 10px; border-radius: 8px; border: 1px solid var(--gold); text-align: center; }
         .input-box label { color: var(--gold); font-size: 0.7rem; display: block; font-weight: bold; margin-bottom: 5px; }
         .input-box input { width: 85%; border: none; padding: 6px; border-radius: 4px; text-align: center; font-weight: bold; font-size: 1.1rem; color: #000; }
 
-        /* MENU ITEMS */
         .cat-head { font-family: 'Playfair Display', serif; color: var(--gold); text-align: center; font-size: 1.8rem; margin: 25px 0 10px; border-bottom: 1px solid var(--gold); padding-bottom: 5px; }
         .item-row { display: flex; align-items: center; background: var(--card); margin: 10px; padding: 12px; border-radius: 15px; border: 1px solid rgba(212,175,55,0.2); }
         .item-img { width: 65px; height: 65px; border-radius: 10px; object-fit: cover; border: 1px solid var(--gold); flex-shrink: 0; }
@@ -42,12 +36,13 @@
         .qty-control { background: var(--gold); border: none; width: 32px; height: 100%; font-weight: 900; font-size: 1.4rem; color: #000; cursor: pointer; }
         .qty-num { width: 35px; text-align: center; border: none; font-weight: 900; font-size: 1.1rem; color: #000; background: transparent; }
 
-        /* MODAL & SMS BUTTON */
+        /* MODAL */
         .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
         .modal-ui { background: var(--card); width: 88%; max-width: 380px; padding: 25px; border-radius: 20px; border: 2px solid var(--gold); text-align: center; }
-        .phone-input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 2px solid var(--gold); text-align: center; font-weight: bold; font-size: 1.1rem; }
-        .sms-direct-btn { display: block; background: var(--gold); color: #000 !important; text-decoration: none; padding: 16px; border-radius: 10px; font-weight: 900; margin-top: 15px; font-size: 1.1rem; border: none; }
-
+        .phone-input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 2px solid var(--gold); text-align: center; font-weight: bold; font-size: 1.1rem; color: #000; }
+        
+        /* THE SMS BUTTON */
+        .sms-btn { display: block; background: var(--gold); color: #000 !important; text-decoration: none; padding: 18px; border-radius: 12px; font-weight: 900; margin-top: 15px; font-size: 1.2rem; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
         .footer-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); padding: 20px; display: flex; justify-content: space-between; align-items: center; border-top: 4px solid var(--gold); z-index: 1000; }
     </style>
 </head>
@@ -74,7 +69,7 @@
     <div class="input-box"><label id="lbl-table">TABLE NO</label><input type="text" id="tb" placeholder="-"></div>
 </div>
 
-<div style="max-width: 600px; margin: 0 auto;">
+<div id="menu-container" style="max-width: 600px; margin: 0 auto;">
     <h2 class="cat-head" id="cat-food">Food Items</h2>
     <div id="food-list"></div>
     <h2 class="cat-head" id="cat-drink">Drinks</h2>
@@ -89,7 +84,8 @@
         <label id="lbl-phone" style="color:var(--gold); font-weight:bold; font-size:0.8rem;"></label>
         <input type="tel" id="custPhone" class="phone-input" placeholder="09........">
 
-        <a id="sms-trigger-link" href="#" class="sms-direct-btn" onclick="prepareSMS(event)">SEND SMS NOW</a>
+        <a id="sms-link" href="#" class="sms-btn" onclick="executeFinalOrder(event)">SEND SMS NOW</a>
+        
         <button onclick="closeModal()" style="background:none; color:var(--gold); border:1px solid var(--gold); width:100%; padding:10px; margin-top:10px; border-radius:8px; font-weight:bold;" id="edit-btn">EDIT</button>
     </div>
 </div>
@@ -101,8 +97,8 @@
 
 <script>
     const trans = {
-        en: { welcome: "Welcome to SGS Hotel. Please select your choices and we will serve you shortly.", room: "ROOM NO", table: "TABLE NO", phone: "ENTER PHONE NUMBER", food: "Food Items", drinks: "Drinks", total: "Total", order: "ORDER NOW", confirm: "Confirm Order", edit: "EDIT", sms: "SEND SMS NOW", errLoc: "Enter Room or Table No!", errItem: "Select items!", errPhone: "Phone required!" },
-        am: { welcome: "እንኳን ወደ ኤስጂኤስ ሆቴል በደህና መጡ። እባክዎ ምርጫዎን ይምረጡ።", room: "ክፍል ቁጥር", table: "ጠረጴዛ ቁጥር", phone: "የስልክ ቁጥር ያስገቡ", food: "ምግቦች", drinks: "መጠጦች", total: "ጠቅላላ", order: "አሁን እዘዝ", confirm: "ትዕዛዝዎን ያረጋግጡ", edit: "አስተካክል", sms: "በአጭር መልዕክት ላክ", errLoc: "እባክዎ የክፍል ወይም የጠረጴዛ ቁጥር ያስገቡ!", errItem: "እባክዎ ንጥሎችን ይምረጡ!", errPhone: "እባክዎ የስልክ ቁጥር ያስገቡ!" }
+        en: { welcome: "Welcome to SGS Hotel. Please select your choices and we will serve you shortly.", room: "ROOM NO", table: "TABLE NO", phone: "ENTER PHONE NUMBER", food: "Food Items", drinks: "Drinks", total: "Total", order: "ORDER NOW", confirm: "Confirm Order", edit: "EDIT", sms: "SEND SMS NOW", errLoc: "Enter Room or Table No!", errItem: "Select items!", errPhone: "Phone required!", copied: "Order copied to clipboard! If SMS doesn't open, paste it in your messages." },
+        am: { welcome: "እንኳን ወደ ኤስጂኤስ ሆቴል በደህና መጡ። እባክዎ ምርጫዎን ይምረጡ።", room: "ክፍል ቁጥር", table: "ጠረጴዛ ቁጥር", phone: "የስልክ ቁጥር ያስገቡ", food: "ምግቦች", drinks: "መጠጦች", total: "ጠቅላላ", order: "አሁን እዘዝ", confirm: "ትዕዛዝዎን ያረጋግጡ", edit: "አስተካክል", sms: "በአጭር መልዕክት ላክ", errLoc: "እባክዎ የክፍል ወይም የጠረጴዛ ቁጥር ያስገቡ!", errItem: "እባክዎ ንጥሎችን ይምረጡ!", errPhone: "እባክዎ የስልክ ቁጥር ያስገቡ!", copied: "ትዕዛዙ ተገልብጧል። የአጭር መልእክት ካልተከፈተ ሜሴጅ ውስጥ 'Paste' ያድርጉት።" }
     };
 
     let curLang = 'en';
@@ -118,7 +114,7 @@
         document.getElementById('btn-order').innerText = t.order;
         document.getElementById('modal-title').innerText = t.confirm;
         document.getElementById('edit-btn').innerText = t.edit;
-        document.getElementById('sms-trigger-link').innerText = t.sms;
+        document.getElementById('sms-link').innerText = t.sms;
         document.getElementById('btn-en').classList.toggle('active', l === 'en');
         document.getElementById('btn-am').classList.toggle('active', l === 'am');
     }
@@ -172,18 +168,30 @@
 
         if(total === 0) { alert(trans[curLang].errItem); return; }
         document.getElementById('orderList').innerHTML = list + `<br><b>TOTAL: ${total} ETB</b><br>LOC: ${r||b}`;
-        window.tempOrderMsg = `SGS Order: ${msg}Total:${total}ETB. Loc:${r||b}`;
+        window.orderMsg = `SGS Order: ${msg}Total:${total}ETB. Loc:${r||b}`;
         document.getElementById('confirmBox').style.display = 'flex';
     }
 
-    function prepareSMS(e) {
+    function executeFinalOrder(e) {
         let p = document.getElementById('custPhone').value.trim();
         if(!p) { alert(trans[curLang].errPhone); e.preventDefault(); return; }
-        
+
         const managerPhone = "0954954591";
         const isiOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
-        const finalMsg = `${window.tempOrderMsg}. CustPh:${p}`;
-        document.getElementById('sms-trigger-link').href = `sms:${managerPhone}${isiOS ? '&' : '?'}body=${encodeURIComponent(finalMsg)}`;
+        const finalMsg = `${window.orderMsg}. CustPh:${p}`;
+
+        // 1. UPDATING THE LINK (For Android/iOS Native browsers)
+        document.getElementById('sms-link').href = `sms:${managerPhone}${isiOS ? '&' : '?'}body=${encodeURIComponent(finalMsg)}`;
+
+        // 2. BACKUP CLIPBOARD ACTION (For browsers that block the link)
+        const dummy = document.createElement("textarea");
+        document.body.appendChild(dummy);
+        dummy.value = finalMsg;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+
+        alert(trans[curLang].copied);
     }
 
     function closeModal() { document.getElementById('confirmBox').style.display = 'none'; }
