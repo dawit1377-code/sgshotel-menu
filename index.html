@@ -16,13 +16,12 @@
         .g-btn { background: var(--green); color: var(--gold); width: 55px; height: 55px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2.2rem; border: 2px dashed var(--gold); font-weight: bold; }
         .hotel-label { background: var(--green); color: var(--gold); padding: 5px 30px; font-weight: 900; letter-spacing: 4px; border-radius: 4px; display: inline-block; margin-top: 10px; border: 1px solid var(--gold); }
         
-        /* NEW WELCOME & LUXURY TITLES */
         .master-welcome { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); margin-top: 20px; font-weight: 700; letter-spacing: 1px; }
         .welcome-note { font-size: 0.85rem; max-width: 320px; margin: 10px auto 0; font-style: italic; line-height: 1.4; opacity: 0.8; }
-        .luxury-room-title { color: var(--gold); font-family: 'Poppins', sans-serif; font-weight: 600; letter-spacing: 2px; font-size: 0.9rem; margin-top: 15px; text-transform: uppercase; border-top: 1px solid rgba(212,175,55,0.3); display: inline-block; padding-top: 10px; opacity: 0.9; }
+        .luxury-room-title { color: var(--gold); font-family: 'Poppins', sans-serif; font-weight: 600; letter-spacing: 2px; font-size: 0.85rem; margin-top: 15px; text-transform: uppercase; border-top: 1px solid rgba(212,175,55,0.3); display: inline-block; padding-top: 10px; opacity: 0.9; }
 
         .lang-container { display: flex; justify-content: center; gap: 10px; margin: 25px 0; }
-        .lang-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.8rem; letter-spacing: 1px; }
+        .lang-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
         .lang-btn.active { background: var(--gold); color: #000; }
 
         .cat-head { font-family: 'Playfair Display', serif; color: var(--gold); text-align: center; font-size: 2rem; margin: 40px 0 15px; letter-spacing: 2px; }
@@ -35,8 +34,8 @@
         .item-price { color: var(--cream); font-weight: 600; font-size: 1.1rem; background: rgba(0,0,0,0.3); padding: 2px 10px; border-radius: 5px; }
         .item-ingredients { color: #ccc; font-size: 0.85rem; line-height: 1.5; font-weight: 300; font-style: italic; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; }
 
-        .footer-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); padding: 20px; text-align: center; border-top: 4px solid var(--gold); z-index: 1000; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
-        .call-btn { display: inline-block; background: var(--gold); color: #000 !important; text-decoration: none; padding: 16px 60px; border-radius: 35px; font-weight: 900; font-size: 1.2rem; letter-spacing: 1px; }
+        .footer-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); padding: 20px; text-align: center; border-top: 4px solid var(--gold); z-index: 1000; }
+        .call-btn { display: inline-block; background: var(--gold); color: #000 !important; text-decoration: none; padding: 16px 60px; border-radius: 35px; font-weight: 900; font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -76,65 +75,30 @@
             mainWelcome: "Welcome to SGS Hotel",
             welcome: "Exquisite dining delivered to your door. Please browse our curated selection.", 
             roomTag: "Luxury Menu for Room Guests",
-            food: "Cuisine", 
-            drinks: "Beverages", 
-            call: "CALL TO ORDER",
-            ingLabel: "Ingredients: "
+            food: "Cuisine", drinks: "Beverages", call: "CALL TO ORDER", ingLabel: "Ingredients: "
         },
         am: { 
             mainWelcome: "እንኳን ወደ ኤስጂኤስ ሆቴል በደህና መጡ",
             welcome: "ምርጥ ምግቦች እስከ እርሶ በር ድረስ። እባክዎ ምርጫዎን ይመልከቱ።", 
             roomTag: "ለክፍል እንግዶች የተዘጋጀ ልዩ ሜኑ",
-            food: "ምግቦች", 
-            drinks: "መጠጦች", 
-            call: "ትዕዛዝ ለመስጠት ይደውሉ",
-            ingLabel: "ጥሬ ዕቃዎች፡ "
+            food: "ምግቦች", drinks: "መጠጦች", call: "ትዕዛዝ ለመስጠት ይደውሉ", ingLabel: "ጥሬ ዕቃዎች፡ "
         }
     };
 
     const foods = [
-        {
-            n: "Beyayentu", am_n: "በያይነቱ", p: 450, img: "beyayentu.jpg", 
-            ing: "Injera, Shiro, Misir, Gomen, Kik Alicha, Key Sir, Salads.",
-            am_ing: "እንጀራ፣ ሽሮ፣ ምስር፣ ጎመን፣ ክክ አልጫ፣ ቀይ ስር፣ ሰላጣ።"
-        },
-        {
-            n: "Egg Sandwich", am_n: "የእንቁላል ሳንድዊች", p: 280, img: "egg-sandwich.jpg", 
-            ing: "Toasted Bread, Scrambled Eggs, Tomatoes, Onions, Green Chilies, Butter.",
-            am_ing: "የተጠበሰ ዳቦ፣ የተመታ እንቁላል፣ ቲማቲም፣ ቀይ ሽንኩርት፣ ቃሪያ፣ ቅቤ።"
-        },
-        {
-            n: "Pizza Margarita", am_n: "ማርጋሪታ ፒዛ", p: 550, img: "pizza.jpg", 
-            ing: "Hand-tossed Dough, Mozzarella Cheese, Fresh Tomato Sauce, Basil, Olive Oil.",
-            am_ing: "ፒዛ ሊጥ፣ ሞዛሬላ ቺዝ፣ ትኩስ የቲማቲም ሶስ፣ ባሲል፣ የወይራ ዘይት።"
-        },
-        {
-            n: "Shiro Tegabino", am_n: "ሽሮ ተጋቢኖ", p: 350, img: "tegabino.jpg", 
-            ing: "Spiced Chickpea Flour, Garlic, Ginger, Berbere, Herb Butter, Injera.",
-            am_ing: "ሽንብራ ሽሮ፣ ነጭ ሽንኩርት፣ ዝንጅብል፣ በርበሬ፣ የጥበስ ቅቤ፣ እንጀራ።"
-        },
-        {
-            n: "Special Burger", am_n: "ስፔሻል በርገር", p: 650, img: "burger.jpg", 
-            ing: "Beef Patty, Caramelized Onions, Cheese, Lettuce, Special House Sauce, Sesame Bun.",
-            am_ing: "የከብት ስጋ፣ የተጠበሰ ሽንኩርት፣ ቺዝ፣ ሰላጣ፣ ስፔሻል ሶስ፣ በርገር ዳቦ።"
-        }
+        { n: "Beyayentu", am_n: "በያይነቱ", p: 450, img: "beyayentu.jpg", ing: "Injera, Shiro, Misir, Gomen, Kik Alicha, Key Sir, Salads.", am_ing: "እንጀራ፣ ሽሮ፣ ምስር፣ ጎመን፣ ክክ አልጫ፣ ቀይ ስር፣ ሰላጣ።" },
+        { n: "Egg Sandwich", am_n: "የእንቁላል ሳንድዊች", p: 280, img: "egg-sandwich.jpg", ing: "Toasted Bread, Scrambled Eggs, Tomatoes, Onions, Green Chilies, Butter.", am_ing: "የተጠበሰ ዳቦ፣ የተመታ እንቁላል፣ ቲማቲም፣ ቀይ ሽንኩርት፣ ቃሪያ፣ ቅቤ።" },
+        { n: "Pizza Margarita", am_n: "ማርጋሪታ ፒዛ", p: 550, img: "pizza.jpg", ing: "Hand-tossed Dough, Mozzarella Cheese, Fresh Tomato Sauce, Basil, Olive Oil.", am_ing: "ፒዛ ሊጥ፣ ሞዛሬላ ቺዝ፣ ትኩስ የቲማቲም ሶስ፣ ባሲል፣ የወይራ ዘይት።" },
+        { n: "Shiro Tegabino", am_n: "ሽሮ ተጋቢኖ", p: 350, img: "tegabino.jpg", ing: "Spiced Chickpea Flour, Garlic, Ginger, Berbere, Herb Butter, Injera.", am_ing: "ሽንብራ ሽሮ፣ ነጭ ሽንኩርት፣ ዝንጅብል፣ በርበሬ፣ የጥበስ ቅቤ፣ እንጀራ።" },
+        { n: "Special Burger", am_n: "ስፔሻል በርገር", p: 650, img: "burger.jpg", ing: "Beef Patty, Caramelized Onions, Cheese, Lettuce, Special House Sauce, Sesame Bun.", am_ing: "የከብት ስጋ፣ የተጠበሰ ሽንኩርት፣ ቺዝ፣ ሰላጣ፣ ስፔሻል ሶስ፣ በርገር ዳቦ።" }
     ];
 
     const drinks = [
-        {
-            n: "Bottled Water", am_n: "ታሸገ ውሃ", p: 60, img: "water.jpg", 
-            ing: "Pure Mineral Water (500ml).", am_ing: "ንጹህ የተፈጥሮ ማዕድን ውሃ (500ml)።"
-        },
-        {
-            n: "Machiato", am_n: "ማኪያቶ", p: 120, img: "macchiato.jpg", 
-            ing: "Strong Espresso, Steamed Milk Foam, Ethiopian Highland Coffee Beans.",
-            am_ing: "ኤስፕሬሶ፣ የወተት አረፋ፣ የኢትዮጵያ ምርጥ ቡና።"
-        },
-        {
-            n: "American Coffee", am_n: "አሜሪካን ኮፊ", p: 110, img: "americano.jpg", 
-            ing: "Double Shot Espresso, Hot Water, Smooth Rich Aroma.",
-            am_ing: "ድርብ ኤስፕሬሶ፣ ሙቅ ውሃ።"
-        }
+        { n: "Bottled Water", am_n: "ታሸገ ውሃ", p: 60, img: "water.jpg", ing: "Pure Mineral Water (500ml).", am_ing: "ንጹህ የተፈጥሮ ማዕድን ውሃ (500ml)።" },
+        { n: "Machiato", am_n: "ማኪያቶ", p: 120, img: "macchiato.jpg", ing: "Strong Espresso, Steamed Milk Foam, Coffee Beans.", am_ing: "ኤስፕሬሶ፣ የወተት አረፋ፣ የኢትዮጵያ ምርጥ ቡና።" },
+        { n: "American Coffee", am_n: "አሜሪካን ኮፊ", p: 110, img: "americano.jpg", ing: "Double Shot Espresso, Hot Water.", am_ing: "ድርብ ኤስፕሬሶ፣ ሙቅ ውሃ።" },
+        { n: "Fresh Orange Juice", am_n: "ትኩስ የብርቱካን ጭማቂ", p: 180, img: "orange.jpg", ing: "100% Squeezed Seasonal Oranges, No added sugar.", am_ing: "መቶ በመቶ የተፈጥሮ ብርቱካን ጭማቂ።" },
+        { n: "Soft Drinks", am_n: "ለስላሳ መጠጦች", p: 90, img: "soda.jpg", ing: "Coca-Cola, Fanta, or Sprite (300ml).", am_ing: "ኮካ ኮላ፣ ፋንታ፣ ወይም ስፕራይት (300ml)።" }
     ];
 
     function setLang(l) {
@@ -147,8 +111,7 @@
         document.getElementById('call-text').innerText = t.call;
         document.getElementById('btn-en').classList.toggle('active', l === 'en');
         document.getElementById('btn-am').classList.toggle('active', l === 'am');
-        build(foods, "food-list", l);
-        build(drinks, "drink-list", l);
+        build(foods, "food-list", l); build(drinks, "drink-list", l);
     }
 
     function build(data, id, lang) {
@@ -156,14 +119,10 @@
         data.forEach(x => {
             const name = lang === 'en' ? x.n : x.am_n;
             const ingredients = lang === 'en' ? x.ing : x.am_ing;
-            h += `
-            <div class="item-row">
+            h += `<div class="item-row">
                 <img src="${x.img}" class="item-img" alt="${name}">
                 <div class="item-content">
-                    <div class="item-header">
-                        <span class="item-name">${name}</span>
-                        <span class="item-price">${x.p} ETB</span>
-                    </div>
+                    <div class="item-header"><span class="item-name">${name}</span><span class="item-price">${x.p} ETB</span></div>
                     <div class="item-ingredients"><strong>${trans[lang].ingLabel}</strong>${ingredients}</div>
                 </div>
             </div>`;
