@@ -6,105 +6,102 @@
     <title>SGS Hotel Menu</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --p-orange: #FF8C00; --gold: #D4AF37; --bg: #ffffff; --dark: #121212; }
+        :root { --p-orange: #E67E22; --dark-orange: #D35400; --bg: #ffffff; }
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-overflow-scrolling: touch; }
-        body { background: var(--bg); color: var(--dark); font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; }
         .lang-am { font-family: 'Noto Sans Ethiopic', sans-serif; }
 
-        /* 1. Header Reduced by 50% & Attractive Colors */
+        /* 1 & 2. Slim Header with Dark Orange & Subtitle */
         .header { 
-            background: var(--p-orange);
-            color: #121212; /* High-contrast dark text on orange */
-            padding: 10px 15px; 
+            background: var(--dark-orange);
+            color: white; 
+            padding: 8px 15px; 
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky; top: 0; z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
-        .header h1 { 
-            font-family: 'Playfair Display', serif; 
-            font-size: 20px; 
-            letter-spacing: 1px;
-            color: #fff; /* White for hotel name */
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-        }
+        .hotel-brand { text-align: center; flex-grow: 1; }
+        .hotel-brand h1 { font-family: 'Playfair Display', serif; font-size: 19px; line-height: 1; }
+        .hotel-brand span { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #ffe0b2; }
 
-        /* 4. Hamburger & Language Placement */
-        .menu-icon { font-size: 24px; cursor: pointer; color: white; }
-        .lang-toggle { 
-            background: white; color: var(--p-orange); 
-            padding: 4px 10px; border-radius: 20px; 
-            font-size: 11px; font-weight: 700; cursor: pointer;
-        }
+        .menu-icon { font-size: 22px; cursor: pointer; color: white; width: 40px; }
+        .top-spacer { width: 40px; } /* Balancing element */
 
-        /* 2 & 3. Categories Maxed & Images +25% */
+        /* Categories */
         .nav-bar { 
-            display: flex; overflow-x: auto; padding: 15px 5px; 
-            background: #fff; position: sticky; top: 44px; z-index: 900; 
+            display: flex; overflow-x: auto; padding: 12px 5px; 
+            background: #fff; position: sticky; top: 48px; z-index: 900; 
             border-bottom: 1px solid #eee;
         }
-        .nav-item { text-align: center; min-width: 130px; cursor: pointer; opacity: 0.5; transition: 0.3s; }
-        .nav-item.active { opacity: 1; color: var(--p-orange); transform: scale(1.05); }
+        .nav-item { text-align: center; min-width: 120px; cursor: pointer; opacity: 0.5; transition: 0.3s; }
+        .nav-item.active { opacity: 1; transform: scale(1.05); }
         .nav-item img { 
-            width: 82px; height: 82px; /* Increased by 25% */
+            width: 75px; height: 75px; 
             border-radius: 50%; display: block; margin: 0 auto 5px; 
-            border: 3px solid #f0f0f0; object-fit: cover; 
+            border: 2px solid #f0f0f0; object-fit: cover; 
+            will-change: transform; /* 6. Speed Optimization */
         }
         .nav-item.active img { border-color: var(--p-orange); }
 
-        /* Item Texts to Orange */
-        .container { padding: 15px; }
+        /* 3 & 5. Ingredients & Orange Numbers */
+        .container { padding: 10px; }
         .card { 
             display: flex; align-items: center; background: white; border-radius: 12px; 
-            margin-bottom: 15px; padding: 12px; border: 1px solid #f9f9f9;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 12px; padding: 10px; border: 1px solid #f2f2f2;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            content-visibility: auto; /* 6. Major Speed Optimization */
         }
         .food-img { 
-            width: 105px; height: 105px; /* Increased by 25% */
-            border-radius: 12px; object-fit: cover; margin-right: 15px; 
+            width: 100px; height: 100px; 
+            border-radius: 10px; object-fit: cover; margin-right: 15px;
+            image-rendering: -webkit-optimize-contrast; 
         }
-        .info .title { font-size: 17px; font-weight: 600; color: var(--p-orange); } /* Text to Orange */
-        .info .price { font-size: 16px; font-weight: 700; color: #333; margin-top: 5px; }
+        .info .title { font-size: 16px; font-weight: 600; color: var(--p-orange); }
+        .info .ingred { font-size: 11px; color: #777; font-style: italic; margin-top: 2px; line-height: 1.2; }
+        .info .price { font-size: 15px; font-weight: 700; color: var(--p-orange); margin-top: 4px; } /* 3. Orange Numbers */
 
-        /* 5. Welcome Note Overlay */
+        /* Admin Management UI */
+        #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:10px; overflow-y:auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        .edit-input { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+
+        /* Overlays */
         #welcomeNote {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: var(--p-orange); color: white; padding: 40px; border-radius: 20px;
-            text-align: center; z-index: 5000; box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            font-weight: 600; border: 3px solid white;
+            background: var(--dark-orange); color: white; padding: 30px; border-radius: 15px;
+            text-align: center; z-index: 5000; font-weight: 600;
         }
-
-        /* 6. Admin Table - Fully Visible Texts */
-        #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:10px; overflow-y:auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; } /* Force width for visibility */
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; white-space: nowrap; }
-        .edit-input { width: 100%; min-width: 120px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
-
-        /* Login */
         .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2500; align-items:center; justify-content:center; }
-        .login-card { background:white; padding:30px; border-radius:15px; width:85%; max-width:320px; text-align:center; }
+        .login-card { background:white; padding:25px; border-radius:12px; width:85%; max-width:300px; text-align:center; }
     </style>
 </head>
 <body id="bodyTag">
 
 <header class="header">
     <div class="menu-icon" onclick="showLogin()">☰</div>
-    <h1 id="displayHotelName">SGS HOTEL</h1>
-    <div class="lang-toggle" onclick="toggleLang()">EN / አማ</div>
+    <div class="hotel-brand">
+        <h1 id="displayHotelName">SGS HOTEL</h1>
+        <span>MENU</span>
+    </div>
+    <div class="lang-toggle-box">
+        <button class="lang-btn" onclick="toggleLang()" style="border:none; background:white; color:var(--dark-orange); padding:3px 8px; border-radius:10px; font-size:10px; font-weight:bold;">EN/አማ</button>
+    </div>
 </header>
 
-<div id="welcomeNote"><h1>WELCOME ADMIN</h1><p>SGS Hotel Manager v7.0</p></div>
+<div id="welcomeNote"><h1>WELCOME</h1><p>SGS Hotel Admin System</p></div>
 
 <nav class="nav-bar">
     <div class="nav-item active" id="cat-breakfast" onclick="changeCat('breakfast')">
-        <img src="b1.jpg" onerror="this.src='https://via.placeholder.com/80'"><span id="nav-text-break">Breakfast</span>
+        <img src="b1.jpg" loading="lazy"><span id="nav-text-break">Breakfast</span>
     </div>
     <div class="nav-item" id="cat-lunchdinner" onclick="changeCat('lunchdinner')">
-        <img src="l1.jpg" onerror="this.src='https://via.placeholder.com/80'"><span id="nav-text-lunch">Lunch/Dinner</span>
+        <img src="l1.jpg" loading="lazy"><span id="nav-text-lunch">Lunch/Dinner</span>
     </div>
     <div class="nav-item" id="cat-beverages" onclick="changeCat('beverages')">
-        <img src="d1.jpg" onerror="this.src='https://via.placeholder.com/80'"><span id="nav-text-bev">Beverages</span>
+        <img src="d1.jpg" loading="lazy"><span id="nav-text-bev">Beverages</span>
     </div>
 </nav>
 
@@ -112,26 +109,26 @@
 
 <div id="loginOverlay" class="overlay">
     <div class="login-card">
-        <h2 style="color:var(--p-orange)">STAFF ACCESS</h2><br>
-        <input type="text" id="userInput" placeholder="User" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd;">
-        <input type="password" id="passInput" placeholder="Pass" style="width:100%; padding:12px; margin-bottom:15px; border:1px solid #ddd;">
-        <button onclick="handleLogin()" style="width:100%; padding:12px; background:var(--p-orange); color:white; border:none; border-radius:5px; font-weight:bold;">LOGIN</button>
-        <p onclick="hideLogin()" style="margin-top:15px; color:gray; cursor:pointer; font-size:12px;">Cancel</p>
+        <h3 style="color:var(--dark-orange)">ADMIN LOGIN</h3><br>
+        <input type="text" id="userInput" placeholder="User" style="width:100%; padding:10px; margin-bottom:10px;">
+        <input type="password" id="passInput" placeholder="Pass" style="width:100%; padding:10px; margin-bottom:15px;">
+        <button onclick="handleLogin()" style="width:100%; padding:12px; background:var(--dark-orange); color:white; border:none; border-radius:5px;">LOGIN</button>
+        <p onclick="hideLogin()" style="margin-top:10px; color:gray; cursor:pointer; font-size:12px;">Close</p>
     </div>
 </div>
 
 <div id="adminDashboard">
-    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--p-orange); padding:10px; color:white; border-radius:5px;">
-        <h3>MENU MANAGER</h3>
-        <button onclick="closeAdmin()" style="color:white; font-weight:bold; border:none; background:none; font-size:20px;">×</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--dark-orange); padding:10px; color:white;">
+        <h4>MENU MANAGER</h4>
+        <button onclick="closeAdmin()" style="color:white; border:none; background:none; font-size:24px;">×</button>
     </div>
-    <div style="overflow-x:auto; margin-top:15px;">
+    <div style="overflow-x:auto;">
         <table>
-            <thead><tr><th>Name (EN)</th><th>Name (AM)</th><th>Price</th><th>Action</th></tr></thead>
+            <thead><tr><th>Name (EN)</th><th>Ingredients</th><th>Price</th><th>Images</th></tr></thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
-    <button onclick="saveAndClear()" style="width:100%; padding:20px; background:#28a745; color:white; border:none; border-radius:10px; margin-top:20px; font-weight:700;">SAVE CHANGES</button>
+    <button onclick="saveAndClear()" style="width:100%; padding:15px; background:#27ae60; color:white; border:none; border-radius:8px; margin-top:15px;">SAVE MENU</button>
 </div>
 
 <script>
@@ -139,33 +136,23 @@
     let currentCat = 'breakfast';
     
     let data = [
-        { id: 1, cat: 'breakfast', en: 'Kitfo Royale', am: 'ክትፎ ሮያል', price: 500, img: 'b1.jpg' },
-        { id: 2, cat: 'breakfast', en: 'Special Omelet', am: 'ልዩ እንቁላል ፍርፍር', price: 350, img: 'b2.jpg' },
-        { id: 3, cat: 'breakfast', en: 'Chechebsa', am: 'ጨጨብሳ', price: 300, img: 'b3.jpg' },
-        { id: 4, cat: 'breakfast', en: 'Full Breakfast', am: 'ቁርስ በሙሉ', price: 450, img: 'b4.jpg' },
-        { id: 5, cat: 'lunchdinner', en: 'Golden Dorowet', am: 'ወርቃማው ዶሮወጥ', price: 600, img: 'l1.jpg' },
-        { id: 6, cat: 'lunchdinner', en: 'Tegabino Shiro', am: 'ተጋቢኖ ሽሮ', price: 250, img: 'l2.jpg' },
-        { id: 7, cat: 'lunchdinner', en: 'Margherita Pizza', am: 'ፒዛ ማርጋሪታ', price: 480, img: 'l3.jpg' },
-        { id: 8, cat: 'lunchdinner', en: 'SGS Burger', am: 'ኤስ ጂ ኤስ በርገር', price: 550, img: 'l4.jpg' },
-        { id: 9, cat: 'beverages', en: 'SGS Macchiato', am: 'ኤስ ጂ ኤስ ማኪያቶ', price: 60, img: 'd1.jpg' },
-        { id: 10, cat: 'beverages', en: 'Mango Juice', am: 'የማንጎ ጭማቂ', price: 120, img: 'd2.jpg' },
-        { id: 11, cat: 'beverages', en: 'St. George Beer', am: 'ቅዱስ ጊዮርጊስ ቢራ', price: 150, img: 'd3.jpg' },
-        { id: 12, cat: 'beverages', en: 'Soft Drink', am: 'ቀዝቃዛ ለስላሳ መጠጥ', price: 80, img: 'd4.jpg' }
+        { id: 1, cat: 'breakfast', en: 'Kitfo Royale', am: 'ክትፎ ሮያል', price: 500, img: 'b1.jpg', ing: 'Minced beef, nitir kibe, mitmita' },
+        { id: 2, cat: 'breakfast', en: 'Special Omelet', am: 'ልዩ እንቁላል', price: 350, img: 'b2.jpg', ing: 'Eggs, onions, green pepper, tomato' },
+        { id: 5, cat: 'lunchdinner', en: 'Golden Dorowet', am: 'ወርቃማው ዶሮወጥ', price: 600, img: 'l1.jpg', ing: 'Chicken stew, boiled eggs, spices' },
+        { id: 9, cat: 'beverages', en: 'SGS Macchiato', am: 'ማኪያቶ', price: 60, img: 'd1.jpg', ing: 'Premium espresso, steamed milk' }
     ];
 
     function render() {
         const list = document.getElementById('menuListing');
         list.innerHTML = "";
         document.getElementById('displayHotelName').innerText = (currentLang === 'en' ? 'SGS HOTEL' : 'ኤስ ጂ ኤስ ሆቴል');
-        document.getElementById('nav-text-break').innerText = (currentLang === 'en' ? 'Breakfast' : 'ቁርስ');
-        document.getElementById('nav-text-lunch').innerText = (currentLang === 'en' ? 'Lunch/Dinner' : 'ምሳ/እራት');
-        document.getElementById('nav-text-bev').innerText = (currentLang === 'en' ? 'Beverages' : 'መጠጦች');
-
+        
         data.filter(i => i.cat === currentCat).forEach(item => {
             list.innerHTML += `<div class="card">
-                <img src="${item.img}" class="food-img" onerror="this.src='https://via.placeholder.com/105'">
+                <img src="${item.img}" class="food-img" loading="lazy" onerror="this.src='https://via.placeholder.com/100'">
                 <div class="info">
                     <div class="title">${currentLang === 'en' ? item.en : item.am}</div>
+                    <div class="ingred">${item.ing}</div>
                     <div class="price">${item.price} ETB</div>
                 </div>
             </div>`;
@@ -186,18 +173,13 @@
     }
 
     function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
-    function hideLogin() { 
-        document.getElementById('userInput').value = ""; 
-        document.getElementById('passInput').value = ""; 
-        document.getElementById('loginOverlay').style.display = 'none'; 
-    }
+    function hideLogin() { document.getElementById('loginOverlay').style.display = 'none'; }
 
     function handleLogin() {
         if(document.getElementById('userInput').value === "admin" && document.getElementById('passInput').value === "sgs") {
             hideLogin();
-            const note = document.getElementById('welcomeNote');
-            note.style.display = 'block';
-            setTimeout(() => { note.style.display = 'none'; openAdmin(); }, 1500);
+            document.getElementById('welcomeNote').style.display = 'block';
+            setTimeout(() => { document.getElementById('welcomeNote').style.display = 'none'; openAdmin(); }, 1200);
         } else { alert("Error"); }
     }
 
@@ -208,9 +190,9 @@
         data.forEach((item, index) => {
             tbody.innerHTML += `<tr>
                 <td><input class="edit-input" value="${item.en}" onchange="editItem(${index}, 'en', this.value)"></td>
-                <td><input class="edit-input" value="${item.am}" onchange="editItem(${index}, 'am', this.value)"></td>
+                <td><input class="edit-input" value="${item.ing}" onchange="editItem(${index}, 'ing', this.value)"></td>
                 <td><input class="edit-input" type="number" value="${item.price}" onchange="editItem(${index}, 'price', this.value)"></td>
-                <td><input type="file" style="font-size:10px" onchange="uploadImg(${index}, this)"></td>
+                <td><input type="file" onchange="uploadImg(${index}, this)"></td>
             </tr>`;
         });
     }
