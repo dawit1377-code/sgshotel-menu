@@ -7,61 +7,68 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --p-orange: #E67E22; --dark-orange: #D35400; --bg: #ffffff; }
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-overflow-scrolling: touch; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        html, body { overflow-x: hidden; position: relative; width: 100%; height: 100%; }
+        html, body { 
+            overflow-x: hidden; 
+            width: 100%; 
+            height: 100%; 
+            overscroll-behavior-y: contain; /* Prevents "pull-to-refresh" lag */
+        }
         body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; }
         .lang-am { font-family: 'Noto Sans Ethiopic', sans-serif; }
 
-        /* Header & Branding */
+        /* Header */
         .header { 
             background: var(--dark-orange);
             color: white; padding: 8px 15px; 
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
         .hotel-brand { text-align: center; flex-grow: 1; }
-        .hotel-brand h1 { font-family: 'Playfair Display', serif; font-size: 19px; line-height: 1; color: #fff; }
-        .hotel-brand span { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #ffe0b2; }
+        .hotel-brand h1 { font-family: 'Playfair Display', serif; font-size: 19px; line-height: 1; }
+        .hotel-brand span { font-size: 11px; font-weight: 700; letter-spacing: 3px; color: #ffe0b2; }
         .menu-icon { font-size: 24px; cursor: pointer; color: white; width: 40px; }
-
-        .lang-btn {
-            border:none; background:white; color:var(--dark-orange); 
-            padding:5px 12px; border-radius:15px; font-size:11px; 
-            font-weight:bold; cursor: pointer;
-        }
 
         /* Categories */
         .nav-bar { 
             display: flex; overflow-x: auto; padding: 15px 5px; 
             background: #fff; position: sticky; top: 48px; z-index: 900; 
             border-bottom: 1px solid #eee;
+            -webkit-overflow-scrolling: touch;
         }
-        .nav-item { text-align: center; min-width: 140px; cursor: pointer; opacity: 0.5; transition: 0.3s; }
+        .nav-item { text-align: center; min-width: 140px; opacity: 0.5; transition: 0.2s; }
         .nav-item.active { opacity: 1; transform: scale(1.05); }
         .nav-item img { width: 95px; height: 95px; border-radius: 50%; display: block; margin: 0 auto 8px; border: 3px solid #f0f0f0; object-fit: cover; }
 
         /* Food Cards */
         .container { padding: 12px; }
-        .card { display: flex; align-items: center; background: white; border-radius: 15px; margin-bottom: 15px; padding: 12px; border: 1px solid #f2f2f2; box-shadow: 0 3px 10px rgba(0,0,0,0.04); }
+        .card { 
+            display: flex; align-items: center; background: white; border-radius: 15px; 
+            margin-bottom: 15px; padding: 12px; border: 1px solid #f2f2f2;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+            transform: translateZ(0); /* Hardware Acceleration */
+        }
         .food-img { width: 125px; height: 125px; border-radius: 12px; object-fit: cover; margin-right: 18px; }
         .info .title { font-size: 18px; font-weight: 600; color: var(--p-orange); }
         .info .ingred { font-size: 12px; color: #777; font-style: italic; margin-top: 3px; }
         .info .price { font-size: 17px; font-weight: 700; color: var(--p-orange); margin-top: 6px; }
 
-        /* FIXED: Admin Table Sliding & Scrolling Correction */
+        /* TURBO SLIDE: Admin Table Scrolling Fix */
         #adminDashboard { 
             display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
-            background:#fff; z-index:3000; padding:10px; overflow-y: auto;
+            background:#fff; z-index:3000; padding:10px; overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
         }
         .table-wrapper { 
             width: 100%; 
-            overflow-x: auto; /* Allows left-right slide */
-            overflow-y: hidden; /* Prevents double scroll conflict */
+            overflow-x: auto; 
+            overflow-y: hidden;
             border: 1px solid #eee; 
             -webkit-overflow-scrolling: touch; 
-            touch-action: pan-x pan-y; /* Critical for smooth multi-directional move */
+            scroll-behavior: smooth;
+            will-change: scroll-position; /* GPU Optimization */
+            touch-action: auto; /* Restores natural browser physics */
         }
         table { width: 100%; border-collapse: collapse; min-width: 1100px; }
         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
@@ -80,18 +87,18 @@
         <h1 id="displayHotelName">SGS HOTEL</h1>
         <span id="menu-label">MENU</span>
     </div>
-    <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN / አማ</button>
+    <button onclick="toggleLang()" style="border:none; background:white; color:var(--dark-orange); padding:5px 12px; border-radius:15px; font-size:11px; font-weight:bold;">EN/አማ</button>
 </header>
 
 <nav class="nav-bar">
     <div class="nav-item active" id="cat-breakfast" onclick="changeCat('breakfast')">
-        <img src="b1.jpg" loading="lazy"><span id="nav-text-break">Breakfast</span>
+        <img src="b1.jpg"><span>Breakfast</span>
     </div>
     <div class="nav-item" id="cat-lunchdinner" onclick="changeCat('lunchdinner')">
-        <img src="l1.jpg" loading="lazy"><span id="nav-text-lunch">Lunch/Dinner</span>
+        <img src="l1.jpg"><span>Lunch/Dinner</span>
     </div>
     <div class="nav-item" id="cat-beverages" onclick="changeCat('beverages')">
-        <img src="d1.jpg" loading="lazy"><span id="nav-text-bev">Beverages</span>
+        <img src="d1.jpg"><span>Beverages</span>
     </div>
 </nav>
 
@@ -99,17 +106,17 @@
 
 <div id="loginOverlay" class="overlay">
     <div class="login-card">
-        <h3 style="color:var(--dark-orange); margin-bottom:20px;">STAFF LOGIN</h3>
-        <input type="text" id="userInput" placeholder="Username" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:5px;">
-        <input type="password" id="passInput" placeholder="Password" style="width:100%; padding:12px; margin-bottom:20px; border:1px solid #ddd; border-radius:5px;">
+        <h3>STAFF LOGIN</h3><br>
+        <input type="text" id="userInput" placeholder="User" style="width:100%; padding:10px; margin-bottom:10px;">
+        <input type="password" id="passInput" placeholder="Pass" style="width:100%; padding:10px; margin-bottom:20px;">
         <button onclick="handleLogin()" style="width:100%; padding:12px; background:var(--dark-orange); color:white; border:none; border-radius:8px; font-weight:bold;">LOGIN</button>
-        <p onclick="hideLogin()" style="margin-top:15px; color:gray; cursor:pointer; font-size:12px;">Cancel</p>
+        <p onclick="hideLogin()" style="margin-top:15px; color:gray; cursor:pointer;">Cancel</p>
     </div>
 </div>
 
 <div id="adminDashboard">
-    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--dark-orange); padding:15px; color:white; margin-bottom:10px; position: sticky; top: 0; z-index: 10;">
-        <h4>SGS MENU MANAGER</h4>
+    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--dark-orange); padding:15px; color:white; position: sticky; top: -10px; z-index: 100;">
+        <h4>MENU MANAGER</h4>
         <button onclick="closeAdmin()" style="color:white; border:none; background:none; font-size:32px;">×</button>
     </div>
     <div class="table-wrapper">
@@ -120,13 +127,13 @@
                     <th>AM Name</th>
                     <th>Ingredients</th>
                     <th>Price</th>
-                    <th>Image</th>
+                    <th>Preview & File</th>
                 </tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
-    <button onclick="saveAndClear()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; margin-top:20px; font-weight:bold;">SAVE DATABASE</button>
+    <button onclick="saveAndClear()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; margin-top:20px; font-weight:bold;">SAVE CHANGES</button>
 </div>
 
 <script>
@@ -153,13 +160,10 @@
         list.innerHTML = "";
         document.getElementById('displayHotelName').innerText = (currentLang === 'en' ? 'SGS HOTEL' : 'ኤስ ጂ ኤስ ሆቴል');
         document.getElementById('menu-label').innerText = (currentLang === 'en' ? 'MENU' : 'ሜኑ');
-        document.getElementById('nav-text-break').innerText = (currentLang === 'en' ? 'Breakfast' : 'ቁርስ');
-        document.getElementById('nav-text-lunch').innerText = (currentLang === 'en' ? 'Lunch/Dinner' : 'ምሳ/እራት');
-        document.getElementById('nav-text-bev').innerText = (currentLang === 'en' ? 'Beverages' : 'መጠጦች');
 
         data.filter(i => i.cat === currentCat).forEach(item => {
             list.innerHTML += `<div class="card">
-                <img src="${item.img}" class="food-img" loading="lazy" onerror="this.src='https://via.placeholder.com/125'">
+                <img src="${item.img}" class="food-img" onerror="this.src='https://via.placeholder.com/125'">
                 <div class="info">
                     <div class="title">${currentLang === 'en' ? item.en : item.am}</div>
                     <div class="ingred">${item.ing}</div>
