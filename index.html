@@ -2,134 +2,181 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SGS Hotel - Luxury Room Menu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGS Hotel - Luxury Digital Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --dark: #2d1b18; --card: #3d2b27; --cream: #fff8e1; --green: #1b3022; }
-        body { font-family: 'Poppins', sans-serif; background: var(--dark); color: var(--cream); margin: 0; padding-bottom: 120px; overflow-x: hidden; }
+        :root {
+            --primary-orange: #FF8C00;
+            --bg-white: #FFFFFF;
+            --text-dark: #333333;
+            --light-gray: #f8f9fa;
+        }
 
-        header { text-align: center; padding: 25px 10px; border-bottom: 5px solid var(--gold); background: var(--dark); }
-        .logo-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .side-img { width: 65px; height: 65px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; }
-        .sgs-text { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 900; color: var(--green); text-shadow: 2px 2px var(--gold); line-height: 1; }
-        .g-btn { background: var(--green); color: var(--gold); width: 55px; height: 55px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 2.2rem; border: 2px dashed var(--gold); font-weight: bold; }
-        .hotel-label { background: var(--green); color: var(--gold); padding: 5px 30px; font-weight: 900; letter-spacing: 4px; border-radius: 4px; display: inline-block; margin-top: 10px; border: 1px solid var(--gold); }
-        
-        .master-welcome { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); margin-top: 20px; font-weight: 700; letter-spacing: 1px; }
-        .welcome-note { font-size: 0.85rem; max-width: 320px; margin: 10px auto 0; font-style: italic; line-height: 1.4; opacity: 0.8; }
-        .luxury-room-title { color: var(--gold); font-family: 'Poppins', sans-serif; font-weight: 600; letter-spacing: 2px; font-size: 0.85rem; margin-top: 15px; text-transform: uppercase; border-top: 1px solid rgba(212,175,55,0.3); display: inline-block; padding-top: 10px; opacity: 0.9; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
 
-        .lang-container { display: flex; justify-content: center; gap: 10px; margin: 25px 0; }
-        .lang-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
-        .lang-btn.active { background: var(--gold); color: #000; }
+        body { background-color: var(--bg-white); color: var(--text-dark); overflow-x: hidden; }
 
-        .cat-head { font-family: 'Playfair Display', serif; color: var(--gold); text-align: center; font-size: 2rem; margin: 40px 0 15px; letter-spacing: 2px; }
-        
-        .item-row { background: var(--card); margin: 15px; border-radius: 20px; border: 1px solid rgba(212,175,55,0.15); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .item-img { width: 100%; height: 220px; object-fit: cover; border-bottom: 2px solid var(--gold); }
-        .item-content { padding: 20px; }
-        .item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-        .item-name { color: var(--gold); font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.4rem; }
-        .item-price { color: var(--cream); font-weight: 600; font-size: 1.1rem; background: rgba(0,0,0,0.3); padding: 2px 10px; border-radius: 5px; }
-        .item-ingredients { color: #ccc; font-size: 0.85rem; line-height: 1.5; font-weight: 300; font-style: italic; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; }
+        /* Mobile Header */
+        .app-header {
+            background-color: var(--primary-orange);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
 
-        .footer-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); padding: 20px; text-align: center; border-top: 4px solid var(--gold); z-index: 1000; }
-        .call-btn { display: inline-block; background: var(--gold); color: #000 !important; text-decoration: none; padding: 16px 60px; border-radius: 35px; font-weight: 900; font-size: 1.2rem; }
+        .hotel-name { font-size: 22px; font-weight: 600; letter-spacing: 1px; }
+
+        /* Category Navigation (Horizontal Scroll) */
+        .category-nav {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 15px;
+            background: var(--bg-white);
+            border-bottom: 1px solid #eee;
+        }
+
+        .category-item {
+            padding: 8px 20px;
+            margin-right: 10px;
+            background: var(--light-gray);
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .category-item.active {
+            background: var(--primary-orange);
+            color: white;
+        }
+
+        /* Menu List */
+        .menu-container { padding: 15px; }
+
+        .menu-card {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            padding: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #f1f1f1;
+        }
+
+        .food-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .food-info { flex: 1; }
+        .food-title { font-size: 16px; font-weight: 600; color: var(--primary-orange); }
+        .food-desc { font-size: 12px; color: #777; margin: 4px 0; }
+        .food-price { font-size: 15px; font-weight: 600; color: var(--text-dark); }
+
+        /* Language Toggle */
+        .lang-switch {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-orange);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 999;
+        }
+
+        /* Admin Login Button (Small & Hidden) */
+        .admin-trigger {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            opacity: 0.3;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        /* Hidden Admin Panel Style */
+        #adminPanel {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white; z-index: 2000; padding: 20px;
+            overflow-y: auto;
+        }
+
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo-row">
-        <img src="logo-left.jpg" class="side-img">
-        <div class="sgs-text">S<div class="g-btn">G</div>S</div>
-        <img src="logo-right.jpg" class="side-img">
+    <header class="app-header">
+        <div class="hotel-name">SGS HOTEL</div>
+    </header>
+
+    <div class="category-nav">
+        <div class="category-item active">Breakfast</div>
+        <div class="category-item">Lunch/Dinner</div>
+        <div class="category-item">Beverages</div>
     </div>
-    <div class="hotel-label">HOTEL</div>
+
+    <main class="menu-container" id="menuListing">
+        <div class="menu-card">
+            <img src="https://via.placeholder.com/100" class="food-img" alt="Special Omelet">
+            <div class="food-info">
+                <div class="food-title">Chief Special Omelet</div>
+                <div class="food-desc">Minced beef, onion, tomato, chili, garlic, pepper, egg.</div>
+                <div class="food-price">500 ETB</div>
+            </div>
+        </div>
+        </main>
+
+    <div class="lang-switch" onclick="toggleLang()">English / አማርኛ</div>
     
-    <div id="main-welcome" class="master-welcome">Welcome to SGS Hotel</div>
-    <p id="welcome-msg" class="welcome-note">Exquisite dining delivered to your door. Please browse our curated selection.</p>
-    <div id="room-guest-tag" class="luxury-room-title">Luxury Menu for Room Guests</div>
-</header>
+    <div class="admin-trigger" onclick="openLogin()">Staff Only</div>
 
-<div class="lang-container">
-    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">ENGLISH</button>
-    <button class="lang-btn" id="btn-am" onclick="setLang('am')">አማርኛ</button>
-</div>
+    <div id="adminPanel">
+        <h2>Admin Login</h2>
+        <input type="text" id="user" placeholder="Username" style="width:100%; padding:10px; margin:10px 0;">
+        <input type="password" id="pass" placeholder="Password" style="width:100%; padding:10px; margin:10px 0;">
+        <button onclick="login()" style="background:var(--primary-orange); color:white; border:none; padding:10px 20px; width:100%;">Login</button>
+        <button onclick="closeAdmin()" style="margin-top:10px; width:100%; border:none; background:none;">Cancel</button>
+    </div>
 
-<div style="max-width: 650px; margin: 0 auto;">
-    <h2 class="cat-head" id="cat-food">Cuisine</h2>
-    <div id="food-list"></div>
-    <h2 class="cat-head" id="cat-drink">Beverages</h2>
-    <div id="drink-list"></div>
-</div>
-
-<div class="footer-bar">
-    <a href="tel:+251954954591" class="call-btn" id="call-text">CALL TO ORDER</a>
-</div>
-
-<script>
-    const trans = {
-        en: { 
-            mainWelcome: "Welcome to SGS Hotel",
-            welcome: "Exquisite dining delivered to your door. Please browse our curated selection.", 
-            roomTag: "Luxury Menu for Room Guests",
-            food: "Cuisine", drinks: "Beverages", call: "CALL TO ORDER", ingLabel: "Ingredients: "
-        },
-        am: { 
-            mainWelcome: "እንኳን ወደ ኤስጂኤስ ሆቴል በደህና መጡ",
-            welcome: "ምርጥ ምግቦች እስከ እርሶ በር ድረስ። እባክዎ ምርጫዎን ይመልከቱ።", 
-            roomTag: "ለክፍል እንግዶች የተዘጋጀ ልዩ ሜኑ",
-            food: "ምግቦች", drinks: "መጠጦች", call: "ትዕዛዝ ለመስጠት ይደውሉ", ingLabel: "ጥሬ ዕቃዎች፡ "
+    <script>
+        function toggleLang() {
+            alert("Language switching logic to be linked to your Amharic JSON file.");
         }
-    };
 
-    const foods = [
-        { n: "Beyayentu", am_n: "በያይነቱ", p: 450, img: "beyayentu.jpg", ing: "Injera, Shiro, Misir, Gomen, Kik Alicha, Key Sir, Salads.", am_ing: "እንጀራ፣ ሽሮ፣ ምስር፣ ጎመን፣ ክክ አልጫ፣ ቀይ ስር፣ ሰላጣ።" },
-        { n: "Egg Sandwich", am_n: "የእንቁላል ሳንድዊች", p: 280, img: "egg-sandwich.jpg", ing: "Toasted Bread, Scrambled Eggs, Tomatoes, Onions, Green Chilies, Butter.", am_ing: "የተጠበሰ ዳቦ፣ የተመታ እንቁላል፣ ቲማቲም፣ ቀይ ሽንኩርት፣ ቃሪያ፣ ቅቤ።" },
-        { n: "Pizza Margarita", am_n: "ማርጋሪታ ፒዛ", p: 550, img: "pizza.jpg", ing: "Hand-tossed Dough, Mozzarella Cheese, Fresh Tomato Sauce, Basil, Olive Oil.", am_ing: "ፒዛ ሊጥ፣ ሞዛሬላ ቺዝ፣ ትኩስ የቲማቲም ሶስ፣ ባሲል፣ የወይራ ዘይት።" },
-        { n: "Shiro Tegabino", am_n: "ሽሮ ተጋቢኖ", p: 350, img: "tegabino.jpg", ing: "Spiced Chickpea Flour, Garlic, Ginger, Berbere, Herb Butter, Injera.", am_ing: "ሽንብራ ሽሮ፣ ነጭ ሽንኩርት፣ ዝንጅብል፣ በርበሬ፣ የጥበስ ቅቤ፣ እንጀራ።" },
-        { n: "Special Burger", am_n: "ስፔሻል በርገር", p: 650, img: "burger.jpg", ing: "Beef Patty, Caramelized Onions, Cheese, Lettuce, Special House Sauce, Sesame Bun.", am_ing: "የከብት ስጋ፣ የተጠበሰ ሽንኩርት፣ ቺዝ፣ ሰላጣ፣ ስፔሻል ሶስ፣ በርገር ዳቦ።" }
-    ];
+        function openLogin() {
+            document.getElementById('adminPanel').style.display = 'block';
+        }
 
-    const drinks = [
-        { n: "Bottled Water", am_n: "ታሸገ ውሃ", p: 60, img: "water.jpg", ing: "Pure Mineral Water (500ml).", am_ing: "ንጹህ የተፈጥሮ ማዕድን ውሃ (500ml)።" },
-        { n: "Machiato", am_n: "ማኪያቶ", p: 120, img: "macchiato.jpg", ing: "Strong Espresso, Steamed Milk Foam, Coffee Beans.", am_ing: "ኤስፕሬሶ፣ የወተት አረፋ፣ የኢትዮጵያ ምርጥ ቡና።" },
-        { n: "American Coffee", am_n: "አሜሪካን ኮፊ", p: 110, img: "americano.jpg", ing: "Double Shot Espresso, Hot Water.", am_ing: "ድርብ ኤስፕሬሶ፣ ሙቅ ውሃ።" },
-        { n: "Fresh Orange Juice", am_n: "ትኩስ የብርቱካን ጭማቂ", p: 180, img: "orange.jpg", ing: "100% Squeezed Seasonal Oranges, No added sugar.", am_ing: "መቶ በመቶ የተፈጥሮ ብርቱካን ጭማቂ።" },
-        { n: "Soft Drinks", am_n: "ለስላሳ መጠጦች", p: 90, img: "soda.jpg", ing: "Coca-Cola, Fanta, or Sprite (300ml).", am_ing: "ኮካ ኮላ፣ ፋንታ፣ ወይም ስፕራይት (300ml)።" }
-    ];
+        function closeAdmin() {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
 
-    function setLang(l) {
-        const t = trans[l];
-        document.getElementById('main-welcome').innerText = t.mainWelcome;
-        document.getElementById('welcome-msg').innerText = t.welcome;
-        document.getElementById('room-guest-tag').innerText = t.roomTag;
-        document.getElementById('cat-food').innerText = t.food;
-        document.getElementById('cat-drink').innerText = t.drinks;
-        document.getElementById('call-text').innerText = t.call;
-        document.getElementById('btn-en').classList.toggle('active', l === 'en');
-        document.getElementById('btn-am').classList.toggle('active', l === 'am');
-        build(foods, "food-list", l); build(drinks, "drink-list", l);
-    }
-
-    function build(data, id, lang) {
-        let h = "";
-        data.forEach(x => {
-            const name = lang === 'en' ? x.n : x.am_n;
-            const ingredients = lang === 'en' ? x.ing : x.am_ing;
-            h += `<div class="item-row">
-                <img src="${x.img}" class="item-img" alt="${name}">
-                <div class="item-content">
-                    <div class="item-header"><span class="item-name">${name}</span><span class="item-price">${x.p} ETB</span></div>
-                    <div class="item-ingredients"><strong>${trans[lang].ingLabel}</strong>${ingredients}</div>
-                </div>
-            </div>`;
-        });
-        document.getElementById(id).innerHTML = h;
-    }
-    setLang('en');
-</script>
+        function login() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            if(u === "admin" && p === "sgs2026") {
+                alert("Login Successful! Dashboard Loading...");
+                // Here we would trigger the Edit Mode
+            } else {
+                alert("Wrong credentials");
+            }
+        }
+    </script>
 </body>
 </html>
