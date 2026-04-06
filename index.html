@@ -10,340 +10,227 @@
             --primary-orange: #FF8C00;
             --bg-white: #FFFFFF;
             --text-dark: #333333;
-            --light-gray: #f8f9fa;
+            --light-gray: #f4f4f4;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body { background-color: var(--bg-white); color: var(--text-dark); overflow-x: hidden; font-family: 'Poppins', sans-serif;}
-        
-        /* Apply Ethiopic font when language switches */
-        body.lang-am { font-family: 'Noto Sans Ethiopic', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', 'Noto Sans Ethiopic', sans-serif; }
+        body { background-color: var(--bg-white); color: var(--text-dark); }
 
-        /* Mobile Header */
+        /* Mobile App Header */
         .app-header {
             background-color: var(--primary-orange);
             color: white;
-            padding: 20px;
+            padding: 18px;
             text-align: center;
             position: sticky;
             top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        .hotel-name { font-size: 22px; font-weight: 600; letter-spacing: 1px; }
-
-        /* Category Navigation with Images */
+        /* Category Bar with Images */
         .category-nav {
             display: flex;
-            overflow-x: auto;
-            white-space: nowrap;
-            padding: 15px;
-            background: var(--bg-white);
+            justify-content: space-around;
+            padding: 15px 5px;
+            background: white;
             border-bottom: 1px solid #eee;
         }
 
         .category-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            margin-right: 15px;
+            text-align: center;
             cursor: pointer;
-            opacity: 0.6;
+            flex: 1;
             transition: 0.3s;
         }
 
-        .category-item.active { opacity: 1; color: var(--primary-orange); border-bottom: 2px solid var(--primary-orange); }
-
         .cat-img {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             object-fit: cover;
+            border: 2px solid #eee;
             margin-bottom: 5px;
-            border: 2px solid #ddd;
         }
-        
-        .category-item.active .cat-img { border: 2px solid var(--primary-orange); }
 
-        .cat-title { font-size: 11px; font-weight: 600; }
+        .category-item.active .cat-img { border-color: var(--primary-orange); }
+        .category-item.active span { color: var(--primary-orange); font-weight: 600; }
+        .cat-label { font-size: 11px; display: block; color: #666; }
 
         /* Menu List */
-        .menu-container { padding: 15px; padding-bottom: 80px; }
+        .menu-container { padding: 15px; }
 
         .menu-card {
             display: flex;
             background: white;
-            border-radius: 15px;
+            border-radius: 12px;
             margin-bottom: 15px;
-            padding: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid #f1f1f1;
-            position: relative;
+            padding: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid #f0f0f0;
         }
 
         .food-img {
-            width: 100px;
-            height: 100px;
-            border-radius: 12px;
+            width: 85px;
+            height: 85px;
+            border-radius: 10px;
             object-fit: cover;
             margin-right: 15px;
         }
 
         .food-info { flex: 1; }
-        .food-title { font-size: 16px; font-weight: 600; color: var(--primary-orange); margin-bottom: 3px;}
-        .food-desc { font-size: 11px; color: #777; margin: 4px 0; line-height: 1.4; }
-        .food-price { font-size: 15px; font-weight: 600; color: var(--text-dark); margin-top: 5px;}
+        .food-title { font-size: 15px; font-weight: 600; color: var(--primary-orange); }
+        .food-desc { font-size: 11px; color: #777; margin: 3px 0; }
+        .food-price { font-size: 14px; font-weight: 600; color: #222; }
 
-        /* Editable Text Styling for Admin */
-        .editable { cursor: pointer; transition: 0.2s; }
-        .edit-mode .editable { border-bottom: 1px dashed var(--primary-orange); }
-        .edit-mode .editable:hover { background-color: #fff3e0; }
-
-        /* Save Button for Admin */
-        #saveChanges {
+        /* Admin Dashboard UI */
+        #adminPanel {
             display: none;
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            cursor: pointer;
-            z-index: 1001;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); /* Dim background */
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Language Toggle */
-        .lang-switch {
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+        }
+
+        .login-box h2 { margin-bottom: 20px; color: #333; }
+        .login-box input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; }
+        .login-btn { background: var(--primary-orange); color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .cancel-btn { margin-top: 15px; display: inline-block; color: #888; font-size: 13px; cursor: pointer; }
+
+        /* Edit Overlay */
+        .edit-badge { background: #4CAF50; color: white; padding: 5px 10px; border-radius: 5px; font-size: 10px; position: fixed; top: 80px; left: 10px; z-index: 500; display: none; }
+        .editable:focus { outline: 2px solid var(--primary-orange); background: #fff9f0; padding: 2px; }
+
+        /* Language Button */
+        .lang-btn {
             position: fixed;
             bottom: 20px;
             right: 20px;
             background: var(--primary-orange);
             color: white;
-            padding: 10px 15px;
-            border-radius: 50px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 13px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             cursor: pointer;
-            font-size: 12px;
-            z-index: 999;
+            z-index: 500;
         }
-
-        /* Hidden Admin Panel Style */
-        #adminPanel {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.98); z-index: 2000; padding: 20px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        #adminPanel.visible { display: flex; }
-
     </style>
 </head>
 <body id="mainBody">
 
-    <header class="app-header">
-        <div class="hotel-name editable" id="hotelName" contenteditable="false">SGS HOTEL</div>
-    </header>
+<div class="edit-badge" id="editBadge">EDIT MODE ACTIVE</div>
 
-    <nav class="category-nav">
-        <div class="category-item active" onclick="showCategory('breakfast', this)">
-            <img src="https://via.placeholder.com/45?text=B" class="cat-img" alt="Breakfast">
-            <span class="cat-title">Breakfast</span>
-        </div>
-        <div class="category-item" onclick="showCategory('lunchdinner', this)">
-            <img src="https://via.placeholder.com/45?text=L/D" class="cat-img" alt="Lunch/Dinner">
-            <span class="cat-title">Lunch/Dinner</span>
-        </div>
-        <div class="category-item" onclick="showCategory('beverages', this)">
-            <img src="https://via.placeholder.com/45?text=D" class="cat-img" alt="Beverages">
-            <span class="cat-title">Beverages</span>
-        </div>
-    </nav>
+<header class="app-header">
+    <h1 class="editable" id="hotelTitle" contenteditable="false">SGS HOTEL</h1>
+</header>
 
-    <main class="menu-container" id="menuListing">
-        </main>
+<div class="category-nav">
+    <div class="category-item active" onclick="filterCategory('breakfast', this)">
+        <img src="https://images.unsplash.com/photo-1525351484163-7529414344d8?w=100" class="cat-img">
+        <span class="cat-label">Breakfast</span>
+    </div>
+    <div class="category-item" onclick="filterCategory('lunchdinner', this)">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100" class="cat-img">
+        <span class="cat-label">Lunch/Dinner</span>
+    </div>
+    <div class="category-item" onclick="filterCategory('beverages', this)">
+        <img src="https://images.unsplash.com/photo-1544145945-f904253d0c7b?w=100" class="cat-img">
+        <span class="cat-label">Beverages</span>
+    </div>
+</div>
 
-    <div class="lang-switch" onclick="switchLanguage()">English / አማርኛ</div>
-    
-    <button id="saveChanges" onclick="saveAdminEdits()">💾 Save Changes</button>
-
-    <div style="font-size: 9px; opacity:0.1; cursor:pointer;" onclick="openAdmin()">Admin</div>
-
-    <div id="adminPanel">
-        <h2>Admin Login</h2>
-        <input type="text" id="adminUser" placeholder="Username" style="width:250px; padding:10px; margin:10px 0;">
-        <input type="password" id="adminPass" placeholder="Password" style="width:250px; padding:10px; margin:10px 0;">
-        <button onclick="loginAdmin()" style="background:var(--primary-orange); color:white; border:none; padding:10px 20px; width:250px;">Login</button>
-        <button onclick="closeAdmin()" style="margin-top:10px; border:none; background:none;">Cancel</button>
+<div class="menu-container" id="menuList">
     </div>
 
-    <script>
-        let currentLang = 'en';
-        let fullMenuData = [];
-        let inEditMode = false;
+<div class="lang-btn" onclick="toggleLanguage()">English / አማርኛ</div>
 
-        // --- 1. Load Menu on Startup ---
-        window.onload = function() {
-            loadMenu();
-        };
+<div id="adminPanel">
+    <div class="login-box">
+        <h2>Admin Login</h2>
+        <input type="text" id="user" placeholder="Username">
+        <input type="password" id="pass" placeholder="Password">
+        <button class="login-btn" onclick="checkLogin()">Login</button>
+        <span class="cancel-btn" onclick="hideAdmin()">Cancel</span>
+    </div>
+</div>
 
-        async function loadMenu() {
-            try {
-                // If admin saved edits locally, use those, else load from JSON
-                const savedMenu = localStorage.getItem('sgsMenu_en'); 
-                if (savedMenu && inEditMode) { // We use stored edit only in edit mode
-                    fullMenuData = JSON.parse(savedMenu);
-                } else {
-                    const response = await fetch(`${currentLang}.json`);
-                    fullMenuData = await response.json();
-                }
-                
-                // Show default category
-                const defaultCat = document.querySelector('.category-nav .category-item.active span').textContent.toLowerCase().replace('/','');
-                renderMenu(defaultCat);
-                
-                // Set page styling
-                if (currentLang === 'am') {
-                    document.getElementById('mainBody').classList.add('lang-am');
-                    document.getElementById('hotelName').textContent = 'ኤስ ጂ ኤስ ሆቴል';
-                } else {
-                    document.getElementById('mainBody').classList.remove('lang-am');
-                    document.getElementById('hotelName').textContent = 'SGS HOTEL';
-                }
-            } catch (error) {
-                console.error("Error loading menu:", error);
-                document.getElementById('menuListing').innerHTML = "<p style='text-align:center; padding:20px;'>Menu loading failed.</p>";
-            }
-        }
+<div onclick="showAdmin()" style="position:fixed; bottom:0; left:0; width:50px; height:50px; opacity:0;"></div>
 
-        // --- 2. Render Menu Card ---
-        function renderMenu(category) {
-            const container = document.getElementById('menuListing');
-            container.innerHTML = ""; // Clear current
+<script>
+    let menuData = [];
+    let currentLang = 'en';
 
-            const filteredMenu = fullMenuData.filter(item => item.cat === category);
+    async function loadData() {
+        const response = await fetch(`${currentLang}.json`);
+        menuData = await response.json();
+        renderMenu('breakfast');
+    }
 
-            filteredMenu.forEach(item => {
-                const card = `
-                    <div class="menu-card" data-id="${item.id}">
-                        <img src="${item.img}" class="food-img" alt="${item.title}">
-                        <div class="food-info">
-                            <div class="food-title ${inEditMode ? 'editable' : ''}" ${inEditMode ? 'contenteditable="true"' : ''} onclick="enableEditField(this)">${item.title}</div>
-                            <div class="food-desc ${inEditMode ? 'editable' : ''}" ${inEditMode ? 'contenteditable="true"' : ''}>${item.desc}</div>
-                            <div class="food-price ${inEditMode ? 'editable' : ''}" ${inEditMode ? 'contenteditable="true"' : ''}>${item.price} ETB</div>
-                        </div>
+    function renderMenu(cat) {
+        const list = document.getElementById('menuList');
+        list.innerHTML = "";
+        const filtered = menuData.filter(item => item.cat === cat);
+        
+        filtered.forEach(item => {
+            list.innerHTML += `
+                <div class="menu-card">
+                    <img src="${item.img}" class="food-img">
+                    <div class="food-info">
+                        <div class="food-title editable" contenteditable="false">${item.title}</div>
+                        <div class="food-desc editable" contenteditable="false">${item.desc}</div>
+                        <div class="food-price editable" contenteditable="false">${item.price} ETB</div>
                     </div>
-                `;
-                container.insertAdjacentHTML('beforeend', card);
-            });
+                </div>
+            `;
+        });
+    }
+
+    function filterCategory(cat, el) {
+        document.querySelectorAll('.category-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        renderMenu(cat);
+    }
+
+    function toggleLanguage() {
+        currentLang = (currentLang === 'en') ? 'am' : 'en';
+        loadData();
+    }
+
+    function showAdmin() { document.getElementById('adminPanel').style.display = 'flex'; }
+    function hideAdmin() { document.getElementById('adminPanel').style.display = 'none'; }
+
+    function checkLogin() {
+        const u = document.getElementById('user').value;
+        const p = document.getElementById('pass').value;
+        if(u === "admin" && p === "sgs") {
+            enableEdit();
+            hideAdmin();
+        } else {
+            alert("Wrong credentials");
         }
+    }
 
-        // --- 3. Switch Language ---
-        function switchLanguage() {
-            currentLang = (currentLang === 'en' ? 'am' : 'en');
-            loadMenu();
-        }
+    function enableEdit() {
+        document.getElementById('editBadge').style.display = 'block';
+        document.querySelectorAll('.editable').forEach(el => {
+            el.setAttribute('contenteditable', 'true');
+        });
+        alert("Admin Mode: Tap any text to edit. Changes save locally for now.");
+    }
 
-        // --- 4. Switch Category ---
-        function showCategory(category, element) {
-            // Remove active from all
-            document.querySelectorAll('.category-item').forEach(el => el.classList.remove('active'));
-            // Add active to clicked
-            element.classList.add('active');
-            renderMenu(category);
-        }
-
-        // ==========================================
-        //         ADMIN DASHBOARD LOGIC (EDITING)
-        // ==========================================
-
-        function openAdmin() {
-            document.getElementById('adminPanel').classList.add('visible');
-        }
-
-        function closeAdmin() {
-            document.getElementById('adminPanel').classList.remove('visible');
-        }
-
-        function loginAdmin() {
-            const u = document.getElementById('adminUser').value;
-            const p = document.getElementById('adminPass').value;
-            // Username: admin | Password: sgs
-            if (u === "admin" && p === "sgs") {
-                activateEditMode();
-                closeAdmin();
-            } else {
-                alert("Wrong Username or Password");
-            }
-        }
-
-        function activateEditMode() {
-            inEditMode = true;
-            document.body.classList.add('edit-mode');
-            
-            // Allow hotel name to be edited
-            const hotelName = document.getElementById('hotelName');
-            hotelName.setAttribute('contenteditable', 'true');
-            hotelName.classList.add('editable');
-            
-            // Show Save button
-            document.getElementById('saveChanges').style.display = 'block';
-            document.getElementById('hotelName').style.display = 'none'; // hide lang switch to prevent conflict
-            
-            // Re-render menu to enable editing
-            loadMenu();
-            alert("Edit Mode Active. You can now tap on any text to change it.");
-        }
-
-        function enableEditField(element) {
-            if (inEditMode) {
-                element.focus();
-            }
-        }
-
-        function saveAdminEdits() {
-            if (!inEditMode) return;
-            
-            // We only save the English menu logic for this example. Amharic requires more complex logic.
-            if(currentLang === 'am'){
-                alert("You are currently viewing Amharic. To update Amharic texts, we need to create a dedicated editing dashboard. This free version only supports updating the master English menu.");
-                return;
-            }
-
-            const updatedMenu = [...fullMenuData]; // Copy current menu state
-
-            // Collect all menu cards and their data
-            document.querySelectorAll('.menu-card').forEach(card => {
-                const id = parseInt(card.getAttribute('data-id'));
-                const title = card.querySelector('.food-title').textContent;
-                const desc = card.querySelector('.food-desc').textContent;
-                const priceStr = card.querySelector('.food-price').textContent.replace(' ETB', '');
-
-                // Find item in data array
-                const itemIndex = updatedMenu.findIndex(item => item.id === id);
-                if (itemIndex > -1) {
-                    updatedMenu[itemIndex].title = title;
-                    updatedMenu[itemIndex].desc = desc;
-                    updatedMenu[itemIndex].price = priceStr;
-                }
-            });
-
-            // Save to browser's Local Storage (Zero-Cost approach)
-            localStorage.setItem('sgsMenu_en', JSON.stringify(updatedMenu));
-            alert("Changes saved to your phone/browser. If you scan this from another phone, you won't see these changes. This free setup only saves changes to one device. We need a Database (like Firebase) to save changes permanently for all guests.");
-            
-            // Revert edit mode
-            inEditMode = false;
-            document.body.classList.remove('edit-mode');
-            document.getElementById('saveChanges').style.display = 'none';
-            document.getElementById('hotelName').style.display = 'block';
-            loadMenu();
-        }
-    </script>
+    loadData();
+</script>
 </body>
 </html>
