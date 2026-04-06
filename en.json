@@ -1,0 +1,12 @@
+﻿[
+  { "id": 1, "cat": "breakfast", "title": "Kitfo Royale", "img": "https://via.placeholder.com/100?text=Kitfo", "desc": "Minced beef, nitir kibe (spiced butter), mitmita spice. Served raw, rare, or medium-rare.", "price": "12.00" },
+  { "id": 2, "cat": "lunchdinner", "title": "Golden Dorowet", "img": "https://via.placeholder.com/100?text=Dorowet", "desc": "Authentic spicy chicken stew (doro wet) with red onions, nitir kibe, berbere, and boiled egg.", "price": "14.00" },
+  { "id": 3, "cat": "lunchdinner", "title": "Injera Platter Beyayentu", "img": "https://via.placeholder.com/100?text=Beyayentu", "desc": "Colorful combination of vegetarian (Misir, Shiro, Gomen) and meat wots on a single injera.", "price": "18.00" },
+  { "id": 4, "cat": "lunchdinner", "title": "Special Tegabino Shiro", "img": "https://via.placeholder.com/100?text=Shiro", "desc": "Velvety, simmered chickpea and pea flour (Shiro), spiced butter, chili, red onion.", "price": "10.00" },
+  { "id": 5, "cat": "lunchdinner", "title": "Classic Burger Combo", "img": "https://via.placeholder.com/100?text=Burger", "desc": "Juicy grilled beef patty, tomato, lettuce, special sauce. Served with crispy fries.", "price": "16.00" },
+  { "id": 6, "cat": "lunchdinner", "title": "Artisanal Pizza Margarita", "img": "https://via.placeholder.com/100?text=Pizza", "desc": "Hand-stretched dough, fresh tomato sauce, mozzarella, basil, olive oil.", "price": "13.00" },
+  { "id": 7, "cat": "beverages", "title": "Ethiopian Macchiato", "img": "https://via.placeholder.com/100?text=Macchiato", "desc": "Strong local espresso layered with velvety steamed milk. Classic SGS taste.", "price": "4.00" },
+  { "id": 8, "cat": "beverages", "title": "Fresh Fruit Juice Mix", "img": "https://via.placeholder.com/100?text=Juice", "desc": "Refreshing blend of local fruits (Avocado, Papaya, Mango). No sugar added.", "price": "3.00" },
+  { "id": 9, "cat": "beverages", "title": "Local St. George Beer", "img": "https://via.placeholder.com/100?text=Beer", "desc": "Enjoy a crisp, cold bottle of Ethiopia's favorite beer (Bati or George).", "price": "6.00" },
+  { "id": 10, "cat": "beverages", "title": "Premium Spiced Tea (Shai)", "img": "https://via.placeholder.com/100?text=Tea", "desc": "Warming black tea infused with local spices (Cardamom, Cinnamon, Cloves).", "price": "3.00" }
+]

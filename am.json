@@ -1,0 +1,12 @@
+﻿[
+  { "id": 1, "cat": "breakfast", "title": "ክትፎ ሮያል", "img": "https://via.placeholder.com/100?text=ክትፎ", "desc": "የተከተፈ የበሬ ሥጋ፣ የቅመም ቅቤ፣ ሚጥሚጣ። በጥሬው፣ ለብ ባለ ወይንም በደንብ በበሰለ የሚቀርብ።", "price": "12.00" },
+  { "id": 2, "cat": "lunchdinner", "title": "ወርቃማው ዶሮወጥ", "img": "https://via.placeholder.com/100?text=ዶሮወጥ", "desc": "በቀይ ሽንኩርት፣ የቅመም ቅቤ፣ በርበሬ እና በተቀቀለ እንቁላል የሚሰራ ትክክለኛ የዶሮ ወጥ።", "price": "14.00" },
+  { "id": 3, "cat": "lunchdinner", "title": "የእንጀራ ማዕድ በያይነቱ", "img": "https://via.placeholder.com/100?text=በያይነቱ", "desc": "በአንድ እንጀራ ላይ የሚቀርብ የአትክልት (ምስር፣ ሽሮ፣ ጎመን) እና የስጋ ወጦች ጥምረት።", "price": "18.00" },
+  { "id": 4, "cat": "lunchdinner", "title": "ልዩ ተጋቢኖ ሽሮ", "img": "https://via.placeholder.com/100?text=ሽሮ", "desc": "ለስላሳ፣ የቀቀለ የሽሮ፣ የቅመም ቅቤ፣ ቃሪያ፣ ቀይ ሽንኩርት።", "price": "10.00" },
+  { "id": 5, "cat": "lunchdinner", "title": "ክላሲክ በርገር ኮምቦ", "img": "https://via.placeholder.com/100?text=በርገር", "desc": "በከሰል የተጠበሰ የበሬ ስጋ፣ ቲማቲም፣ ሰላጣ፣ ልዩ ሶስ። ከቺፕስ ጋር የሚቀርብ።", "price": "16.00" },
+  { "id": 6, "cat": "lunchdinner", "title": "አርቲስናል ፒዛ ማርጋሪታ", "img": "https://via.placeholder.com/100?text=ፒዛ", "desc": "በእጅ የተቦካ ሊጥ፣ የትኩስ ቲማቲም ሶስ፣ ሞዛሬላ፣ በሲል፣ የወይራ ዘይት።", "price": "13.00" },
+  { "id": 7, "cat": "beverages", "title": "የኢትዮጵያ ማኪያቶ", "img": "https://via.placeholder.com/100?text=ማኪያቶ", "desc": "ለስላሳ የፈላ ወተት እና ጠንካራ የሀገር ውስጥ ቡና። ክላሲክ የSGS ጣዕም።", "price": "4.00" },
+  { "id": 8, "cat": "beverages", "title": "የትኩስ ፍራፍሬ ጭማቂ ሚክስ", "img": "https://via.placeholder.com/100?text=ጭማቂ", "desc": "የሀገር ውስጥ ፍራፍሬዎች (አቮካዶ፣ ፓፓያ፣ ማንጎ) ድብልቅ። ስኳር ያልተጨመረበት።", "price": "3.00" },
+  { "id": 9, "cat": "beverages", "title": "የቅዱስ ጊዮርጊስ ቢራ", "img": "https://via.placeholder.com/100?text=ቢራ", "desc": "በረዶ የቀዘቀዘ የኢትዮጵያ ተወዳጅ ቢራ (ባቲ ወይንም ጊዮርጊስ)።", "price": "6.00" },
+  { "id": 10, "cat": "beverages", "title": "ልዩ የቅመም ሻይ", "img": "https://via.placeholder.com/100?text=ሻይ", "desc": "በትኩስ የሀገር ውስጥ ቅመሞች (ኮረሪማ፣ ቀረፋ፣ ቅርንፉድ) የተዘጋጀ ሻይ።", "price": "3.00" }
+]
