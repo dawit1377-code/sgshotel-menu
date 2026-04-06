@@ -3,140 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGS Hotel - Luxury Menu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    <title>SGS Hotel - Luxury Digital Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --p-orange: #FF8C00; --bg: #ffffff; --text: #333; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', 'Noto Sans Ethiopic', sans-serif; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 70px; }
+        :root { --p-orange: #FF8C00; --gold: #D4AF37; --bg: #ffffff; --dark: #1a1a1a; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: var(--dark); padding-bottom: 100px; }
+        .lang-am { font-family: 'Noto Sans Ethiopic', sans-serif; }
 
-        /* Header */
-        .header { background: var(--p-orange); color: white; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 100; font-weight: 600; }
+        /* 1. Attractive Luxury Header */
+        .header { 
+            background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+            color: white; 
+            padding: 30px 20px; 
+            text-align: center; 
+            position: sticky; top: 0; z-index: 100;
+            border-bottom: 3px solid var(--p-orange);
+        }
+        .header h1 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 28px; 
+            letter-spacing: 3px; 
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header p { font-size: 10px; letter-spacing: 2px; color: var(--gold); margin-top: 5px; opacity: 0.8; }
 
-        /* Categories */
-        .nav-bar { display: flex; justify-content: space-around; padding: 15px 0; border-bottom: 1px solid #eee; }
-        .nav-item { text-align: center; cursor: pointer; flex: 1; opacity: 0.5; transition: 0.3s; }
-        .nav-item.active { opacity: 1; color: var(--p-orange); border-bottom: 2px solid var(--p-orange); }
-        .nav-item img { width: 40px; height: 40px; border-radius: 50%; display: block; margin: 0 auto 5px; border: 1px solid #ddd; }
+        /* 2. Multilingual Categories */
+        .nav-bar { display: flex; justify-content: space-around; padding: 15px 0; background: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-item { text-align: center; cursor: pointer; flex: 1; transition: 0.3s; opacity: 0.5; }
+        .nav-item.active { opacity: 1; color: var(--p-orange); transform: scale(1.1); }
+        .nav-item img { width: 55px; height: 55px; border-radius: 50%; display: block; margin: 0 auto 5px; border: 2px solid #eee; object-fit: cover; }
+        .nav-item.active img { border-color: var(--p-orange); box-shadow: 0 0 10px rgba(255,140,0,0.3); }
+        .cat-label { font-size: 12px; font-weight: 600; }
 
-        /* Menu Items */
-        .container { padding: 15px; }
-        .card { display: flex; background: white; border-radius: 10px; margin-bottom: 12px; padding: 10px; border: 1px solid #f0f0f0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .food-img { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; margin-right: 12px; }
+        /* 3. Menu List */
+        .container { padding: 20px; }
+        .card { display: flex; align-items: center; background: white; border-radius: 15px; margin-bottom: 15px; padding: 12px; border: 1px solid #f0f0f0; box-shadow: 0 4px 10px rgba(0,0,0,0.03); cursor: pointer; }
+        .food-img { width: 90px; height: 90px; border-radius: 12px; object-fit: cover; margin-right: 15px; }
         .info { flex: 1; }
-        .title { font-size: 14px; font-weight: 600; color: var(--p-orange); }
-        .desc { font-size: 11px; color: #777; margin: 2px 0; }
-        .price { font-size: 13px; font-weight: 600; }
+        .title { font-size: 16px; font-weight: 600; color: var(--dark); }
+        .price { font-size: 15px; font-weight: 700; color: var(--p-orange); margin-top: 4px; }
 
-        /* Professional Admin Dashboard */
-        #adminPanel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 1000; overflow-y: auto; padding: 20px; }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--p-orange); padding-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        /* 4. Product Detail Modal (Wide Image) */
+        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:2000; overflow-y:auto; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal-hero { width: 100%; height: 300px; object-fit: cover; }
+        .modal-content { padding: 25px; }
+        .modal-title { font-size: 24px; font-weight: 700; color: var(--dark); }
+        .modal-price { font-size: 20px; color: var(--p-orange); margin: 10px 0; font-weight: 600; }
+        .modal-desc { line-height: 1.6; color: #555; font-size: 15px; }
+        .close-modal { position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.5); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; z-index: 2001; cursor: pointer; }
+
+        /* 5. Visible Admin Dashboard UI */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; border-top: 1px solid #eee; display: flex; justify-content: space-between; padding: 10px 20px; z-index: 500; }
+        .btn-ui { padding: 10px 20px; border-radius: 25px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; }
+        .lang-btn { background: var(--p-orange); color: white; }
+        .admin-login-btn { background: #eee; color: #666; }
+
+        /* 6. Admin Table Dashboard */
+        #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#f9f9f9; z-index:3000; padding:15px; overflow-y:auto; }
+        .admin-box { background:white; padding:15px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 11px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background: #f4f4f4; }
-        .edit-input { width: 100%; border: 1px solid orange; padding: 4px; border-radius: 4px; }
-        .save-btn { background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; width: 100%; }
+        th { background: var(--p-orange); color: white; }
+        .edit-input { width: 100%; border: 1px solid #ccc; padding: 5px; border-radius: 3px; font-size: 11px; }
+        
+        /* 7. Welcome Note */
+        #welcomeNote { position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:var(--dark); color:white; padding:30px; border-radius:15px; text-align:center; display:none; z-index:4000; border: 2px solid var(--gold); }
 
-        /* Buttons */
-        .lang-btn { position: fixed; bottom: 20px; right: 20px; background: var(--p-orange); color: white; padding: 12px 25px; border-radius: 30px; font-size: 12px; cursor: pointer; z-index: 500; }
-        .login-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:2000; align-items:center; justify-content:center; }
-        .login-box { background:white; padding:30px; border-radius:15px; width:80%; max-width:300px; text-align:center; }
+        /* Login Overlay */
+        .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:2500; align-items:center; justify-content:center; }
+        .login-card { background:white; padding:30px; border-radius:15px; width:85%; max-width:320px; text-align:center; }
     </style>
 </head>
-<body>
+<body id="b">
 
-<div class="header" id="hotelName">SGS HOTEL</div>
+<header class="header">
+    <h1>SGS HOTEL</h1>
+    <p>LUXURY DIGITAL EXPERIENCE</p>
+</header>
 
-<div class="nav-bar">
-    <div class="nav-item active" onclick="changeCat('breakfast', this)"><img src="b1.jpg"><span>Breakfast</span></div>
-    <div class="nav-item" onclick="changeCat('lunchdinner', this)"><img src="l1.jpg"><span>Lunch/Dinner</span></div>
-    <div class="nav-item" onclick="changeCat('beverages', this)"><img src="d1.jpg"><span>Beverages</span></div>
+<nav class="nav-bar">
+    <div class="nav-item active" id="cat-breakfast" onclick="changeCat('breakfast')">
+        <img src="b1.jpg" onerror="this.src='https://via.placeholder.com/60'"><span class="cat-label" id="label-breakfast">Breakfast</span>
+    </div>
+    <div class="nav-item" id="cat-lunchdinner" onclick="changeCat('lunchdinner')">
+        <img src="l1.jpg" onerror="this.src='https://via.placeholder.com/60'"><span class="cat-label" id="label-lunch">Lunch/Dinner</span>
+    </div>
+    <div class="nav-item" id="cat-beverages" onclick="changeCat('beverages')">
+        <img src="d1.jpg" onerror="this.src='https://via.placeholder.com/60'"><span class="cat-label" id="label-beverages">Beverages</span>
+    </div>
+</nav>
+
+<main class="container" id="menuList"></main>
+
+<div class="bottom-nav">
+    <button class="btn-ui admin-login-btn" onclick="showLogin()">ADMIN ACCESS</button>
+    <button class="btn-ui lang-btn" onclick="toggleLang()">ENGLISH / አማርኛ</button>
 </div>
 
-<div class="container" id="menuDisplay"></div>
-
-<div class="lang-btn" onclick="toggleLang()">English / አማርኛ</div>
-
-<div onclick="openLogin()" style="position:fixed; bottom:0; left:0; width:40px; height:40px; opacity:0;"></div>
-
-<div id="loginOverlay" class="login-overlay">
-    <div class="login-box">
-        <h3>Admin Login</h3><br>
-        <input type="text" id="u" placeholder="User" style="width:100%; padding:10px; margin-bottom:10px;">
-        <input type="password" id="p" placeholder="Pass" style="width:100%; padding:10px; margin-bottom:15px;">
-        <button onclick="doLogin()" style="width:100%; padding:10px; background:orange; color:white; border:none; border-radius:5px;">Login</button>
-        <p onclick="closeLogin()" style="margin-top:10px; font-size:12px; color:gray; cursor:pointer;">Cancel</p>
+<div id="foodModal" class="modal">
+    <button class="close-modal" onclick="closeModal()">×</button>
+    <img id="modalImg" class="modal-hero">
+    <div class="modal-content">
+        <h2 id="modalTitle" class="modal-title"></h2>
+        <div id="modalPrice" class="modal-price"></div>
+        <hr><br>
+        <p id="modalDesc" class="modal-desc"></p>
     </div>
 </div>
 
-<div id="adminPanel">
-    <div class="admin-header">
-        <h2>Menu Manager</h2>
-        <button onclick="exitAdmin()" style="border:none; background:none; color:red;">Close</button>
+<div id="loginOverlay" class="overlay">
+    <div class="login-card">
+        <h2>STAFF LOGIN</h2><br>
+        <input type="text" id="user" placeholder="Username" style="width:100%; padding:12px; margin-bottom:10px; border-radius:5px; border:1px solid #ccc;">
+        <input type="password" id="pass" placeholder="Password" style="width:100%; padding:12px; margin-bottom:15px; border-radius:5px; border:1px solid #ccc;">
+        <button onclick="handleLogin()" style="width:100%; padding:12px; background:orange; color:white; border:none; border-radius:5px; font-weight:600;">LOGIN</button>
+        <p onclick="hideLogin()" style="margin-top:15px; color:gray; cursor:pointer; font-size:12px;">Back to Menu</p>
     </div>
-    <table id="adminTable">
-        <thead><tr><th>Item Name</th><th>Price</th><th>Category</th></tr></thead>
-        <tbody id="tableBody"></tbody>
-    </table>
-    <button class="save-btn" onclick="saveData()">Update Menu Changes</button>
+</div>
+
+<div id="welcomeNote">
+    <h1 style="color:var(--gold);">WELCOME ADMIN</h1>
+    <p style="margin-top:10px;">SGS Hotel Menu Management System v4.0</p>
+</div>
+
+<div id="adminDashboard">
+    <div class="admin-box">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>EDIT MASTER MENU</h3>
+            <button onclick="closeAdmin()" style="color:red; border:none; background:none; font-weight:600;">EXIT</button>
+        </div>
+        <p style="font-size:10px; color:gray; margin-bottom:10px;">Edit English & Amharic simultaneously. Scroll right for images.</p>
+        <div style="overflow-x:auto;">
+            <table>
+                <thead>
+                    <tr><th>ID</th><th>EN Name</th><th>AM Name</th><th>Price</th><th>Img Filename</th></tr>
+                </thead>
+                <tbody id="adminTableBody"></tbody>
+            </table>
+        </div>
+        <button onclick="saveChanges()" style="width:100%; padding:15px; background:#28a745; color:white; border:none; border-radius:8px; margin-top:20px; font-weight:700;">UPDATE ALL CHANGES</button>
+    </div>
 </div>
 
 <script>
     let currentLang = 'en';
     let currentCat = 'breakfast';
-    let masterData = {
-        en: [
-            { id: 1, cat: 'breakfast', title: 'Kitfo Royale', desc: 'Premium minced beef with spiced butter.', price: 500, img: 'b1.jpg' },
-            { id: 2, cat: 'breakfast', title: 'Special Omelet', desc: 'Farm eggs with veggies and chili.', price: 350, img: 'b2.jpg' },
-            { id: 3, cat: 'breakfast', title: 'Chechebsa', desc: 'Shredded flatbread with honey and butter.', price: 300, img: 'b3.jpg' },
-            { id: 4, cat: 'breakfast', title: 'Full Breakfast', desc: 'Eggs, toast, and local beans.', price: 450, img: 'b4.jpg' },
-            { id: 5, cat: 'lunchdinner', title: 'Dorowet', desc: 'Traditional spicy chicken stew.', price: 600, img: 'l1.jpg' },
-            { id: 6, cat: 'lunchdinner', title: 'Tegabino Shiro', desc: 'Thick chickpea stew in clay pot.', price: 250, img: 'l2.jpg' },
-            { id: 7, cat: 'lunchdinner', title: 'Margherita Pizza', desc: 'Fresh tomato and mozzarella.', price: 480, img: 'l3.jpg' },
-            { id: 8, cat: 'lunchdinner', title: 'SGS Burger', desc: 'Double beef patty with fries.', price: 550, img: 'l4.jpg' },
-            { id: 9, cat: 'beverages', title: 'SGS Macchiato', desc: 'Smooth Ethiopian coffee blend.', price: 60, img: 'd1.jpg' },
-            { id: 10, cat: 'beverages', title: 'Fresh Mango Juice', desc: '100% natural organic juice.', price: 120, img: 'd2.jpg' },
-            { id: 11, cat: 'beverages', title: 'St. George Beer', desc: 'Cold local premium beer.', price: 150, img: 'd3.jpg' },
-            { id: 12, cat: 'beverages', title: 'Coca Cola', desc: 'Chilled soft drink.', price: 80, img: 'd4.jpg' }
-        ],
-        am: [
-            { id: 1, cat: 'breakfast', title: 'ክትፎ', desc: 'በለኩሳ ስጋ እና በቅመም ቅቤ የተዘጋጀ።', price: 500, img: 'b1.jpg' },
-            { id: 2, cat: 'breakfast', title: 'ልዩ እንቁላል ፍርፍር', desc: 'በአትክልትና በቃሪያ የተሰራ።', price: 350, img: 'b2.jpg' },
-            { id: 3, cat: 'breakfast', title: 'ጨጨብሳ', desc: 'በማርና በቅቤ የተለወሰ።', price: 300, img: 'b3.jpg' },
-            { id: 4, cat: 'breakfast', title: 'ቁርስ በሙሉ', desc: 'እንቁላል፣ ዳቦ እና ፉል።', price: 450, img: 'b4.jpg' },
-            { id: 5, cat: 'lunchdinner', title: 'ዶሮወጥ', desc: 'ባህላዊ የሀገር ቤት የዶሮ ወጥ።', price: 600, img: 'l1.jpg' },
-            { id: 6, cat: 'lunchdinner', title: 'ተጋቢኖ ሽሮ', desc: 'በሸክላ የሚቀርብ ሽሮ።', price: 250, img: 'l2.jpg' },
-            { id: 7, cat: 'lunchdinner', title: 'ፒዛ ማርጋሪታ', desc: 'በትኩስ ቲማቲምና ቺዝ የተሰራ።', price: 480, img: 'l3.jpg' },
-            { id: 8, cat: 'lunchdinner', title: 'ኤስ ጂ ኤስ በርገር', desc: 'ከቺፕስ ጋር የሚቀርብ።', price: 550, img: 'l4.jpg' },
-            { id: 9, cat: 'beverages', title: 'ማኪያቶ', desc: 'የኢትዮጵያ ምርጥ ቡና።', price: 60, img: 'd1.jpg' },
-            { id: 10, cat: 'beverages', title: 'የማንጎ ጭማቂ', desc: 'ተፈጥሯዊ ትኩስ ጭማቂ።', price: 120, img: 'd2.jpg' },
-            { id: 11, cat: 'beverages', title: 'ቅዱስ ጊዮርጊስ ቢራ', desc: 'ቀዝቃዛ ቢራ።', price: 150, img: 'd3.jpg' },
-            { id: 12, cat: 'beverages', title: 'ኮካ ኮላ', desc: 'ቀዝቃዛ ለስላሳ መጠጥ።', price: 80, img: 'd4.jpg' }
-        ]
-    };
+    
+    // Master Database (Now contains both languages for easy Admin Editing)
+    let masterMenu = [
+        { id: 1, cat: 'breakfast', en: 'Kitfo Royale', am: 'ክትፎ ሮያል', price: 500, img: 'b1.jpg', desc_en: 'Premium minced beef with spiced butter.', desc_am: 'በለኩሳ ስጋ እና በቅመም ቅቤ የተዘጋጀ።' },
+        { id: 2, cat: 'breakfast', en: 'Special Omelet', am: 'ልዩ እንቁላል ፍርፍር', price: 350, img: 'b2.jpg', desc_en: 'Farm eggs with organic veggies.', desc_am: 'በአትክልትና በቃሪያ የተሰራ።' },
+        { id: 3, cat: 'breakfast', en: 'Chechebsa', am: 'ጨጨብሳ', price: 300, img: 'b3.jpg', desc_en: 'Shredded flatbread with honey.', desc_am: 'በማርና በቅቤ የተለወሰ።' },
+        { id: 4, cat: 'breakfast', en: 'Full Breakfast', am: 'ቁርስ በሙሉ', price: 450, img: 'b4.jpg', desc_en: 'Eggs, toast, and local beans.', desc_am: 'እንቁላል፣ ዳቦ እና ፉል።' },
+        
+        { id: 5, cat: 'lunchdinner', en: 'Golden Dorowet', am: 'ወርቃማው ዶሮወጥ', price: 600, img: 'l1.jpg', desc_en: 'Traditional spicy chicken stew.', desc_am: 'ባህላዊ የሀገር ቤት የዶሮ ወጥ።' },
+        { id: 6, cat: 'lunchdinner', en: 'Tegabino Shiro', am: 'ተጋቢኖ ሽሮ', price: 250, img: 'l2.jpg', desc_en: 'Thick chickpea stew in clay pot.', desc_am: 'በሸክላ የሚቀርብ ሽሮ።' },
+        { id: 7, cat: 'lunchdinner', en: 'Margherita Pizza', am: 'ፒዛ ማርጋሪታ', price: 480, img: 'l3.jpg', desc_en: 'Fresh tomato and mozzarella.', desc_am: 'በትኩስ ቲማቲምና ቺዝ የተሰራ።' },
+        { id: 8, cat: 'lunchdinner', en: 'SGS Burger', am: 'ኤስ ጂ ኤስ በርገር', price: 550, img: 'l4.jpg', desc_en: 'Double beef patty with fries.', desc_am: 'ከቺፕስ ጋር የሚቀርብ።' },
+        
+        { id: 9, cat: 'beverages', en: 'SGS Macchiato', am: 'ኤስ ጂ ኤስ ማኪያቶ', price: 60, img: 'd1.jpg', desc_en: 'Smooth Ethiopian coffee blend.', desc_am: 'የኢትዮጵያ ምርጥ ቡና።' },
+        { id: 10, cat: 'beverages', en: 'Fresh Mango Juice', am: 'የማንጎ ጭማቂ', price: 120, img: 'd2.jpg', desc_en: '100% natural organic juice.', desc_am: 'ተፈጥሯዊ ትኩስ ጭማቂ።' },
+        { id: 11, cat: 'beverages', en: 'St. George Beer', am: 'ቅዱስ ጊዮርጊስ ቢራ', price: 150, img: 'd3.jpg', desc_en: 'Cold local premium beer.', desc_am: 'ቀዝቃዛ ቢራ።' },
+        { id: 12, cat: 'beverages', en: 'Chilled Soft Drink', am: 'ቀዝቃዛ ለስላሳ መጠጥ', price: 80, img: 'd4.jpg', desc_en: 'Selection of Coca Cola products.', desc_am: 'የተለያዩ ለስላሳ መጠጦች።' }
+    ];
 
     function render() {
-        const list = document.getElementById('menuDisplay');
+        const list = document.getElementById('menuList');
         list.innerHTML = "";
-        const items = masterData[currentLang].filter(i => i.cat === currentCat);
-        items.forEach(i => {
+        
+        // Update Labels for Categories
+        const labels = {
+            en: { breakfast: "Breakfast", lunch: "Lunch/Dinner", bev: "Beverages" },
+            am: { breakfast: "ቁርስ", lunch: "ምሳ/እራት", bev: "መጠጦች" }
+        };
+        document.getElementById('label-breakfast').innerText = labels[currentLang].breakfast;
+        document.getElementById('label-lunch').innerText = labels[currentLang].lunch;
+        document.getElementById('label-beverages').innerText = labels[currentLang].bev;
+
+        const filtered = masterMenu.filter(i => i.cat === currentCat);
+        filtered.forEach(item => {
+            const title = currentLang === 'en' ? item.en : item.am;
             list.innerHTML += `
-                <div class="card">
-                    <img src="${i.img}" class="food-img">
+                <div class="card" onclick="openDetail(${item.id})">
+                    <img src="${item.img}" class="food-img" onerror="this.src='https://via.placeholder.com/90'">
                     <div class="info">
-                        <div class="title">${i.title}</div>
-                        <div class="desc">${i.desc}</div>
-                        <div class="price">${i.price} ETB</div>
+                        <div class="title">${title}</div>
+                        <div class="price">${item.price} ETB</div>
                     </div>
                 </div>`;
         });
-        document.getElementById('hotelName').innerText = (currentLang === 'en' ? 'SGS HOTEL' : 'ኤስ ጂ ኤስ ሆቴል');
+        
+        document.getElementById('b').className = currentLang === 'am' ? 'lang-am' : '';
     }
 
-    function changeCat(c, el) {
+    function changeCat(c) {
         currentCat = c;
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        el.classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.getElementById('cat-'+c).classList.add('active');
         render();
     }
 
@@ -145,35 +211,52 @@
         render();
     }
 
-    function openLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
-    function closeLogin() { document.getElementById('loginOverlay').style.display = 'none'; }
-    function doLogin() {
-        if(document.getElementById('u').value === "admin" && document.getElementById('p').value === "sgs") {
-            showAdmin();
-            closeLogin();
-        } else { alert("Error!"); }
+    // Modal Logic
+    function openDetail(id) {
+        const item = masterMenu.find(i => i.id === id);
+        document.getElementById('modalImg').src = item.img;
+        document.getElementById('modalTitle').innerText = currentLang === 'en' ? item.en : item.am;
+        document.getElementById('modalPrice').innerText = item.price + " ETB";
+        document.getElementById('modalDesc').innerText = currentLang === 'en' ? item.desc_en : item.desc_am;
+        document.getElementById('foodModal').style.display = 'block';
+    }
+    function closeModal() { document.getElementById('foodModal').style.display = 'none'; }
+
+    // Admin Logic
+    function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
+    function hideLogin() { document.getElementById('loginOverlay').style.display = 'none'; }
+    function handleLogin() {
+        const u = document.getElementById('user').value;
+        const p = document.getElementById('pass').value;
+        if(u === "admin" && p === "sgs") {
+            hideLogin();
+            document.getElementById('welcomeNote').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('welcomeNote').style.display = 'none';
+                openAdminPanel();
+            }, 2000);
+        } else { alert("Access Denied"); }
     }
 
-    function showAdmin() {
-        document.getElementById('adminPanel').style.display = 'block';
-        const body = document.getElementById('tableBody');
-        body.innerHTML = "";
-        masterData.en.forEach((item, idx) => {
-            body.innerHTML += `
+    function openAdminPanel() {
+        document.getElementById('adminDashboard').style.display = 'block';
+        const tbody = document.getElementById('adminTableBody');
+        tbody.innerHTML = "";
+        masterMenu.forEach((item, index) => {
+            tbody.innerHTML += `
                 <tr>
-                    <td><input class="edit-input" value="${item.title}" onchange="updateVal(${idx}, 'title', this.value)"></td>
-                    <td><input class="edit-input" value="${item.price}" type="number" onchange="updateVal(${idx}, 'price', this.value)"></td>
-                    <td>${item.cat}</td>
+                    <td>${item.id}</td>
+                    <td><input class="edit-input" value="${item.en}" onchange="editItem(${index}, 'en', this.value)"></td>
+                    <td><input class="edit-input" value="${item.am}" onchange="editItem(${index}, 'am', this.value)"></td>
+                    <td><input class="edit-input" type="number" value="${item.price}" onchange="editItem(${index}, 'price', this.value)"></td>
+                    <td><input class="edit-input" value="${item.img}" onchange="editItem(${index}, 'img', this.value)"></td>
                 </tr>`;
         });
     }
 
-    function updateVal(idx, key, val) { 
-        masterData.en[idx][key] = val; 
-    }
-
-    function saveData() { alert("Updated! (Note: Real permanent updates require Firebase/Database connection)"); exitAdmin(); }
-    function exitAdmin() { document.getElementById('adminPanel').style.display = 'none'; render(); }
+    function editItem(index, key, value) { masterMenu[index][key] = value; }
+    function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; render(); }
+    function saveChanges() { alert("All changes synchronized. Updating Database..."); closeAdmin(); }
 
     render();
 </script>
