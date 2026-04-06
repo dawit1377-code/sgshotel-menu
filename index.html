@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGS Hotel - Luxury Digital Menu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-orange: #FF8C00;
@@ -13,9 +13,12 @@
             --light-gray: #f8f9fa;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-
-        body { background-color: var(--bg-white); color: var(--text-dark); overflow-x: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { background-color: var(--bg-white); color: var(--text-dark); overflow-x: hidden; font-family: 'Poppins', sans-serif;}
+        
+        /* Apply Ethiopic font when language switches */
+        body.lang-am { font-family: 'Noto Sans Ethiopic', sans-serif; }
 
         /* Mobile Header */
         .app-header {
@@ -31,7 +34,7 @@
 
         .hotel-name { font-size: 22px; font-weight: 600; letter-spacing: 1px; }
 
-        /* Category Navigation (Horizontal Scroll) */
+        /* Category Navigation with Images */
         .category-nav {
             display: flex;
             overflow-x: auto;
@@ -42,23 +45,33 @@
         }
 
         .category-item {
-            padding: 8px 20px;
-            margin-right: 10px;
-            background: var(--light-gray);
-            border-radius: 20px;
-            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            margin-right: 15px;
             cursor: pointer;
+            opacity: 0.6;
             transition: 0.3s;
-            border: 1px solid transparent;
         }
 
-        .category-item.active {
-            background: var(--primary-orange);
-            color: white;
+        .category-item.active { opacity: 1; color: var(--primary-orange); border-bottom: 2px solid var(--primary-orange); }
+
+        .cat-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 5px;
+            border: 2px solid #ddd;
         }
+        
+        .category-item.active .cat-img { border: 2px solid var(--primary-orange); }
+
+        .cat-title { font-size: 11px; font-weight: 600; }
 
         /* Menu List */
-        .menu-container { padding: 15px; }
+        .menu-container { padding: 15px; padding-bottom: 80px; }
 
         .menu-card {
             display: flex;
@@ -68,6 +81,7 @@
             padding: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             border: 1px solid #f1f1f1;
+            position: relative;
         }
 
         .food-img {
@@ -79,9 +93,29 @@
         }
 
         .food-info { flex: 1; }
-        .food-title { font-size: 16px; font-weight: 600; color: var(--primary-orange); }
-        .food-desc { font-size: 12px; color: #777; margin: 4px 0; }
-        .food-price { font-size: 15px; font-weight: 600; color: var(--text-dark); }
+        .food-title { font-size: 16px; font-weight: 600; color: var(--primary-orange); margin-bottom: 3px;}
+        .food-desc { font-size: 11px; color: #777; margin: 4px 0; line-height: 1.4; }
+        .food-price { font-size: 15px; font-weight: 600; color: var(--text-dark); margin-top: 5px;}
+
+        /* Editable Text Styling for Admin */
+        .editable { cursor: pointer; transition: 0.2s; }
+        .edit-mode .editable { border-bottom: 1px dashed var(--primary-orange); }
+        .edit-mode .editable:hover { background-color: #fff3e0; }
+
+        /* Save Button for Admin */
+        #saveChanges {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 1001;
+        }
 
         /* Language Toggle */
         .lang-switch {
@@ -98,84 +132,217 @@
             z-index: 999;
         }
 
-        /* Admin Login Button (Small & Hidden) */
-        .admin-trigger {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            opacity: 0.3;
-            font-size: 10px;
-            cursor: pointer;
-        }
-
         /* Hidden Admin Panel Style */
         #adminPanel {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: white; z-index: 2000; padding: 20px;
-            overflow-y: auto;
+            background: rgba(255,255,255,0.98); z-index: 2000; padding: 20px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
+        #adminPanel.visible { display: flex; }
 
     </style>
 </head>
-<body>
+<body id="mainBody">
 
     <header class="app-header">
-        <div class="hotel-name">SGS HOTEL</div>
+        <div class="hotel-name editable" id="hotelName" contenteditable="false">SGS HOTEL</div>
     </header>
 
-    <div class="category-nav">
-        <div class="category-item active">Breakfast</div>
-        <div class="category-item">Lunch/Dinner</div>
-        <div class="category-item">Beverages</div>
-    </div>
+    <nav class="category-nav">
+        <div class="category-item active" onclick="showCategory('breakfast', this)">
+            <img src="https://via.placeholder.com/45?text=B" class="cat-img" alt="Breakfast">
+            <span class="cat-title">Breakfast</span>
+        </div>
+        <div class="category-item" onclick="showCategory('lunchdinner', this)">
+            <img src="https://via.placeholder.com/45?text=L/D" class="cat-img" alt="Lunch/Dinner">
+            <span class="cat-title">Lunch/Dinner</span>
+        </div>
+        <div class="category-item" onclick="showCategory('beverages', this)">
+            <img src="https://via.placeholder.com/45?text=D" class="cat-img" alt="Beverages">
+            <span class="cat-title">Beverages</span>
+        </div>
+    </nav>
 
     <main class="menu-container" id="menuListing">
-        <div class="menu-card">
-            <img src="https://via.placeholder.com/100" class="food-img" alt="Special Omelet">
-            <div class="food-info">
-                <div class="food-title">Chief Special Omelet</div>
-                <div class="food-desc">Minced beef, onion, tomato, chili, garlic, pepper, egg.</div>
-                <div class="food-price">500 ETB</div>
-            </div>
-        </div>
         </main>
 
-    <div class="lang-switch" onclick="toggleLang()">English / አማርኛ</div>
+    <div class="lang-switch" onclick="switchLanguage()">English / አማርኛ</div>
     
-    <div class="admin-trigger" onclick="openLogin()">Staff Only</div>
+    <button id="saveChanges" onclick="saveAdminEdits()">💾 Save Changes</button>
+
+    <div style="font-size: 9px; opacity:0.1; cursor:pointer;" onclick="openAdmin()">Admin</div>
 
     <div id="adminPanel">
         <h2>Admin Login</h2>
-        <input type="text" id="user" placeholder="Username" style="width:100%; padding:10px; margin:10px 0;">
-        <input type="password" id="pass" placeholder="Password" style="width:100%; padding:10px; margin:10px 0;">
-        <button onclick="login()" style="background:var(--primary-orange); color:white; border:none; padding:10px 20px; width:100%;">Login</button>
-        <button onclick="closeAdmin()" style="margin-top:10px; width:100%; border:none; background:none;">Cancel</button>
+        <input type="text" id="adminUser" placeholder="Username" style="width:250px; padding:10px; margin:10px 0;">
+        <input type="password" id="adminPass" placeholder="Password" style="width:250px; padding:10px; margin:10px 0;">
+        <button onclick="loginAdmin()" style="background:var(--primary-orange); color:white; border:none; padding:10px 20px; width:250px;">Login</button>
+        <button onclick="closeAdmin()" style="margin-top:10px; border:none; background:none;">Cancel</button>
     </div>
 
     <script>
-        function toggleLang() {
-            alert("Language switching logic to be linked to your Amharic JSON file.");
+        let currentLang = 'en';
+        let fullMenuData = [];
+        let inEditMode = false;
+
+        // --- 1. Load Menu on Startup ---
+        window.onload = function() {
+            loadMenu();
+        };
+
+        async function loadMenu() {
+            try {
+                // If admin saved edits locally, use those, else load from JSON
+                const savedMenu = localStorage.getItem('sgsMenu_en'); 
+                if (savedMenu && inEditMode) { // We use stored edit only in edit mode
+                    fullMenuData = JSON.parse(savedMenu);
+                } else {
+                    const response = await fetch(`${currentLang}.json`);
+                    fullMenuData = await response.json();
+                }
+                
+                // Show default category
+                const defaultCat = document.querySelector('.category-nav .category-item.active span').textContent.toLowerCase().replace('/','');
+                renderMenu(defaultCat);
+                
+                // Set page styling
+                if (currentLang === 'am') {
+                    document.getElementById('mainBody').classList.add('lang-am');
+                    document.getElementById('hotelName').textContent = 'ኤስ ጂ ኤስ ሆቴል';
+                } else {
+                    document.getElementById('mainBody').classList.remove('lang-am');
+                    document.getElementById('hotelName').textContent = 'SGS HOTEL';
+                }
+            } catch (error) {
+                console.error("Error loading menu:", error);
+                document.getElementById('menuListing').innerHTML = "<p style='text-align:center; padding:20px;'>Menu loading failed.</p>";
+            }
         }
 
-        function openLogin() {
-            document.getElementById('adminPanel').style.display = 'block';
+        // --- 2. Render Menu Card ---
+        function renderMenu(category) {
+            const container = document.getElementById('menuListing');
+            container.innerHTML = ""; // Clear current
+
+            const filteredMenu = fullMenuData.filter(item => item.cat === category);
+
+            filteredMenu.forEach(item => {
+                const card = `
+                    <div class="menu-card" data-id="${item.id}">
+                        <img src="${item.img}" class="food-img" alt="${item.title}">
+                        <div class="food-info">
+                            <div class="food-title ${inEditMode ? 'editable' : ''}" ${inEditMode ? 'contenteditable="true"' : ''} onclick="enableEditField(this)">${item.title}</div>
+                            <div class="food-desc ${inEditMode ? 'editable' : ''}" ${inEditMode ? 'contenteditable="true"' : ''}>${item.desc}</div>
+                            <div class="food-price ${inEditMode ? 'editable' : ''}" ${inEditMode ? 'contenteditable="true"' : ''}>${item.price} ETB</div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', card);
+            });
+        }
+
+        // --- 3. Switch Language ---
+        function switchLanguage() {
+            currentLang = (currentLang === 'en' ? 'am' : 'en');
+            loadMenu();
+        }
+
+        // --- 4. Switch Category ---
+        function showCategory(category, element) {
+            // Remove active from all
+            document.querySelectorAll('.category-item').forEach(el => el.classList.remove('active'));
+            // Add active to clicked
+            element.classList.add('active');
+            renderMenu(category);
+        }
+
+        // ==========================================
+        //         ADMIN DASHBOARD LOGIC (EDITING)
+        // ==========================================
+
+        function openAdmin() {
+            document.getElementById('adminPanel').classList.add('visible');
         }
 
         function closeAdmin() {
-            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('adminPanel').classList.remove('visible');
         }
 
-        function login() {
-            const u = document.getElementById('user').value;
-            const p = document.getElementById('pass').value;
-            if(u === "admin" && p === "sgs2026") {
-                alert("Login Successful! Dashboard Loading...");
-                // Here we would trigger the Edit Mode
+        function loginAdmin() {
+            const u = document.getElementById('adminUser').value;
+            const p = document.getElementById('adminPass').value;
+            // Username: admin | Password: sgs
+            if (u === "admin" && p === "sgs") {
+                activateEditMode();
+                closeAdmin();
             } else {
-                alert("Wrong credentials");
+                alert("Wrong Username or Password");
             }
+        }
+
+        function activateEditMode() {
+            inEditMode = true;
+            document.body.classList.add('edit-mode');
+            
+            // Allow hotel name to be edited
+            const hotelName = document.getElementById('hotelName');
+            hotelName.setAttribute('contenteditable', 'true');
+            hotelName.classList.add('editable');
+            
+            // Show Save button
+            document.getElementById('saveChanges').style.display = 'block';
+            document.getElementById('hotelName').style.display = 'none'; // hide lang switch to prevent conflict
+            
+            // Re-render menu to enable editing
+            loadMenu();
+            alert("Edit Mode Active. You can now tap on any text to change it.");
+        }
+
+        function enableEditField(element) {
+            if (inEditMode) {
+                element.focus();
+            }
+        }
+
+        function saveAdminEdits() {
+            if (!inEditMode) return;
+            
+            // We only save the English menu logic for this example. Amharic requires more complex logic.
+            if(currentLang === 'am'){
+                alert("You are currently viewing Amharic. To update Amharic texts, we need to create a dedicated editing dashboard. This free version only supports updating the master English menu.");
+                return;
+            }
+
+            const updatedMenu = [...fullMenuData]; // Copy current menu state
+
+            // Collect all menu cards and their data
+            document.querySelectorAll('.menu-card').forEach(card => {
+                const id = parseInt(card.getAttribute('data-id'));
+                const title = card.querySelector('.food-title').textContent;
+                const desc = card.querySelector('.food-desc').textContent;
+                const priceStr = card.querySelector('.food-price').textContent.replace(' ETB', '');
+
+                // Find item in data array
+                const itemIndex = updatedMenu.findIndex(item => item.id === id);
+                if (itemIndex > -1) {
+                    updatedMenu[itemIndex].title = title;
+                    updatedMenu[itemIndex].desc = desc;
+                    updatedMenu[itemIndex].price = priceStr;
+                }
+            });
+
+            // Save to browser's Local Storage (Zero-Cost approach)
+            localStorage.setItem('sgsMenu_en', JSON.stringify(updatedMenu));
+            alert("Changes saved to your phone/browser. If you scan this from another phone, you won't see these changes. This free setup only saves changes to one device. We need a Database (like Firebase) to save changes permanently for all guests.");
+            
+            // Revert edit mode
+            inEditMode = false;
+            document.body.classList.remove('edit-mode');
+            document.getElementById('saveChanges').style.display = 'none';
+            document.getElementById('hotelName').style.display = 'block';
+            loadMenu();
         }
     </script>
 </body>
