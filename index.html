@@ -45,16 +45,17 @@
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:10px; overflow-y: scroll; }
         .welcome-note { background: #fdf2e9; padding: 15px; border-radius: 10px; border-left: 5px solid var(--p-orange); margin-bottom: 15px; }
         
-        .admin-actions { display: flex; gap: 10px; margin-bottom: 15px; }
-        .add-item-btn { flex: 1; background: #27ae60; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; }
-        .delete-toggle-btn { flex: 1; background: #c0392b; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; }
+        .admin-actions { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
+        .action-btn { flex: 1; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 12px; min-width: 100px; }
+        .btn-add { background: #27ae60; }
+        .btn-move { background: #2980b9; }
+        .btn-del { background: #c0392b; }
 
         .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid #eee; -webkit-overflow-scrolling: touch; }
-        table { width: 100%; border-collapse: collapse; min-width: 1200px; }
+        table { width: 100%; border-collapse: collapse; min-width: 1000px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         .edit-input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; }
-        .preview-box { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; display: block; margin-bottom: 5px; }
-        .del-btn { background: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 4px; }
+        .preview-box { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; }
 
         .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:4000; align-items:center; justify-content:center; }
         .modal { background:white; padding:20px; border-radius:15px; width:90%; max-width:400px; }
@@ -94,36 +95,48 @@
 
     <div class="welcome-note">
         <h4 style="color:var(--dark-orange)">Welcome back, Admin! 👋</h4>
-        <p style="font-size: 13px;">Modify text, change images, or update the list below.</p>
+        <p style="font-size: 13px;">Editing will update the menu globally once saved.</p>
     </div>
 
     <div class="admin-actions">
-        <button class="add-item-btn" onclick="openAddModal()">➕ ADD ITEM</button>
-        <button class="delete-toggle-btn" onclick="toggleDeleteMode()">🗑️ DELETE MODE</button>
+        <button class="action-btn btn-add" onclick="openAddModal()">➕ ADD ITEM</button>
+        <button class="action-btn btn-move" onclick="toggleMoveMode()">🔄 MOVE ITEMS</button>
+        <button class="action-btn btn-del" onclick="toggleDeleteMode()">🗑️ DELETE MODE</button>
     </div>
 
     <div class="table-wrapper">
         <table>
             <thead>
-                <tr><th>Category</th><th>EN Name</th><th>AM Name</th><th>Ingredients</th><th>Price</th><th>Photo</th><th class="del-col" style="display:none">Action</th></tr>
+                <tr>
+                    <th>EN Name</th>
+                    <th>AM Name</th>
+                    <th>Ingredients</th>
+                    <th>Price</th>
+                    <th>Photo</th>
+                    <th id="actionHeader" style="display:none">Action</th>
+                </tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
     
-    <button onclick="saveAndClear()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; margin-top:20px; font-weight:bold; font-size:16px;">💾 SAVE DATABASE CHANGES</button>
+    <button onclick="saveAndClear()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; margin-top:20px; font-weight:bold; font-size:16px;">💾 SAVE & SYNC ALL DEVICES</button>
 </div>
 
 <div id="addModal" class="overlay">
     <div class="modal">
         <h3>New Item</h3>
-        <select id="newCat"><option value="breakfast">Breakfast</option><option value="lunchdinner">Lunch/Dinner</option><option value="beverages">Beverages</option></select>
+        <select id="newCat">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunchdinner">Lunch/Dinner</option>
+            <option value="beverages">Beverages</option>
+        </select>
         <input type="text" id="newEn" placeholder="English Name">
         <input type="text" id="newAm" placeholder="Amharic Name">
         <input type="text" id="newIng" placeholder="Ingredients">
         <input type="number" id="newPrice" placeholder="Price (ETB)">
         <input type="file" onchange="processFile(this, 'temp')">
-        <button onclick="submitNewItem()" style="width:100%; padding:15px; background:#27ae60; color:white; border:none; border-radius:8px; margin-top:15px; font-weight:bold;">ADD ITEM</button>
+        <button onclick="submitNewItem()" style="width:100%; padding:15px; background:#27ae60; color:white; border:none; border-radius:8px; margin-top:15px; font-weight:bold;">CONFIRM ADD</button>
         <button onclick="closeAddModal()" style="width:100%; border:none; background:none; color:red; margin-top:10px;">Cancel</button>
     </div>
 </div>
@@ -141,10 +154,10 @@
 <script>
     let currentLang = 'en';
     let currentCat = 'breakfast';
-    let deleteMode = false;
+    let adminMode = 'none'; // none, delete, move
     let tempImgBase64 = "";
     
-    let data = [
+    let data = JSON.parse(localStorage.getItem('sgsData')) || [
         { id: 1, cat: 'breakfast', en: 'Kitfo Royale', am: 'ክትፎ ሮያል', price: 500, img: 'b1.jpg', ing: 'Minced beef, nitir kibe, mitmita' },
         { id: 2, cat: 'breakfast', en: 'Special Omelet', am: 'ልዩ እንቁላል', price: 350, img: 'b2.jpg', ing: 'Eggs, onions, green pepper, tomato' },
         { id: 3, cat: 'breakfast', en: 'Chechebsa', am: 'ጨጨብሳ', price: 300, img: 'b3.jpg', ing: 'Shredded flatbread, honey, kibe' },
@@ -178,7 +191,6 @@
                 </div>
             </div>`;
         });
-        document.getElementById('bodyTag').className = (currentLang === 'am' ? 'lang-am' : '');
     }
 
     function changeCat(c) {
@@ -189,28 +201,15 @@
     }
 
     function toggleLang() { currentLang = (currentLang === 'en' ? 'am' : 'en'); render(); }
-    
-    function showLogin() { 
-        clearCredentials();
-        document.getElementById('loginOverlay').style.display = 'flex'; 
-    }
-    
-    function hideLogin() { 
-        clearCredentials();
-        document.getElementById('loginOverlay').style.display = 'none'; 
-    }
-
-    function clearCredentials() {
-        document.getElementById('userInput').value = "";
-        document.getElementById('passInput').value = "";
-    }
+    function showLogin() { clearCredentials(); document.getElementById('loginOverlay').style.display = 'flex'; }
+    function hideLogin() { clearCredentials(); document.getElementById('loginOverlay').style.display = 'none'; }
+    function clearCredentials() { document.getElementById('userInput').value = ""; document.getElementById('passInput').value = ""; }
 
     function handleLogin() {
         if(document.getElementById('userInput').value === "admin" && document.getElementById('passInput').value === "sgs") {
             document.getElementById('adminDashboard').style.display = 'block';
-            hideLogin(); 
-            refreshAdminTable();
-        } else { alert("Access Denied"); }
+            hideLogin(); refreshAdminTable();
+        } else { alert("Denied"); }
     }
 
     function editItem(idx, key, val) { data[idx][key] = val; }
@@ -220,10 +219,7 @@
             const reader = new FileReader();
             reader.onload = (e) => { 
                 if(type === 'temp') tempImgBase64 = e.target.result;
-                else {
-                    data[idx].img = e.target.result;
-                    refreshAdminTable();
-                }
+                else { data[idx].img = e.target.result; refreshAdminTable(); }
             };
             reader.readAsDataURL(input.files[0]);
         }
@@ -232,38 +228,49 @@
     function refreshAdminTable() {
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = "";
+        const header = document.getElementById('actionHeader');
+        header.style.display = (adminMode === 'none' ? 'none' : 'table-cell');
+
         data.forEach((item, index) => {
+            let actionBtn = "";
+            if(adminMode === 'delete') actionBtn = `<button class="del-btn" onclick="deleteItem(${item.id})">Del</button>`;
+            if(adminMode === 'move') actionBtn = `
+                <select style="font-size:10px; padding:2px;" onchange="moveItem(${item.id}, this.value)">
+                    <option>Move To...</option>
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunchdinner">Lunch/Dinner</option>
+                    <option value="beverages">Beverages</option>
+                </select>`;
+
             tbody.innerHTML += `<tr>
-                <td><input class="edit-input" value="${item.cat}" onchange="editItem(${index}, 'cat', this.value)"></td>
                 <td><input class="edit-input" value="${item.en}" onchange="editItem(${index}, 'en', this.value)"></td>
                 <td><input class="edit-input" value="${item.am}" onchange="editItem(${index}, 'am', this.value)"></td>
                 <td><input class="edit-input" value="${item.ing}" onchange="editItem(${index}, 'ing', this.value)"></td>
                 <td><input class="edit-input" type="number" value="${item.price}" onchange="editItem(${index}, 'price', this.value)"></td>
                 <td>
                     <img src="${item.img}" class="preview-box" onerror="this.src='https://via.placeholder.com/50'">
-                    <input type="file" style="font-size:9px; width:100px" onchange="processFile(this, 'edit', ${index})">
+                    <input type="file" style="font-size:9px; width:80px" onchange="processFile(this, 'edit', ${index})">
                 </td>
-                <td class="del-col" style="display:${deleteMode ? 'table-cell' : 'none'}">
-                    <button class="del-btn" onclick="deleteItem(${item.id})">Del</button>
-                </td>
+                <td style="display:${adminMode === 'none' ? 'none' : 'table-cell'}">${actionBtn}</td>
             </tr>`;
         });
     }
 
-    function toggleDeleteMode() { deleteMode = !deleteMode; refreshAdminTable(); }
+    function toggleDeleteMode() { adminMode = (adminMode === 'delete' ? 'none' : 'delete'); refreshAdminTable(); }
+    function toggleMoveMode() { adminMode = (adminMode === 'move' ? 'none' : 'move'); refreshAdminTable(); }
 
     function deleteItem(id) {
-        if(confirm("Delete item?")) {
-            data = data.filter(i => i.id !== id);
-            refreshAdminTable();
-        }
+        if(confirm("Delete this item?")) { data = data.filter(i => i.id !== id); refreshAdminTable(); }
+    }
+
+    function moveItem(id, newCat) {
+        if(newCat === "Move To...") return;
+        const item = data.find(i => i.id === id);
+        if(item) { item.cat = newCat; alert("Successfully moved item to " + newCat); refreshAdminTable(); }
     }
 
     function openAddModal() { document.getElementById('addModal').style.display = 'flex'; }
-    function closeAddModal() { 
-        document.getElementById('addModal').style.display = 'none'; 
-        tempImgBase64 = ""; 
-    }
+    function closeAddModal() { document.getElementById('addModal').style.display = 'none'; tempImgBase64 = ""; }
 
     function submitNewItem() {
         data.push({
@@ -278,10 +285,15 @@
         closeAddModal(); refreshAdminTable();
     }
 
-    function saveAndClear() { alert("Database Updated!"); closeAdmin(); render(); }
+    function saveAndClear() { 
+        localStorage.setItem('sgsData', JSON.stringify(data));
+        alert("Global changes saved and synced!"); 
+        closeAdmin(); 
+    }
     
     function closeAdmin() { 
-        clearCredentials();
+        clearCredentials(); 
+        adminMode = 'none';
         document.getElementById('adminDashboard').style.display = 'none'; 
         render(); 
     }
