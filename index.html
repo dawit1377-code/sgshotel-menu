@@ -13,7 +13,7 @@
         body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; }
         .lang-am { font-family: 'Noto Sans Ethiopic', sans-serif; }
 
-        /* 1. Centered Header Fonts + 20% Size */
+        /* Centered Header (Height Locked) */
         .header { 
             background: var(--dark-orange);
             color: white; padding: 5px 15px; 
@@ -26,7 +26,7 @@
         .hotel-brand span { font-size: 14px; font-weight: 700; letter-spacing: 3px; color: #ffe0b2; display: block; }
         .menu-icon { font-size: 24px; cursor: pointer; color: white; width: 40px; }
 
-        /* Categories */
+        /* Nav */
         .nav-bar { 
             display: flex; overflow-x: auto; padding: 15px 5px; 
             background: #fff; position: sticky; top: 65px; z-index: 900; 
@@ -45,24 +45,23 @@
         .info .ingred { font-size: 12px; color: #777; font-style: italic; margin-top: 3px; }
         .info .price { font-size: 17px; font-weight: 700; color: var(--p-orange); margin-top: 6px; }
 
-        /* Admin UI */
+        /* Admin Dashboard */
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:10px; overflow-y: scroll; }
         .welcome-note { background: #fdf2e9; padding: 15px; border-radius: 10px; border-left: 5px solid var(--p-orange); margin-bottom: 15px; }
         
-        .admin-actions { display: flex; gap: 10px; margin-bottom: 20px; }
-        .add-item-btn { flex: 1; background: #27ae60; color: white; border: none; padding: 15px; border-radius: 8px; font-weight: 700; }
-        
-        /* 3. Delete Mode Toggle */
-        .delete-toggle-btn { flex: 1; background: #c0392b; color: white; border: none; padding: 15px; border-radius: 8px; font-weight: 700; }
+        .admin-actions { display: flex; gap: 10px; margin-bottom: 15px; }
+        .add-item-btn { flex: 1; background: #27ae60; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; }
+        .delete-toggle-btn { flex: 1; background: #c0392b; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; }
 
         .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid #eee; -webkit-overflow-scrolling: touch; }
         table { width: 100%; border-collapse: collapse; min-width: 1100px; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        .preview-box { width: 55px; height: 55px; border-radius: 6px; object-fit: cover; }
-        .del-btn { background: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        .edit-input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; }
+        .preview-box { width: 45px; height: 45px; border-radius: 6px; object-fit: cover; }
+        .del-btn { background: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 4px; }
 
         .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:4000; align-items:center; justify-content:center; }
-        .modal { background:white; padding:20px; border-radius:15px; width:90%; max-width:400px; max-height: 80vh; overflow-y: auto; }
+        .modal { background:white; padding:20px; border-radius:15px; width:90%; max-width:400px; }
         input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; }
     </style>
 </head>
@@ -99,22 +98,24 @@
 
     <div class="welcome-note">
         <h4 style="color:var(--dark-orange)">Welcome back, Admin! 👋</h4>
-        <p style="font-size: 13px; color: #666;">Manage your live menu items below.</p>
+        <p style="font-size: 13px;">Edit cells directly, or use buttons below.</p>
     </div>
 
     <div class="admin-actions">
         <button class="add-item-btn" onclick="openAddModal()">➕ ADD ITEM</button>
-        <button class="delete-toggle-btn" onclick="toggleDeleteMode()">🗑️ DELETE ITEMS</button>
+        <button class="delete-toggle-btn" onclick="toggleDeleteMode()">🗑️ DELETE MODE</button>
     </div>
 
     <div class="table-wrapper">
         <table>
             <thead>
-                <tr><th>Category</th><th>EN Name</th><th>AM Name</th><th>Price</th><th>Preview</th><th class="del-col" style="display:none">Action</th></tr>
+                <tr><th>Category</th><th>EN Name</th><th>AM Name</th><th>Ingredients</th><th>Price</th><th>Preview</th><th class="del-col" style="display:none">Action</th></tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
+    
+    <button onclick="saveAndClear()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; margin-top:20px; font-weight:bold; font-size:16px;">💾 SAVE DATABASE CHANGES</button>
 </div>
 
 <div id="addModal" class="overlay">
@@ -126,7 +127,7 @@
         <input type="text" id="newIng" placeholder="Ingredients">
         <input type="number" id="newPrice" placeholder="Price (ETB)">
         <input type="file" onchange="processNewImg(this)">
-        <button onclick="submitNewItem()" style="width:100%; padding:15px; background:#27ae60; color:white; border:none; border-radius:8px; margin-top:15px; font-weight:bold;">SAVE ITEM</button>
+        <button onclick="submitNewItem()" style="width:100%; padding:15px; background:#27ae60; color:white; border:none; border-radius:8px; margin-top:15px; font-weight:bold;">ADD ITEM</button>
         <button onclick="closeAddModal()" style="width:100%; border:none; background:none; color:red; margin-top:10px;">Cancel</button>
     </div>
 </div>
@@ -137,7 +138,7 @@
         <input type="text" id="userInput" placeholder="User">
         <input type="password" id="passInput" placeholder="Pass">
         <button onclick="handleLogin()" style="width:100%; padding:12px; background:var(--dark-orange); color:white; border:none; border-radius:8px; font-weight:bold; margin-bottom:10px;">LOGIN</button>
-        <button onclick="hideLogin()" style="width:100%; border:none; background:none; color:gray; font-size:13px;">Cancel Login</button>
+        <button onclick="hideLogin()" style="width:100%; border:none; background:none; color:gray;">Cancel</button>
     </div>
 </div>
 
@@ -165,8 +166,6 @@
     function render() {
         const list = document.getElementById('menuListing');
         list.innerHTML = "";
-        
-        // 1. Language Centered Header Logic
         document.getElementById('displayHotelName').innerText = (currentLang === 'en' ? 'SGS HOTEL' : 'ኤስ ጂ ኤስ ሆቴል');
         document.getElementById('menu-label').innerText = (currentLang === 'en' ? 'MENU' : 'ሜኑ');
         document.getElementById('txt-break').innerText = (currentLang === 'en' ? 'Breakfast' : 'ቁርስ');
@@ -204,15 +203,21 @@
         } else { alert("Access Denied"); }
     }
 
+    function editItem(idx, key, val) { data[idx][key] = val; }
+
     function refreshAdminTable() {
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = "";
-        data.forEach(item => {
+        data.forEach((item, index) => {
             tbody.innerHTML += `<tr>
-                <td>${item.cat}</td><td>${item.en}</td><td>${item.am}</td><td>${item.price}</td>
+                <td><input class="edit-input" value="${item.cat}" onchange="editItem(${index}, 'cat', this.value)"></td>
+                <td><input class="edit-input" value="${item.en}" onchange="editItem(${index}, 'en', this.value)"></td>
+                <td><input class="edit-input" value="${item.am}" onchange="editItem(${index}, 'am', this.value)"></td>
+                <td><input class="edit-input" value="${item.ing}" onchange="editItem(${index}, 'ing', this.value)"></td>
+                <td><input class="edit-input" type="number" value="${item.price}" onchange="editItem(${index}, 'price', this.value)"></td>
                 <td><img src="${item.img}" class="preview-box"></td>
                 <td class="del-col" style="display:${deleteMode ? 'table-cell' : 'none'}">
-                    <button class="del-btn" onclick="deleteItem(${item.id})">Delete</button>
+                    <button class="del-btn" onclick="deleteItem(${item.id})">Del</button>
                 </td>
             </tr>`;
         });
@@ -220,15 +225,13 @@
 
     function toggleDeleteMode() {
         deleteMode = !deleteMode;
-        document.querySelectorAll('.del-col').forEach(el => el.style.display = deleteMode ? 'table-cell' : 'none');
         refreshAdminTable();
     }
 
     function deleteItem(id) {
-        if(confirm("Delete this item?")) {
+        if(confirm("Delete item?")) {
             data = data.filter(i => i.id !== id);
             refreshAdminTable();
-            render();
         }
     }
 
@@ -252,10 +255,11 @@
             price: document.getElementById('newPrice').value,
             img: tempImgBase64 || 'https://via.placeholder.com/125'
         });
-        closeAddModal(); refreshAdminTable(); render();
+        closeAddModal(); refreshAdminTable();
     }
 
-    function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; }
+    function saveAndClear() { alert("Database Updated Successfully!"); closeAdmin(); render(); }
+    function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; render(); }
     render();
 </script>
 </body>
