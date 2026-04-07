@@ -5,40 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SGS Hotel Menu</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
-    
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-
     <style>
         :root { --p-orange: #E67E22; --dark-orange: #D35400; --bg: #ffffff; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         html, body { overflow-x: hidden; width: 100%; height: 100%; overscroll-behavior-y: contain; }
         body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; }
-        .header { background: var(--dark-orange); color: white; padding: 5px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 65px; }
+        .lang-am { font-family: 'Noto Sans Ethiopic', sans-serif; }
+
+        .header { 
+            background: var(--dark-orange);
+            color: white; padding: 5px 15px; 
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000;
+            height: 65px; 
+        }
         .hotel-brand { text-align: center; flex-grow: 1; }
         .hotel-brand h1 { font-family: 'Playfair Display', serif; font-size: 23px; line-height: 1; }
         .hotel-brand span { font-size: 14px; font-weight: 700; letter-spacing: 3px; color: #ffe0b2; display: block; }
         .menu-icon { font-size: 24px; cursor: pointer; color: white; width: 40px; }
-        .nav-bar { display: flex; overflow-x: auto; padding: 15px 5px; background: #fff; position: sticky; top: 65px; z-index: 900; border-bottom: 1px solid #eee; }
+
+        .nav-bar { 
+            display: flex; overflow-x: auto; padding: 15px 5px; 
+            background: #fff; position: sticky; top: 65px; z-index: 900; 
+            border-bottom: 1px solid #eee;
+            -webkit-overflow-scrolling: touch;
+        }
         .nav-item { text-align: center; min-width: 140px; opacity: 0.5; transition: 0.2s; cursor: pointer; }
         .nav-item.active { opacity: 1; transform: scale(1.05); }
-        .nav-item img { width: 90px; height: 90px; border-radius: 50%; display: block; margin: 0 auto 8px; border: 3px solid #f0f0f0; object-fit: cover; }
+        .nav-item img { width: 95px; height: 95px; border-radius: 50%; display: block; margin: 0 auto 8px; border: 3px solid #f0f0f0; object-fit: cover; }
+
         .container { padding: 12px; min-height: 60vh; }
-        .card { display: flex; align-items: center; background: white; border-radius: 15px; margin-bottom: 15px; padding: 12px; border: 1px solid #f2f2f2; box-shadow: 0 3px 10px rgba(0,0,0,0.04); }
-        .food-img { width: 110px; height: 110px; border-radius: 12px; object-fit: cover; margin-right: 15px; background: #eee; }
-        .info .title { font-size: 17px; font-weight: 600; color: var(--p-orange); }
-        .info .price { font-size: 16px; font-weight: 700; color: var(--dark-orange); margin-top: 5px; }
+        .card { display: flex; align-items: center; background: white; border-radius: 15px; margin-bottom: 15px; padding: 12px; border: 1px solid #f2f2f2; box-shadow: 0 3px 10px rgba(0,0,0,0.04); transform: translateZ(0); }
+        .food-img { width: 125px; height: 125px; border-radius: 12px; object-fit: cover; margin-right: 18px; background: #eee; }
+        .info .title { font-size: 18px; font-weight: 600; color: var(--p-orange); }
+        .info .ingred { font-size: 12px; color: #777; font-style: italic; margin-top: 3px; }
+        .info .price { font-size: 17px; font-weight: 700; color: var(--p-orange); margin-top: 6px; }
+
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:10px; overflow-y: scroll; }
-        .action-btn { flex: 1; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; }
-        .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid #eee; margin-top: 10px; }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; font-size: 13px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:4000; align-items:center; justify-content:center; }
+        .welcome-note { background: #fdf2e9; padding: 15px; border-radius: 10px; border-left: 5px solid var(--p-orange); margin-bottom: 15px; }
+        
+        .admin-actions { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
+        .action-btn { flex: 1; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 12px; min-width: 100px; }
+        .btn-add { background: #27ae60; }
+        .btn-move { background: #2980b9; }
+        .btn-del { background: #c0392b; }
+
+        .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid #eee; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        .edit-input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; }
+        .preview-box { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; }
+
+        .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:4000; align-items:center; justify-content:center; }
         .modal { background:white; padding:20px; border-radius:15px; width:90%; max-width:400px; }
-        input, select { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 6px; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; }
     </style>
 </head>
-<body>
+<body id="bodyTag">
 
 <header class="header">
     <div class="menu-icon" onclick="showLogin()">☰</div>
@@ -46,7 +70,7 @@
         <h1 id="displayHotelName">SGS HOTEL</h1>
         <span id="menu-label">MENU</span>
     </div>
-    <button onclick="toggleLang()" style="border:none; background:white; color:var(--dark-orange); padding:5px 10px; border-radius:15px; font-size:11px; font-weight:bold;">EN/አማ</button>
+    <button onclick="toggleLang()" style="border:none; background:white; color:var(--dark-orange); padding:5px 12px; border-radius:15px; font-size:11px; font-weight:bold;">EN/አማ</button>
 </header>
 
 <nav class="nav-bar">
@@ -61,78 +85,108 @@
     </div>
 </nav>
 
-<div class="container" id="menuListing">
-    <p style="text-align:center; margin-top:50px; color:#999;">Loading Menu...</p>
-</div>
+<div class="container" id="menuListing"></div>
 
 <div id="adminDashboard">
-    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--dark-orange); padding:15px; color:white;">
-        <h3>SGS MANAGER</h3>
-        <button onclick="closeAdmin()" style="color:white; border:none; background:none; font-size:30px;">×</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--dark-orange); padding:15px; color:white; position: sticky; top: -10px; z-index: 100;">
+        <h4>SGS MANAGER</h4>
+        <button onclick="closeAdmin()" style="color:white; border:none; background:none; font-size:32px;">×</button>
     </div>
-    <div style="display:flex; gap:5px; margin-top:15px;">
-        <button class="action-btn" style="background:#27ae60" onclick="openAddModal()">➕ ADD</button>
-        <button class="action-btn" style="background:#2980b9" onclick="toggleMoveMode()">🔄 MOVE</button>
-        <button class="action-btn" style="background:#c0392b" onclick="toggleDeleteMode()">🗑️ DELETE</button>
+
+    <div class="welcome-note">
+        <h4 style="color:var(--dark-orange)">Welcome back, Admin! 👋</h4>
+        <p style="font-size: 13px;">Editing will update the menu globally once saved.</p>
     </div>
+
+    <div class="admin-actions">
+        <button class="action-btn btn-add" onclick="openAddModal()">➕ ADD ITEM</button>
+        <button class="action-btn btn-move" onclick="toggleMoveMode()">🔄 MOVE ITEMS</button>
+        <button class="action-btn btn-del" onclick="toggleDeleteMode()">🗑️ DELETE MODE</button>
+    </div>
+
     <div class="table-wrapper">
         <table>
-            <thead><tr><th>EN Name</th><th>AM Name</th><th>Price</th><th>Photo</th><th id="actionHeader" style="display:none">Action</th></tr></thead>
+            <thead>
+                <tr>
+                    <th>EN Name</th>
+                    <th>AM Name</th>
+                    <th>Ingredients</th>
+                    <th>Price</th>
+                    <th>Photo</th>
+                    <th id="actionHeader" style="display:none">Action</th>
+                </tr>
+            </thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
-    <button onclick="saveToCloud()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; margin-top:20px; font-weight:bold;">💾 SAVE & SYNC ALL DEVICES</button>
+    
+    <button onclick="saveAndClear()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; margin-top:20px; font-weight:bold; font-size:16px;">💾 SAVE & SYNC ALL DEVICES</button>
 </div>
 
-<div id="addModal" class="overlay"><div class="modal">
-    <h3>New Item</h3>
-    <select id="newCat"><option value="breakfast">Breakfast</option><option value="lunchdinner">Lunch/Dinner</option><option value="beverages">Beverages</option></select>
-    <input type="text" id="newEn" placeholder="English Name">
-    <input type="text" id="newAm" placeholder="Amharic Name">
-    <input type="number" id="newPrice" placeholder="Price">
-    <input type="file" onchange="processFile(this, 'temp')">
-    <button onclick="submitNewItem()" style="width:100%; padding:15px; background:#27ae60; color:white; border:none; border-radius:8px; margin-top:10px;">ADD ITEM</button>
-    <button onclick="closeAddModal()" style="width:100%; border:none; background:none; color:red; margin-top:10px;">Cancel</button>
-</div></div>
+<div id="addModal" class="overlay">
+    <div class="modal">
+        <h3>New Item</h3>
+        <select id="newCat">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunchdinner">Lunch/Dinner</option>
+            <option value="beverages">Beverages</option>
+        </select>
+        <input type="text" id="newEn" placeholder="English Name">
+        <input type="text" id="newAm" placeholder="Amharic Name">
+        <input type="text" id="newIng" placeholder="Ingredients">
+        <input type="number" id="newPrice" placeholder="Price (ETB)">
+        <input type="file" onchange="processFile(this, 'temp')">
+        <button onclick="submitNewItem()" style="width:100%; padding:15px; background:#27ae60; color:white; border:none; border-radius:8px; margin-top:15px; font-weight:bold;">CONFIRM ADD</button>
+        <button onclick="closeAddModal()" style="width:100%; border:none; background:none; color:red; margin-top:10px;">Cancel</button>
+    </div>
+</div>
 
-<div id="loginOverlay" class="overlay"><div class="modal" style="text-align:center;">
-    <h3>STAFF LOGIN</h3>
-    <input type="text" id="userInput" placeholder="User">
-    <input type="password" id="passInput" placeholder="Pass">
-    <button onclick="handleLogin()" style="width:100%; padding:12px; background:var(--dark-orange); color:white; border:none; border-radius:8px; margin-top:10px;">LOGIN</button>
-    <button onclick="hideLogin()" style="width:100%; border:none; background:none; color:gray; margin-top:10px;">Cancel</button>
-</div></div>
+<div id="loginOverlay" class="overlay">
+    <div class="modal" style="text-align:center;">
+        <h3 style="color:var(--dark-orange)">STAFF LOGIN</h3><br>
+        <input type="text" id="userInput" placeholder="User">
+        <input type="password" id="passInput" placeholder="Pass">
+        <button onclick="handleLogin()" style="width:100%; padding:12px; background:var(--dark-orange); color:white; border:none; border-radius:8px; font-weight:bold; margin-bottom:10px;">LOGIN</button>
+        <button onclick="hideLogin()" style="width:100%; border:none; background:none; color:gray;">Cancel</button>
+    </div>
+</div>
 
 <script>
-    // --- YOUR SPECIFIC FIREBASE CONFIG ---
-    const firebaseConfig = {
-      apiKey: "AIzaSyDhV9y3R77R_4W2pZMOngCgZICyX45B_Ug",
-      authDomain: "sgs-menu.firebaseapp.com",
-      projectId: "sgs-menu",
-      databaseURL: "https://sgs-menu-default-rtdb.firebaseio.com",
-      storageBucket: "sgs-menu.firebasestorage.app"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    let currentLang = 'en', currentCat = 'breakfast', adminMode = 'none', data = [], tempImgBase64 = "";
-
-    // Sync from Cloud
-    db.ref('menuData').on('value', (snap) => {
-        data = snap.val() || [];
-        render();
-    });
+    let currentLang = 'en';
+    let currentCat = 'breakfast';
+    let adminMode = 'none'; // none, delete, move
+    let tempImgBase64 = "";
+    
+    let data = JSON.parse(localStorage.getItem('sgsData')) || [
+        { id: 1, cat: 'breakfast', en: 'Kitfo Royale', am: 'ክትፎ ሮያል', price: 500, img: 'b1.jpg', ing: 'Minced beef, nitir kibe, mitmita' },
+        { id: 2, cat: 'breakfast', en: 'Special Omelet', am: 'ልዩ እንቁላል', price: 350, img: 'b2.jpg', ing: 'Eggs, onions, green pepper, tomato' },
+        { id: 3, cat: 'breakfast', en: 'Chechebsa', am: 'ጨጨብሳ', price: 300, img: 'b3.jpg', ing: 'Shredded flatbread, honey, kibe' },
+        { id: 4, cat: 'breakfast', en: 'Full Breakfast', am: 'ቁርስ በሙሉ', price: 450, img: 'b4.jpg', ing: 'Eggs, toast, honey, beans' },
+        { id: 5, cat: 'lunchdinner', en: 'Golden Dorowet', am: 'ወርቃማው ዶሮወጥ', price: 600, img: 'l1.jpg', ing: 'Chicken stew, boiled eggs, spices' },
+        { id: 6, cat: 'lunchdinner', en: 'Tegabino Shiro', am: 'ተጋቢኖ ሽሮ', price: 250, img: 'l2.jpg', ing: 'Thick chickpea stew, clay pot' },
+        { id: 7, cat: 'lunchdinner', en: 'Margherita Pizza', am: 'ፒዛ ማርጋሪታ', price: 480, img: 'l3.jpg', ing: 'Fresh tomato, mozzarella, basil' },
+        { id: 8, cat: 'lunchdinner', en: 'SGS Burger', am: 'ኤስ ጂ ኤስ በርገር', price: 550, img: 'l4.jpg', ing: 'Beef patty, cheese, special sauce' },
+        { id: 9, cat: 'beverages', en: 'SGS Macchiato', am: 'ኤስ ጂ ኤስ ማኪያቶ', price: 60, img: 'd1.jpg', ing: 'Ethiopian espresso, milk' },
+        { id: 10, cat: 'beverages', en: 'Mango Juice', am: 'የማንጎ ጭማቂ', price: 120, img: 'd2.jpg', ing: '100% Organic mango fruit' },
+        { id: 11, cat: 'beverages', en: 'St. George Beer', am: 'ቅዱስ ጊዮርጊስ ቢራ', price: 150, img: 'd3.jpg', ing: 'Premium local cold beer' },
+        { id: 12, cat: 'beverages', en: 'Soft Drink', am: 'ለስላሳ መጠጥ', price: 80, img: 'd4.jpg', ing: 'Coke, Fanta, or Sprite' }
+    ];
 
     function render() {
         const list = document.getElementById('menuListing');
         list.innerHTML = "";
         document.getElementById('displayHotelName').innerText = (currentLang === 'en' ? 'SGS HOTEL' : 'ኤስ ጂ ኤስ ሆቴል');
-        
+        document.getElementById('menu-label').innerText = (currentLang === 'en' ? 'MENU' : 'ሜኑ');
+        document.getElementById('txt-break').innerText = (currentLang === 'en' ? 'Breakfast' : 'ቁርስ');
+        document.getElementById('txt-lunch').innerText = (currentLang === 'en' ? 'Lunch/Dinner' : 'ምሳ/እራት');
+        document.getElementById('txt-bev').innerText = (currentLang === 'en' ? 'Beverages' : 'መጠጦች');
+
         data.filter(i => i.cat === currentCat).forEach(item => {
             list.innerHTML += `<div class="card">
-                <img src="${item.img}" class="food-img" onerror="this.src='https://via.placeholder.com/110'">
+                <img src="${item.img}" class="food-img" onerror="this.src='https://via.placeholder.com/125'">
                 <div class="info">
                     <div class="title">${currentLang === 'en' ? item.en : item.am}</div>
+                    <div class="ingred">${item.ing}</div>
                     <div class="price">${item.price} ETB</div>
                 </div>
             </div>`;
@@ -147,63 +201,104 @@
     }
 
     function toggleLang() { currentLang = (currentLang === 'en' ? 'am' : 'en'); render(); }
-    function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
-    function hideLogin() { document.getElementById('loginOverlay').style.display = 'none'; }
-    
+    function showLogin() { clearCredentials(); document.getElementById('loginOverlay').style.display = 'flex'; }
+    function hideLogin() { clearCredentials(); document.getElementById('loginOverlay').style.display = 'none'; }
+    function clearCredentials() { document.getElementById('userInput').value = ""; document.getElementById('passInput').value = ""; }
+
     function handleLogin() {
         if(document.getElementById('userInput').value === "admin" && document.getElementById('passInput').value === "sgs") {
             document.getElementById('adminDashboard').style.display = 'block';
             hideLogin(); refreshAdminTable();
-        } else { alert("Wrong password"); }
+        } else { alert("Denied"); }
+    }
+
+    function editItem(idx, key, val) { data[idx][key] = val; }
+
+    function processFile(input, type, idx) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => { 
+                if(type === 'temp') tempImgBase64 = e.target.result;
+                else { data[idx].img = e.target.result; refreshAdminTable(); }
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     }
 
     function refreshAdminTable() {
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = "";
-        document.getElementById('actionHeader').style.display = (adminMode === 'none' ? 'none' : 'table-cell');
+        const header = document.getElementById('actionHeader');
+        header.style.display = (adminMode === 'none' ? 'none' : 'table-cell');
 
         data.forEach((item, index) => {
-            let action = "";
-            if(adminMode === 'delete') action = `<button onclick="deleteItem(${item.id})" style="background:red; color:white; border:none; padding:5px;">Del</button>`;
-            if(adminMode === 'move') action = `<select onchange="moveItem(${item.id}, this.value)"><option>Move...</option><option value="breakfast">Breakfast</option><option value="lunchdinner">Lunch</option><option value="beverages">Beverages</option></select>`;
+            let actionBtn = "";
+            if(adminMode === 'delete') actionBtn = `<button class="del-btn" onclick="deleteItem(${item.id})">Del</button>`;
+            if(adminMode === 'move') actionBtn = `
+                <select style="font-size:10px; padding:2px;" onchange="moveItem(${item.id}, this.value)">
+                    <option>Move To...</option>
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunchdinner">Lunch/Dinner</option>
+                    <option value="beverages">Beverages</option>
+                </select>`;
 
             tbody.innerHTML += `<tr>
-                <td><input value="${item.en}" onchange="data[${index}].en=this.value" class="edit-input"></td>
-                <td><input value="${item.am}" onchange="data[${index}].am=this.value" class="edit-input"></td>
-                <td><input type="number" value="${item.price}" onchange="data[${index}].price=this.value" class="edit-input"></td>
-                <td><img src="${item.img}" style="width:40px; height:40px; object-fit:cover;"></td>
-                <td style="display:${adminMode === 'none' ? 'none' : 'table-cell'}">${action}</td>
+                <td><input class="edit-input" value="${item.en}" onchange="editItem(${index}, 'en', this.value)"></td>
+                <td><input class="edit-input" value="${item.am}" onchange="editItem(${index}, 'am', this.value)"></td>
+                <td><input class="edit-input" value="${item.ing}" onchange="editItem(${index}, 'ing', this.value)"></td>
+                <td><input class="edit-input" type="number" value="${item.price}" onchange="editItem(${index}, 'price', this.value)"></td>
+                <td>
+                    <img src="${item.img}" class="preview-box" onerror="this.src='https://via.placeholder.com/50'">
+                    <input type="file" style="font-size:9px; width:80px" onchange="processFile(this, 'edit', ${index})">
+                </td>
+                <td style="display:${adminMode === 'none' ? 'none' : 'table-cell'}">${actionBtn}</td>
             </tr>`;
         });
     }
 
     function toggleDeleteMode() { adminMode = (adminMode === 'delete' ? 'none' : 'delete'); refreshAdminTable(); }
     function toggleMoveMode() { adminMode = (adminMode === 'move' ? 'none' : 'move'); refreshAdminTable(); }
-    function deleteItem(id) { data = data.filter(i => i.id !== id); refreshAdminTable(); }
-    function moveItem(id, cat) { const item = data.find(i => i.id === id); if(item && cat !== "Move...") { item.cat = cat; refreshAdminTable(); } }
 
-    function processFile(input, type) {
-        const reader = new FileReader();
-        reader.onload = (e) => { tempImgBase64 = e.target.result; };
-        if(input.files[0]) reader.readAsDataURL(input.files[0]);
+    function deleteItem(id) {
+        if(confirm("Delete this item?")) { data = data.filter(i => i.id !== id); refreshAdminTable(); }
+    }
+
+    function moveItem(id, newCat) {
+        if(newCat === "Move To...") return;
+        const item = data.find(i => i.id === id);
+        if(item) { item.cat = newCat; alert("Successfully moved item to " + newCat); refreshAdminTable(); }
     }
 
     function openAddModal() { document.getElementById('addModal').style.display = 'flex'; }
-    function closeAddModal() { document.getElementById('addModal').style.display = 'none'; }
+    function closeAddModal() { document.getElementById('addModal').style.display = 'none'; tempImgBase64 = ""; }
 
     function submitNewItem() {
-        data.push({ id: Date.now(), cat: document.getElementById('newCat').value, en: document.getElementById('newEn').value, am: document.getElementById('newAm').value, price: document.getElementById('newPrice').value, img: tempImgBase64 || '' });
+        data.push({
+            id: Date.now(),
+            cat: document.getElementById('newCat').value,
+            en: document.getElementById('newEn').value,
+            am: document.getElementById('newAm').value,
+            ing: document.getElementById('newIng').value,
+            price: document.getElementById('newPrice').value,
+            img: tempImgBase64 || 'https://via.placeholder.com/125'
+        });
         closeAddModal(); refreshAdminTable();
     }
 
-    function saveToCloud() {
-        db.ref('menuData').set(data).then(() => {
-            alert("SUCCESS: Updated for every device!");
-            document.getElementById('adminDashboard').style.display = 'none';
-        });
+    function saveAndClear() { 
+        localStorage.setItem('sgsData', JSON.stringify(data));
+        alert("Global changes saved and synced!"); 
+        closeAdmin(); 
     }
-
-    function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; }
+    
+    function closeAdmin() { 
+        clearCredentials(); 
+        adminMode = 'none';
+        document.getElementById('adminDashboard').style.display = 'none'; 
+        render(); 
+    }
+    
+    render();
 </script>
 </body>
 </html>
