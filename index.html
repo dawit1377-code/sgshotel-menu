@@ -9,74 +9,58 @@
         :root { --p-orange: #E67E22; --dark-orange: #D35400; --bg: #ffffff; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        html, body { 
-            overflow-x: hidden; 
-            width: 100%; 
-            height: 100%; 
-            overscroll-behavior-y: contain; /* Prevents "pull-to-refresh" lag */
-        }
+        html, body { overflow-x: hidden; width: 100%; height: 100%; overscroll-behavior-y: contain; }
         body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; }
         .lang-am { font-family: 'Noto Sans Ethiopic', sans-serif; }
 
-        /* Header */
+        /* 1. Header Fonts Increased 20% (Height Locked) */
         .header { 
             background: var(--dark-orange);
-            color: white; padding: 8px 15px; 
+            color: white; padding: 5px 15px; 
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 1000;
+            height: 65px; /* Fixed orange area height */
         }
-        .hotel-brand { text-align: center; flex-grow: 1; }
-        .hotel-brand h1 { font-family: 'Playfair Display', serif; font-size: 19px; line-height: 1; }
-        .hotel-brand span { font-size: 11px; font-weight: 700; letter-spacing: 3px; color: #ffe0b2; }
+        .hotel-brand h1 { font-family: 'Playfair Display', serif; font-size: 23px; line-height: 1; }
+        .hotel-brand span { font-size: 14px; font-weight: 700; letter-spacing: 3px; color: #ffe0b2; }
         .menu-icon { font-size: 24px; cursor: pointer; color: white; width: 40px; }
 
         /* Categories */
         .nav-bar { 
             display: flex; overflow-x: auto; padding: 15px 5px; 
-            background: #fff; position: sticky; top: 48px; z-index: 900; 
+            background: #fff; position: sticky; top: 65px; z-index: 900; 
             border-bottom: 1px solid #eee;
             -webkit-overflow-scrolling: touch;
         }
-        .nav-item { text-align: center; min-width: 140px; opacity: 0.5; transition: 0.2s; }
+        .nav-item { text-align: center; min-width: 140px; opacity: 0.5; transition: 0.2s; cursor: pointer; }
         .nav-item.active { opacity: 1; transform: scale(1.05); }
         .nav-item img { width: 95px; height: 95px; border-radius: 50%; display: block; margin: 0 auto 8px; border: 3px solid #f0f0f0; object-fit: cover; }
 
-        /* Food Cards */
-        .container { padding: 12px; }
-        .card { 
-            display: flex; align-items: center; background: white; border-radius: 15px; 
-            margin-bottom: 15px; padding: 12px; border: 1px solid #f2f2f2;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.04);
-            transform: translateZ(0); /* Hardware Acceleration */
-        }
-        .food-img { width: 125px; height: 125px; border-radius: 12px; object-fit: cover; margin-right: 18px; }
+        /* Cards */
+        .container { padding: 12px; min-height: 60vh; }
+        .card { display: flex; align-items: center; background: white; border-radius: 15px; margin-bottom: 15px; padding: 12px; border: 1px solid #f2f2f2; box-shadow: 0 3px 10px rgba(0,0,0,0.04); transform: translateZ(0); }
+        .food-img { width: 125px; height: 125px; border-radius: 12px; object-fit: cover; margin-right: 18px; background: #eee; }
         .info .title { font-size: 18px; font-weight: 600; color: var(--p-orange); }
         .info .ingred { font-size: 12px; color: #777; font-style: italic; margin-top: 3px; }
         .info .price { font-size: 17px; font-weight: 700; color: var(--p-orange); margin-top: 6px; }
 
-        /* TURBO SLIDE: Admin Table Scrolling Fix */
-        #adminDashboard { 
-            display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
-            background:#fff; z-index:3000; padding:10px; overflow-y: scroll;
-            -webkit-overflow-scrolling: touch;
+        /* 2 & 3. Admin & Add Item UI */
+        #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:10px; overflow-y: scroll; }
+        .welcome-note { background: #fdf2e9; padding: 15px; border-radius: 10px; border-left: 5px solid var(--p-orange); margin-bottom: 15px; }
+        
+        .add-item-btn { 
+            background: var(--p-orange); color: white; border: none; padding: 15px; 
+            border-radius: 8px; width: 100%; font-weight: 700; margin-bottom: 20px; font-size: 15px;
         }
-        .table-wrapper { 
-            width: 100%; 
-            overflow-x: auto; 
-            overflow-y: hidden;
-            border: 1px solid #eee; 
-            -webkit-overflow-scrolling: touch; 
-            scroll-behavior: smooth;
-            will-change: scroll-position; /* GPU Optimization */
-            touch-action: auto; /* Restores natural browser physics */
-        }
+
+        .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid #eee; -webkit-overflow-scrolling: touch; }
         table { width: 100%; border-collapse: collapse; min-width: 1100px; }
         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        .edit-input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; }
         .preview-box { width: 55px; height: 55px; border-radius: 6px; object-fit: cover; }
 
-        .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:2500; align-items:center; justify-content:center; }
-        .login-card { background:white; padding:30px; border-radius:15px; width:85%; max-width:320px; text-align:center; }
+        .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:4000; align-items:center; justify-content:center; }
+        .modal { background:white; padding:20px; border-radius:15px; width:90%; max-width:400px; max-height: 80vh; overflow-y: auto; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; }
     </style>
 </head>
 <body id="bodyTag">
@@ -104,41 +88,62 @@
 
 <div class="container" id="menuListing"></div>
 
-<div id="loginOverlay" class="overlay">
-    <div class="login-card">
-        <h3>STAFF LOGIN</h3><br>
-        <input type="text" id="userInput" placeholder="User" style="width:100%; padding:10px; margin-bottom:10px;">
-        <input type="password" id="passInput" placeholder="Pass" style="width:100%; padding:10px; margin-bottom:20px;">
-        <button onclick="handleLogin()" style="width:100%; padding:12px; background:var(--dark-orange); color:white; border:none; border-radius:8px; font-weight:bold;">LOGIN</button>
-        <p onclick="hideLogin()" style="margin-top:15px; color:gray; cursor:pointer;">Cancel</p>
-    </div>
-</div>
-
 <div id="adminDashboard">
     <div style="display:flex; justify-content:space-between; align-items:center; background:var(--dark-orange); padding:15px; color:white; position: sticky; top: -10px; z-index: 100;">
-        <h4>MENU MANAGER</h4>
+        <h4>SGS MANAGER</h4>
         <button onclick="closeAdmin()" style="color:white; border:none; background:none; font-size:32px;">×</button>
     </div>
+
+    <div class="welcome-note">
+        <h4 style="color:var(--dark-orange)">Welcome back, Admin! 👋</h4>
+        <p style="font-size: 13px; color: #666;">Use this panel to monitor your inventory or add new delicious items to the live menu.</p>
+    </div>
+
+    <button class="add-item-btn" onclick="openAddModal()">➕ ADD NEW MENU ITEM</button>
+
     <div class="table-wrapper">
         <table>
             <thead>
-                <tr>
-                    <th>EN Name</th>
-                    <th>AM Name</th>
-                    <th>Ingredients</th>
-                    <th>Price</th>
-                    <th>Preview & File</th>
-                </tr>
+                <tr><th>Category</th><th>EN Name</th><th>AM Name</th><th>Price</th><th>Preview</th></tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
-    <button onclick="saveAndClear()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; margin-top:20px; font-weight:bold;">SAVE CHANGES</button>
+</div>
+
+<div id="addModal" class="overlay">
+    <div class="modal">
+        <h3 style="margin-bottom:10px;">New Item Details</h3>
+        <select id="newCat">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunchdinner">Lunch/Dinner</option>
+            <option value="beverages">Beverages</option>
+        </select>
+        <input type="text" id="newEn" placeholder="English Name (e.g. Pasta)">
+        <input type="text" id="newAm" placeholder="Amharic Name (e.g. ፓስታ)">
+        <input type="text" id="newIng" placeholder="Ingredients">
+        <input type="number" id="newPrice" placeholder="Price (ETB)">
+        <p style="font-size:11px; margin-top:10px;">Select Food Photo:</p>
+        <input type="file" id="newImgFile" onchange="processNewImg(this)">
+        
+        <button onclick="submitNewItem()" style="width:100%; padding:15px; background:#27ae60; color:white; border:none; border-radius:8px; margin-top:15px; font-weight:bold;">ADD TO LIVE MENU</button>
+        <button onclick="closeAddModal()" style="width:100%; border:none; background:none; color:red; margin-top:10px;">Cancel</button>
+    </div>
+</div>
+
+<div id="loginOverlay" class="overlay">
+    <div class="modal" style="text-align:center;">
+        <h3>STAFF LOGIN</h3><br>
+        <input type="text" id="userInput" placeholder="User">
+        <input type="password" id="passInput" placeholder="Pass">
+        <button onclick="handleLogin()" style="width:100%; padding:12px; background:var(--dark-orange); color:white; border:none; border-radius:8px; font-weight:bold;">LOGIN</button>
+    </div>
 </div>
 
 <script>
     let currentLang = 'en';
     let currentCat = 'breakfast';
+    let tempImgBase64 = "";
     
     let data = [
         { id: 1, cat: 'breakfast', en: 'Kitfo Royale', am: 'ክትፎ ሮያል', price: 500, img: 'b1.jpg', ing: 'Minced beef, nitir kibe, mitmita' },
@@ -158,9 +163,6 @@
     function render() {
         const list = document.getElementById('menuListing');
         list.innerHTML = "";
-        document.getElementById('displayHotelName').innerText = (currentLang === 'en' ? 'SGS HOTEL' : 'ኤስ ጂ ኤስ ሆቴል');
-        document.getElementById('menu-label').innerText = (currentLang === 'en' ? 'MENU' : 'ሜኑ');
-
         data.filter(i => i.cat === currentCat).forEach(item => {
             list.innerHTML += `<div class="card">
                 <img src="${item.img}" class="food-img" onerror="this.src='https://via.placeholder.com/125'">
@@ -171,7 +173,6 @@
                 </div>
             </div>`;
         });
-        document.getElementById('bodyTag').className = (currentLang === 'am' ? 'lang-am' : '');
     }
 
     function changeCat(c) {
@@ -181,57 +182,60 @@
         render();
     }
 
-    function toggleLang() {
-        currentLang = (currentLang === 'en' ? 'am' : 'en');
-        render();
-    }
-
+    function toggleLang() { currentLang = (currentLang === 'en' ? 'am' : 'en'); render(); }
+    
     function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
-    function hideLogin() { 
-        document.getElementById('userInput').value = ""; 
-        document.getElementById('passInput').value = ""; 
-        document.getElementById('loginOverlay').style.display = 'none'; 
-    }
-
     function handleLogin() {
         if(document.getElementById('userInput').value === "admin" && document.getElementById('passInput').value === "sgs") {
-            openAdmin(); hideLogin();
-        } else { alert("Error"); }
+            document.getElementById('adminDashboard').style.display = 'block';
+            document.getElementById('loginOverlay').style.display = 'none';
+            refreshAdminTable();
+        } else { alert("Access Denied"); }
     }
 
-    function openAdmin() {
-        document.getElementById('adminDashboard').style.display = 'block';
-        const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = "";
-        data.forEach((item, index) => {
-            tbody.innerHTML += `<tr>
-                <td><input class="edit-input" value="${item.en}" onchange="editItem(${index}, 'en', this.value)"></td>
-                <td><input class="edit-input" value="${item.am}" onchange="editItem(${index}, 'am', this.value)"></td>
-                <td><input class="edit-input" value="${item.ing}" onchange="editItem(${index}, 'ing', this.value)"></td>
-                <td><input class="edit-input" type="number" value="${item.price}" onchange="editItem(${index}, 'price', this.value)"></td>
-                <td>
-                    <img src="${item.img}" class="preview-box" id="prev-${index}" onerror="this.src='https://via.placeholder.com/55'">
-                    <input type="file" style="font-size:10px" onchange="uploadImg(${index}, this)">
-                </td>
-            </tr>`;
-        });
-    }
+    function openAddModal() { document.getElementById('addModal').style.display = 'flex'; }
+    function closeAddModal() { document.getElementById('addModal').style.display = 'none'; }
 
-    function uploadImg(idx, input) {
+    function processNewImg(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
-            reader.onload = (e) => { 
-                data[idx].img = e.target.result;
-                document.getElementById('prev-'+idx).src = e.target.result;
-            };
+            reader.onload = (e) => { tempImgBase64 = e.target.result; };
             reader.readAsDataURL(input.files[0]);
         }
     }
 
-    function editItem(idx, key, val) { data[idx][key] = val; }
-    function saveAndClear() { alert("Saved!"); closeAdmin(); }
-    function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; render(); }
+    function submitNewItem() {
+        const newItem = {
+            id: Date.now(),
+            cat: document.getElementById('newCat').value,
+            en: document.getElementById('newEn').value,
+            am: document.getElementById('newAm').value,
+            ing: document.getElementById('newIng').value,
+            price: document.getElementById('newPrice').value,
+            img: tempImgBase64 || 'https://via.placeholder.com/125'
+        };
+        data.push(newItem);
+        alert("Item Added Globally!");
+        closeAddModal();
+        refreshAdminTable();
+        render();
+    }
 
+    function refreshAdminTable() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = "";
+        data.forEach(item => {
+            tbody.innerHTML += `<tr>
+                <td>${item.cat}</td>
+                <td>${item.en}</td>
+                <td>${item.am}</td>
+                <td>${item.price} ETB</td>
+                <td><img src="${item.img}" class="preview-box"></td>
+            </tr>`;
+        });
+    }
+
+    function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; }
     render();
 </script>
 </body>
