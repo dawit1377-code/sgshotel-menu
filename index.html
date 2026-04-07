@@ -13,7 +13,6 @@
         body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; }
         .lang-am { font-family: 'Noto Sans Ethiopic', sans-serif; }
 
-        /* Centered Header (Height Locked) */
         .header { 
             background: var(--dark-orange);
             color: white; padding: 5px 15px; 
@@ -26,7 +25,6 @@
         .hotel-brand span { font-size: 14px; font-weight: 700; letter-spacing: 3px; color: #ffe0b2; display: block; }
         .menu-icon { font-size: 24px; cursor: pointer; color: white; width: 40px; }
 
-        /* Nav */
         .nav-bar { 
             display: flex; overflow-x: auto; padding: 15px 5px; 
             background: #fff; position: sticky; top: 65px; z-index: 900; 
@@ -37,7 +35,6 @@
         .nav-item.active { opacity: 1; transform: scale(1.05); }
         .nav-item img { width: 95px; height: 95px; border-radius: 50%; display: block; margin: 0 auto 8px; border: 3px solid #f0f0f0; object-fit: cover; }
 
-        /* Cards */
         .container { padding: 12px; min-height: 60vh; }
         .card { display: flex; align-items: center; background: white; border-radius: 15px; margin-bottom: 15px; padding: 12px; border: 1px solid #f2f2f2; box-shadow: 0 3px 10px rgba(0,0,0,0.04); transform: translateZ(0); }
         .food-img { width: 125px; height: 125px; border-radius: 12px; object-fit: cover; margin-right: 18px; background: #eee; }
@@ -45,7 +42,6 @@
         .info .ingred { font-size: 12px; color: #777; font-style: italic; margin-top: 3px; }
         .info .price { font-size: 17px; font-weight: 700; color: var(--p-orange); margin-top: 6px; }
 
-        /* Admin Dashboard */
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:10px; overflow-y: scroll; }
         .welcome-note { background: #fdf2e9; padding: 15px; border-radius: 10px; border-left: 5px solid var(--p-orange); margin-bottom: 15px; }
         
@@ -54,10 +50,10 @@
         .delete-toggle-btn { flex: 1; background: #c0392b; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; }
 
         .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid #eee; -webkit-overflow-scrolling: touch; }
-        table { width: 100%; border-collapse: collapse; min-width: 1100px; }
+        table { width: 100%; border-collapse: collapse; min-width: 1200px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         .edit-input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; }
-        .preview-box { width: 45px; height: 45px; border-radius: 6px; object-fit: cover; }
+        .preview-box { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; display: block; margin-bottom: 5px; }
         .del-btn { background: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 4px; }
 
         .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:4000; align-items:center; justify-content:center; }
@@ -98,7 +94,7 @@
 
     <div class="welcome-note">
         <h4 style="color:var(--dark-orange)">Welcome back, Admin! 👋</h4>
-        <p style="font-size: 13px;">Edit cells directly, or use buttons below.</p>
+        <p style="font-size: 13px;">Modify text, change images, or update the list below.</p>
     </div>
 
     <div class="admin-actions">
@@ -109,7 +105,7 @@
     <div class="table-wrapper">
         <table>
             <thead>
-                <tr><th>Category</th><th>EN Name</th><th>AM Name</th><th>Ingredients</th><th>Price</th><th>Preview</th><th class="del-col" style="display:none">Action</th></tr>
+                <tr><th>Category</th><th>EN Name</th><th>AM Name</th><th>Ingredients</th><th>Price</th><th>Photo</th><th class="del-col" style="display:none">Action</th></tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
@@ -126,7 +122,7 @@
         <input type="text" id="newAm" placeholder="Amharic Name">
         <input type="text" id="newIng" placeholder="Ingredients">
         <input type="number" id="newPrice" placeholder="Price (ETB)">
-        <input type="file" onchange="processNewImg(this)">
+        <input type="file" onchange="processFile(this, 'temp')">
         <button onclick="submitNewItem()" style="width:100%; padding:15px; background:#27ae60; color:white; border:none; border-radius:8px; margin-top:15px; font-weight:bold;">ADD ITEM</button>
         <button onclick="closeAddModal()" style="width:100%; border:none; background:none; color:red; margin-top:10px;">Cancel</button>
     </div>
@@ -193,17 +189,45 @@
     }
 
     function toggleLang() { currentLang = (currentLang === 'en' ? 'am' : 'en'); render(); }
-    function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
-    function hideLogin() { document.getElementById('loginOverlay').style.display = 'none'; }
+    
+    function showLogin() { 
+        clearCredentials();
+        document.getElementById('loginOverlay').style.display = 'flex'; 
+    }
+    
+    function hideLogin() { 
+        clearCredentials();
+        document.getElementById('loginOverlay').style.display = 'none'; 
+    }
+
+    function clearCredentials() {
+        document.getElementById('userInput').value = "";
+        document.getElementById('passInput').value = "";
+    }
 
     function handleLogin() {
         if(document.getElementById('userInput').value === "admin" && document.getElementById('passInput').value === "sgs") {
             document.getElementById('adminDashboard').style.display = 'block';
-            hideLogin(); refreshAdminTable();
+            hideLogin(); 
+            refreshAdminTable();
         } else { alert("Access Denied"); }
     }
 
     function editItem(idx, key, val) { data[idx][key] = val; }
+
+    function processFile(input, type, idx) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => { 
+                if(type === 'temp') tempImgBase64 = e.target.result;
+                else {
+                    data[idx].img = e.target.result;
+                    refreshAdminTable();
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 
     function refreshAdminTable() {
         const tbody = document.getElementById('tableBody');
@@ -215,7 +239,10 @@
                 <td><input class="edit-input" value="${item.am}" onchange="editItem(${index}, 'am', this.value)"></td>
                 <td><input class="edit-input" value="${item.ing}" onchange="editItem(${index}, 'ing', this.value)"></td>
                 <td><input class="edit-input" type="number" value="${item.price}" onchange="editItem(${index}, 'price', this.value)"></td>
-                <td><img src="${item.img}" class="preview-box"></td>
+                <td>
+                    <img src="${item.img}" class="preview-box" onerror="this.src='https://via.placeholder.com/50'">
+                    <input type="file" style="font-size:9px; width:100px" onchange="processFile(this, 'edit', ${index})">
+                </td>
                 <td class="del-col" style="display:${deleteMode ? 'table-cell' : 'none'}">
                     <button class="del-btn" onclick="deleteItem(${item.id})">Del</button>
                 </td>
@@ -223,10 +250,7 @@
         });
     }
 
-    function toggleDeleteMode() {
-        deleteMode = !deleteMode;
-        refreshAdminTable();
-    }
+    function toggleDeleteMode() { deleteMode = !deleteMode; refreshAdminTable(); }
 
     function deleteItem(id) {
         if(confirm("Delete item?")) {
@@ -236,13 +260,9 @@
     }
 
     function openAddModal() { document.getElementById('addModal').style.display = 'flex'; }
-    function closeAddModal() { document.getElementById('addModal').style.display = 'none'; }
-    function processNewImg(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => { tempImgBase64 = e.target.result; };
-            reader.readAsDataURL(input.files[0]);
-        }
+    function closeAddModal() { 
+        document.getElementById('addModal').style.display = 'none'; 
+        tempImgBase64 = ""; 
     }
 
     function submitNewItem() {
@@ -258,8 +278,14 @@
         closeAddModal(); refreshAdminTable();
     }
 
-    function saveAndClear() { alert("Database Updated Successfully!"); closeAdmin(); render(); }
-    function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; render(); }
+    function saveAndClear() { alert("Database Updated!"); closeAdmin(); render(); }
+    
+    function closeAdmin() { 
+        clearCredentials();
+        document.getElementById('adminDashboard').style.display = 'none'; 
+        render(); 
+    }
+    
     render();
 </script>
 </body>
