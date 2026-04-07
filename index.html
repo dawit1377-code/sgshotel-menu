@@ -10,19 +10,19 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <style>
-        :root :root { 
-    --p-orange: #4F7942;    /* Fern Green (For titles and highlights) */
-    --dark-orange: #3E5F34; /* A slightly darker shade of Fern (For Header & Buttons) */
-    --bg: #FAFAF7;          /* A very soft, off-white (Matches well with green) */
-}
+        /* BRAND COLORS UPDATED TO FERN GREEN */
+        :root { 
+            --p-orange: #4F7942;    /* Fern Green */
+            --dark-orange: #3E5F34; /* Darker Fern Green */
+            --bg: #ffffff; 
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { overflow-x: hidden; width: 100%; height: 100%; overscroll-behavior-y: contain; }
         body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; }
         .header { background: var(--dark-orange); color: white; padding: 5px 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 90px; }
         .hotel-brand { text-align: center; flex-grow: 1; min-width: 200px; }
         .hotel-brand h1 { font-family: 'Playfair Display', serif; font-size: 22px; line-height: 1; }
-        .hotel-brand span { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #ffe0b2; display: block; margin-top: 2px; }
-        /* Adjusted VAT Note for Single Line Mobile View */
+        .hotel-brand span { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #e8f5e9; display: block; margin-top: 2px; }
         .vat-main { font-size: 11px; color: #fff; opacity: 0.9; font-style: italic; display: block; margin-top: 4px; white-space: nowrap; width: 100%; }
         .menu-icon { font-size: 24px; cursor: pointer; color: white; width: 40px; }
         .nav-bar { display: flex; overflow-x: auto; padding: 15px 5px; background: #fff; position: sticky; top: 90px; z-index: 900; border-bottom: 1px solid #eee; }
