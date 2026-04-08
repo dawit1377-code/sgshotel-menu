@@ -36,10 +36,11 @@
         .info .ingred { font-size: 12px; color: #777; font-style: italic; margin-top: 2px; font-family: 'Noto Sans Ethiopic', sans-serif; }
         .info .price { font-size: 17px; font-weight: 700; color: var(--dark-orange); margin-top: 5px; }
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:10px; overflow-y: scroll; }
-        .action-btn { flex: 1; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; }
+        .action-btn { flex: 1; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 11px; cursor: pointer; }
         .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid #eee; margin-top: 10px; }
         table { width: 100%; border-collapse: collapse; min-width: 900px; font-size: 13px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .hidden-row { background: #f9f9f9; opacity: 0.6; }
         .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:4000; align-items:center; justify-content:center; }
         .modal { background:white; padding:20px; border-radius:15px; width:90%; max-width:400px; }
         input, select { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 6px; }
@@ -84,6 +85,7 @@
     <div style="display:flex; gap:5px; margin-top:15px;">
         <button class="action-btn" style="background:#27ae60" onclick="openAddModal()">➕ ADD</button>
         <button class="action-btn" style="background:#2980b9" onclick="toggleMoveMode()">🔄 MOVE</button>
+        <button class="action-btn" style="background:#f39c12" onclick="toggleHideMode()">👁️ HIDE/SHOW</button>
         <button class="action-btn" style="background:#c0392b" onclick="toggleDeleteMode()">🗑️ DELETE</button>
     </div>
     <div class="table-wrapper">
@@ -145,7 +147,9 @@
         document.getElementById('txt-bev').innerText = isEn ? 'Beverages' : 'መጠጦች';
         document.getElementById('vat-text').innerText = isEn ? 'All Price Is inclusive of VAT' : 'ሁሉም ዋጋ የተጨማሪ እሴት ታክስ (VAT) ያካትታል';
         
-        const filtered = data.filter(i => i.cat === currentCat);
+        // Only show items that are NOT hidden to the customers
+        const filtered = data.filter(i => i.cat === currentCat && !i.hidden);
+        
         if(filtered.length === 0) {
             list.innerHTML = `<p style='text-align:center; padding-top:40px; color:#aaa;'>${isEn ? 'Category is empty.' : 'በዚህ ክፍል ምንም ዝርዝር የለም::'}</p>`;
             return;
@@ -194,13 +198,18 @@
             let action = "";
             if(adminMode === 'delete') action = `<button onclick="deleteItem(${item.id})" style="background:red; color:white; border:none; padding:5px; border-radius:4px;">Del</button>`;
             if(adminMode === 'move') action = `<select onchange="moveItem(${item.id}, this.value)"><option>Move...</option><option value="breakfast">Breakfast</option><option value="lunchdinner">Lunch</option><option value="beverages">Beverages</option></select>`;
+            if(adminMode === 'hide') action = `<button onclick="toggleHideItem(${index})" style="background:#555; color:white; border:none; padding:5px; border-radius:4px;">${item.hidden ? 'Restore' : 'Hide'}</button>`;
 
-            tbody.innerHTML += `<tr>
+            tbody.innerHTML += `<tr class="${item.hidden ? 'hidden-row' : ''}">
                 <td><input value="${item.en}" onchange="data[${index}].en=this.value" style="width:100%"></td>
                 <td><input value="${item.am}" onchange="data[${index}].am=this.value" style="width:100%"></td>
                 <td><input value="${item.ing || ''}" onchange="data[${index}].ing=this.value" style="width:100%"></td>
                 <td><input type="number" value="${item.price}" onchange="data[${index}].price=this.value" style="width:100%"></td>
-                <td><img src="${item.img}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;"></td>
+                <td>
+                    <img src="${item.img || 'https://via.placeholder.com/150'}" style="width:50px; height:50px; object-fit:cover; border-radius:4px; display:block; margin-bottom:5px;">
+                    <input type="file" id="file-${index}" style="display:none" onchange="updateItemImage(${index}, this)">
+                    <button onclick="document.getElementById('file-${index}').click()" style="font-size:10px; padding:2px; cursor:pointer;">Change Photo</button>
+                </td>
                 <td style="display:${adminMode === 'none' ? 'none' : 'table-cell'}">${action}</td>
             </tr>`;
         });
@@ -208,8 +217,24 @@
 
     function toggleDeleteMode() { adminMode = (adminMode === 'delete' ? 'none' : 'delete'); refreshAdminTable(); }
     function toggleMoveMode() { adminMode = (adminMode === 'move' ? 'none' : 'move'); refreshAdminTable(); }
+    function toggleHideMode() { adminMode = (adminMode === 'hide' ? 'none' : 'hide'); refreshAdminTable(); }
+    
     function deleteItem(id) { data = data.filter(i => i.id !== id); refreshAdminTable(); }
     function moveItem(id, cat) { const item = data.find(i => i.id === id); if(item && cat !== "Move...") { item.cat = cat; refreshAdminTable(); } }
+    
+    function toggleHideItem(index) {
+        data[index].hidden = !data[index].hidden;
+        refreshAdminTable();
+    }
+
+    function updateItemImage(index, input) {
+        const reader = new FileReader();
+        reader.onload = (e) => { 
+            data[index].img = e.target.result; 
+            refreshAdminTable();
+        };
+        if(input.files[0]) reader.readAsDataURL(input.files[0]);
+    }
 
     function processFile(input) {
         const reader = new FileReader();
@@ -221,7 +246,7 @@
     function closeAddModal() { document.getElementById('addModal').style.display = 'none'; tempImgBase64 = ""; }
 
     function submitNewItem() {
-        data.push({ id: Date.now(), cat: document.getElementById('newCat').value, en: document.getElementById('newEn').value, am: document.getElementById('newAm').value, ing: document.getElementById('newIng').value, price: document.getElementById('newPrice').value, img: tempImgBase64 });
+        data.push({ id: Date.now(), cat: document.getElementById('newCat').value, en: document.getElementById('newEn').value, am: document.getElementById('newAm').value, ing: document.getElementById('newIng').value, price: document.getElementById('newPrice').value, img: tempImgBase64, hidden: false });
         closeAddModal(); refreshAdminTable();
     }
 
