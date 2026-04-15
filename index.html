@@ -10,11 +10,9 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; padding-bottom: 80px; overflow-x: hidden; }
         
-        /* Header */
         .header { background: var(--dark-green); color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 115px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .header h1 { font-family: 'Playfair Display'; font-size: 28px; text-align: center; flex-grow: 1; line-height: 1; }
         
-        /* Nav Bar - Enhanced Sizes */
         .nav-bar { display: flex; overflow-x: auto; padding: 15px 10px; background: #fff; position: sticky; top: 115px; z-index: 900; border-bottom: 1px solid #eee; min-height: 140px; scrollbar-width: none; }
         .nav-bar::-webkit-scrollbar { display: none; }
         .nav-item { text-align: center; min-width: 120px; opacity: 0.5; cursor: pointer; transition: all 0.3s ease; padding: 5px; border-bottom: 4px solid transparent; flex-shrink: 0; }
@@ -33,7 +31,6 @@
         
         .call-order-btn { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--dark-green); color: white; padding: 16px 35px; border-radius: 50px; text-decoration: none; z-index: 2000; display: flex; align-items: center; gap: 10px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         
-        /* Admin UI */
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:15px; overflow-y: auto; }
         .admin-section { border: 1px solid #eee; padding: 12px; border-radius: 12px; margin-bottom: 25px; background: #fafafa; }
         .btn { padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; font-size: 11px; transition: 0.2s; }
@@ -90,19 +87,19 @@
 
 <div id="editCatModal" class="overlay"><div class="modal">
     <h3>Rename Category</h3>
-    <input type="text" id="eCatEn" placeholder="New English Name">
-    <input type="text" id="eCatAm" placeholder="New Amharic Name">
-    <button onclick="saveCatRename()" class="btn" style="background:#27ae60; width:100%; margin-top:15px;">Apply Changes</button>
+    <input type="text" id="eCatEn" placeholder="English Name">
+    <input type="text" id="eCatAm" placeholder="Amharic Name">
+    <button onclick="saveCatRename()" class="btn" style="background:#27ae60; width:100%; margin-top:15px;">Save Changes</button>
     <button onclick="closeModals()" class="btn" style="background:#95a5a6; width:100%; margin-top:8px;">Cancel</button>
 </div></div>
 
 <div id="catModal" class="overlay"><div class="modal">
     <h3>New Category</h3>
-    <input type="text" id="nCatId" placeholder="ID (lowercase, e.g. breakfast)">
+    <input type="text" id="nCatId" placeholder="ID (no spaces)">
     <input type="text" id="nCatEn" placeholder="English Name">
     <input type="text" id="nCatAm" placeholder="Amharic Name">
     <input type="file" onchange="handleImg(this)">
-    <button onclick="addCat()" class="btn" style="background:#8e44ad; width:100%; margin-top:15px;">Create Category</button>
+    <button onclick="addCat()" class="btn" style="background:#8e44ad; width:100%; margin-top:15px;">Create</button>
     <button onclick="closeModals()" class="btn" style="background:#95a5a6; width:100%; margin-top:8px;">Cancel</button>
 </div></div>
 
@@ -114,7 +111,7 @@
     <input type="text" id="nItemIng" placeholder="Ingredients">
     <input type="number" id="nItemPrice" placeholder="Price">
     <input type="file" onchange="handleImg(this)">
-    <button onclick="addItem()" class="btn" style="background:#27ae60; width:100%; margin-top:15px;">Add to Menu</button>
+    <button onclick="addItem()" class="btn" style="background:#27ae60; width:100%; margin-top:15px;">Add</button>
     <button onclick="closeModals()" class="btn" style="background:#95a5a6; width:100%; margin-top:8px;">Cancel</button>
 </div></div>
 
@@ -140,7 +137,7 @@
             categories = json.cats || [];
             if(categories.length > 0 && !curCat) curCat = categories[0].id;
             render();
-        } catch (e) { console.error("Database Connection Error"); }
+        } catch (e) { console.error("Database Error"); }
     }
 
     function render() {
@@ -167,28 +164,24 @@
                     <div class="food-ing">${i.ing || ''}</div>
                     <div class="price-tag">${i.price} ETB</div>
                 </div>
-            </div>`).join('') : `<div style="text-align:center; padding:60px; color:#999; width:100%;">Empty Category</div>`;
+            </div>`).join('') : `<div style="text-align:center; padding:60px; color:#999; width:100%;">Empty</div>`;
         renderAdmin();
     }
 
     function renderAdmin() {
-        // Category Admin UI
-        document.getElementById('adminCatList').innerHTML = categories.map(c => `
+        const catList = document.getElementById('adminCatList');
+        catList.innerHTML = categories.map(c => `
             <div style="min-width:110px; text-align:center; border:1px solid #ddd; padding:10px; border-radius:10px; background:white;">
-                <p style="font-size:10px; font-weight:bold; height:24px; overflow:hidden;">${c.en}</p>
-                <div style="display:flex; gap:4px; margin-top:5px;">
-                    <button onclick="openRenameCat('${c.id}')" style="background:#3498db; color:white; border:none; font-size:9px; padding:4px; border-radius:4px; flex:1;">Edit</button>
-                    <button onclick="delCat('${c.id}')" style="background:#e74c3c; color:white; border:none; font-size:9px; padding:4px; border-radius:4px; flex:1;">Del</button>
+                <p style="font-size:10px; font-weight:bold; margin-bottom:5px;">${c.en}</p>
+                <div style="display:flex; gap:5px;">
+                    <button type="button" onclick="openRenameCat('${c.id}')" style="background:#3498db; color:white; border:none; font-size:9px; padding:5px; border-radius:4px; width:50%;">Rename</button>
+                    <button type="button" onclick="delCat('${c.id}')" style="background:#e74c3c; color:white; border:none; font-size:9px; padding:5px; border-radius:4px; width:50%;">Delete</button>
                 </div>
             </div>`).join('');
 
-        // Item Admin UI
         document.getElementById('adminItemBody').innerHTML = data.map((i, idx) => `
             <tr style="${i.hidden ? 'opacity:0.4;' : ''}">
-                <td>
-                    <input value="${i.en}" onchange="data[${idx}].en=this.value">
-                    <input value="${i.am}" onchange="data[${idx}].am=this.value">
-                </td>
+                <td><input value="${i.en}" onchange="data[${idx}].en=this.value"><input value="${i.am}" onchange="data[${idx}].am=this.value"></td>
                 <td><input type="number" value="${i.price}" onchange="data[${idx}].price=this.value" style="width:55px;"></td>
                 <td>
                     <select onchange="data[${idx}].cat=this.value; render();">
@@ -203,82 +196,58 @@
         document.getElementById('nItemCat').innerHTML = categories.map(c => `<option value="${c.id}">${c.en}</option>`).join('');
     }
 
-    // Fixed Category Logic
-    function openRenameCat(id) {
+    window.openRenameCat = function(id) {
         catEditId = id;
-        let c = categories.find(x => x.id === id);
-        document.getElementById('eCatEn').value = c.en;
-        document.getElementById('eCatAm').value = c.am;
+        const cat = categories.find(x => x.id === id);
+        document.getElementById('eCatEn').value = cat.en;
+        document.getElementById('eCatAm').value = cat.am;
         document.getElementById('editCatModal').style.display = 'flex';
-    }
+    };
 
-    function saveCatRename() {
-        let c = categories.find(x => x.id === catEditId);
-        if(c) {
-            c.en = document.getElementById('eCatEn').value;
-            c.am = document.getElementById('eCatAm').value;
-            render();
-            closeModals();
+    window.saveCatRename = function() {
+        const cat = categories.find(x => x.id === catEditId);
+        if(cat) {
+            cat.en = document.getElementById('eCatEn').value;
+            cat.am = document.getElementById('eCatAm').value;
+            closeModals(); render();
         }
-    }
+    };
 
-    function delCat(id) {
-        if(confirm("Confirm: Delete this category? Items won't be deleted but will be hidden from view.")) {
+    window.delCat = function(id) {
+        if(confirm("Confirm Delete Category?")) {
             categories = categories.filter(c => c.id !== id);
             if(curCat === id && categories.length > 0) curCat = categories[0].id;
             render();
         }
-    }
+    };
 
     async function saveToCloud() {
         const b = document.getElementById('cloudBtn');
-        b.innerText = "Synchronizing..."; b.disabled = true;
+        b.innerText = "Syncing..."; b.disabled = true;
         try {
             await fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ items: data, cats: categories }) });
-            alert("Update Successful!"); closeAdmin(); fetchData();
-        } catch (e) { alert("Sync Failed. Check Connection."); }
+            alert("Updated Successfully!"); closeAdmin(); fetchData();
+        } catch (e) { alert("Error"); }
         finally { b.innerText = "💾 SYNC ALL UPDATES"; b.disabled = false; }
     }
 
-    // Auth & General UI
     function doLogin() { 
         if(document.getElementById('uIn').value === "admin" && document.getElementById('pIn').value === "sgs") { 
             document.getElementById('adminDashboard').style.display = 'block'; closeModals(); 
-        } else { alert("Access Denied"); } 
+        } else { alert("Error"); } 
     }
     function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
-    function closeModals() { 
-        document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); 
-        document.getElementById('uIn').value = ""; document.getElementById('pIn').value = "";
-        tmpImg = "";
-    }
+    function closeModals() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); document.getElementById('uIn').value=""; document.getElementById('pIn').value=""; tmpImg=""; }
     function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; }
-    function setCat(id) { curCat = id; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    function setCat(id) { curCat = id; render(); window.scrollTo(0,0); }
     function toggleLang() { curLang = (curLang === 'en') ? 'am' : 'en'; render(); }
-    
-    // CRUD Functions
-    function addCat() {
-        const idVal = document.getElementById('nCatId').value.toLowerCase().replace(/\s/g, '');
-        if(!idVal) return;
-        categories.push({id: idVal, en: document.getElementById('nCatEn').value, am: document.getElementById('nCatAm').value, img: tmpImg});
-        closeModals(); render();
-    }
-    function addItem() {
-        data.push({id: Date.now(), cat: document.getElementById('nItemCat').value, en: document.getElementById('nItemEn').value, am: document.getElementById('nItemAm').value, ing: document.getElementById('nItemIng').value, price: document.getElementById('nItemPrice').value, img: tmpImg, hidden: false});
-        closeModals(); render();
-    }
-    function delItm(idx) { if(confirm("Delete item?")) { data.splice(idx,1); render(); } }
+    function addCat() { categories.push({id: document.getElementById('nCatId').value.toLowerCase(), en: document.getElementById('nCatEn').value, am: document.getElementById('nCatAm').value, img: tmpImg}); closeModals(); render(); }
+    function addItem() { data.push({id: Date.now(), cat: document.getElementById('nItemCat').value, en: document.getElementById('nItemEn').value, am: document.getElementById('nItemAm').value, ing: document.getElementById('nItemIng').value, price: document.getElementById('nItemPrice').value, img: tmpImg, hidden: false}); closeModals(); render(); }
+    function delItm(idx) { data.splice(idx,1); render(); }
     function tglHdn(idx) { data[idx].hidden = !data[idx].hidden; render(); }
-    function handleImg(input) { 
-        const r = new FileReader(); r.onload = (e) => { tmpImg = e.target.result; }; 
-        if(input.files[0]) r.readAsDataURL(input.files[0]); 
-    }
+    function handleImg(input) { const r = new FileReader(); r.onload = (e) => { tmpImg = e.target.result; }; if(input.files[0]) r.readAsDataURL(input.files[0]); }
     function triggerEditPic(idx) { editingIdx = idx; document.getElementById('editPicInput').click(); }
-    function updateItemPhoto(input) {
-        const r = new FileReader();
-        r.onload = (e) => { data[editingIdx].img = e.target.result; render(); };
-        if(input.files[0]) r.readAsDataURL(input.files[0]);
-    }
+    function updateItemPhoto(input) { const r = new FileReader(); r.onload = (e) => { data[editingIdx].img = e.target.result; render(); }; if(input.files[0]) r.readAsDataURL(input.files[0]); }
 
     fetchData();
 </script>
