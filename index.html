@@ -3,29 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SGS Hotel Menu - FINAL MASTER</title>
+    <title>SGS Hotel Menu - PROFESSIONAL</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --p-green: #4F7942; --dark-green: #3E5F34; --bg: #ffffff; }
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: #333; font-family: 'Poppins', 'Noto Sans Ethiopic', sans-serif; padding-bottom: 100px; }
         
-        /* HEADER & NAVIGATION */
-        .header { background: var(--dark-green); color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 125px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .header h1 { font-family: 'Playfair Display'; font-size: 24px; text-align: center; flex-grow: 1; }
+        /* HEADER - Increased Title Font */
+        .header { background: var(--dark-green); color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 130px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header h1 { font-family: 'Playfair Display'; font-size: 32px; font-weight: 800; text-align: center; flex-grow: 1; letter-spacing: 1px; }
         
-        .nav-bar { display: flex; overflow-x: auto; padding: 15px 10px; background: #fff; position: sticky; top: 125px; z-index: 900; border-bottom: 1px solid #eee; min-height: 145px; }
-        .nav-item { text-align: center; min-width: 110px; opacity: 0.5; cursor: pointer; flex-shrink: 0; border-bottom: 4px solid transparent; }
+        /* NAVIGATION - Increased Cat Img & Text */
+        .nav-bar { display: flex; overflow-x: auto; padding: 15px 10px; background: #fff; position: sticky; top: 130px; z-index: 900; border-bottom: 1px solid #eee; min-height: 160px; scrollbar-width: none; }
+        .nav-item { text-align: center; min-width: 130px; opacity: 0.5; cursor: pointer; flex-shrink: 0; border-bottom: 4px solid transparent; }
         .nav-item.active { opacity: 1; font-weight: bold; color: var(--p-green); border-bottom-color: var(--p-green); }
-        .nav-item img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #eee; pointer-events: none; }
+        .nav-item img { width: 95px; height: 95px; border-radius: 50%; object-fit: cover; border: 3px solid #eee; pointer-events: none; margin-bottom: 8px; }
+        .nav-item p { font-size: 15px; font-weight: 600; }
 
         /* MENU CARDS */
         .container { padding: 15px; }
         .card { display: flex; align-items: center; background: white; border-radius: 12px; margin-bottom: 15px; padding: 12px; border: 1px solid #f0f0f0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .food-img { width: 95px; height: 95px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
-        .food-title { color: var(--p-green); font-size: 18px; font-weight: 600; }
-        .food-ing { font-size: 12px; color: #777; font-style: italic; }
-        .price-tag { font-weight: bold; color: var(--dark-green); margin-top: 5px; font-size: 16px; }
+        .food-title { color: var(--p-green); font-size: 19px; font-weight: 600; }
+        .food-ing { font-size: 13px; color: #777; font-style: italic; }
+        .price-tag { font-weight: bold; color: var(--dark-green); margin-top: 5px; font-size: 17px; }
 
         .call-order-btn { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); background: var(--dark-green); color: white; padding: 16px 35px; border-radius: 50px; text-decoration: none; z-index: 2000; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
@@ -119,8 +121,10 @@
 
 <div id="loginOverlay" class="overlay"><div class="modal" style="text-align:center;">
     <h3>MANAGER LOGIN</h3>
-    <input type="text" id="uIn" placeholder="User">
-    <input type="password" id="pIn" placeholder="Pass">
+    <form autocomplete="off">
+        <input type="text" id="uIn" placeholder="User" autocomplete="off">
+        <input type="password" id="pIn" placeholder="Pass" autocomplete="new-password">
+    </form>
     <button onclick="APP.verifyLogin()" class="btn" style="background:var(--dark-green); width:100%; margin-top:15px;">LOGIN</button>
 </div></div>
 
@@ -150,7 +154,7 @@
             document.getElementById('categoryNav').innerHTML = this.cats.map(c => `
                 <div class="nav-item ${this.activeCat == c.id ? 'active' : ''}" onclick="APP.setCat('${c.id}')">
                     <img src="${c.img || ''}">
-                    <p style="font-size:12px; margin-top:5px;">${isEn ? c.en : c.am}</p>
+                    <p>${isEn ? c.en : c.am}</p>
                 </div>`).join('');
 
             const filtered = this.data.filter(i => String(i.cat) === String(this.activeCat) && !i.hidden);
@@ -177,11 +181,12 @@
                     </div>
                 </div>`).join('');
 
-            // Items List
+            // Items List - Enhanced to allow editing EN and AM titles
             document.getElementById('adminItemBody').innerHTML = this.data.map((i, idx) => `
                 <tr style="${i.hidden ? 'opacity:0.3' : ''}">
-                    <td style="width:50%">
-                        <b>${i.en}</b> | <small>${i.am}</small><br>
+                    <td style="width:55%">
+                        <input value="${i.en}" placeholder="English Title" onchange="APP.data[${idx}].en=this.value" style="font-size:13px; font-weight:bold; padding:5px; margin-bottom:2px;">
+                        <input value="${i.am}" placeholder="Amharic Title" onchange="APP.data[${idx}].am=this.value" style="font-size:13px; padding:5px; margin-bottom:2px;">
                         <input value="${i.ing || ''}" placeholder="Ingredients" onchange="APP.data[${idx}].ing=this.value" style="font-size:11px; padding:5px; margin:2px 0;">
                         <input type="file" style="font-size:10px; padding:2px;" onchange="APP.updateItemImg(${idx}, this)">
                     </td>
@@ -200,16 +205,23 @@
         setCat: function(id) { this.activeCat = id; this.render(); },
         toggleLang: function() { this.lang = (this.lang === 'en' ? 'am' : 'en'); this.render(); },
         showLogin: function() { document.getElementById('loginOverlay').style.display='flex'; },
-        verifyLogin: function() { if(document.getElementById('uIn').value==='admin' && document.getElementById('pIn').value==='sgs'){ document.getElementById('adminDashboard').style.display='block'; this.closeModals(); } },
+        verifyLogin: function() { 
+            const u = document.getElementById('uIn');
+            const p = document.getElementById('pIn');
+            if(u.value==='admin' && p.value==='sgs'){ 
+                document.getElementById('adminDashboard').style.display='block'; 
+                u.value = ''; p.value = ''; // Security: Clear credentials immediately
+                this.closeModals(); 
+            } else { alert("Login Failed"); }
+        },
         closeAdmin: function() { document.getElementById('adminDashboard').style.display='none'; },
         closeModals: function() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); this.imgTmp = ''; },
         openModal: function(id) { document.getElementById(id).style.display='flex'; },
         handleImg: function(input) { const r = new FileReader(); r.onload = (e) => this.imgTmp = e.target.result; r.readAsDataURL(input.files[0]); },
 
-        // ITEM PHOTO UPDATE
         updateItemImg: function(idx, input) {
             const r = new FileReader();
-            r.onload = (e) => { this.data[idx].img = e.target.result; alert("Photo updated locally. Sync to save permanently."); };
+            r.onload = (e) => { this.data[idx].img = e.target.result; alert("Photo updated. Sync to save."); };
             r.readAsDataURL(input.files[0]);
         },
 
@@ -241,9 +253,9 @@
             b.innerText = "UPDATING..."; b.disabled = true;
             try {
                 await fetch(this.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ items: this.data, cats: this.cats }) });
-                alert("Success! Data is now live.");
+                alert("Professional Update Successful!");
                 this.init();
-            } catch(e) { alert("Error Syncing"); }
+            } catch(e) { alert("Sync Error"); }
             finally { b.innerText = "💾 SYNC ALL CHANGES"; b.disabled = false; }
         }
     };
