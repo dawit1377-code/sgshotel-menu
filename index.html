@@ -33,7 +33,7 @@
         
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:15px; overflow-y: auto; }
         .admin-section { border: 1px solid #eee; padding: 12px; border-radius: 12px; margin-bottom: 25px; background: #fafafa; }
-        .btn { padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; font-size: 12px; transition: 0.2s; }
+        .btn { padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; font-size: 11px; transition: 0.2s; }
         .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:4000; align-items:center; justify-content:center; backdrop-filter: blur(4px); }
         .modal { background:white; padding:25px; border-radius:20px; width:90%; max-width:400px; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; background: white; }
@@ -50,7 +50,7 @@
         <div id="subTitle" style="font-size: 14px; font-weight: bold; letter-spacing: 4px; margin-top: -5px;">MENU</div>
         <div id="vatLabel" style="font-size:10px; opacity:0.9; margin-top: 2px;">All Price are including VAT</div>
     </div>
-    <button onclick="toggleLang()" style="background:white; color:var(--dark-green); border:none; padding:8px 14px; border-radius:20px; font-weight:bold; font-size:12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">EN/አማ</button>
+    <button onclick="toggleLang()" style="background:white; color:var(--dark-green); border:none; padding:8px 14px; border-radius:20px; font-weight:bold; font-size:12px;">EN/አማ</button>
 </header>
 
 <nav class="nav-bar" id="categoryNav"></nav>
@@ -65,7 +65,7 @@
     </div>
     <div class="admin-section">
         <h4>1. Category Setup</h4>
-        <div id="adminCatList" style="display:flex; overflow-x:auto; gap:12px; margin-bottom:15px; padding-bottom:5px;"></div>
+        <div id="adminCatList" style="display:flex; overflow-x:auto; gap:12px; margin-bottom:15px; padding-bottom:10px;"></div>
         <button class="btn" style="background:#8e44ad; width:100%;" onclick="openCatModal()">+ Add New Category</button>
     </div>
     <div class="admin-section">
@@ -82,6 +82,14 @@
     </div>
     <button id="cloudBtn" onclick="saveToCloud()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; position:sticky; bottom:0;">💾 SYNC ALL UPDATES</button>
 </div>
+
+<div id="editCatModal" class="overlay"><div class="modal">
+    <h3>Rename Category</h3>
+    <input type="text" id="eCatEn" placeholder="English Name">
+    <input type="text" id="eCatAm" placeholder="Amharic Name">
+    <button onclick="saveCatRename()" class="btn" style="background:#27ae60; width:100%; margin-top:15px;">Save Changes</button>
+    <button onclick="closeModals()" class="btn" style="background:#95a5a6; width:100%; margin-top:8px;">Cancel</button>
+</div></div>
 
 <input type="file" id="editPicInput" style="display:none;" onchange="updateItemPhoto(this)">
 
@@ -117,7 +125,7 @@
 
 <script>
     const SHEET_URL = "https://script.google.com/macros/s/AKfycbzUs_R4tSRSWfZN5WWwoUa1_8qxHbs95fQk83xDwd9TZ9wzGnlxxLuEmFpTgfaZ2aKOnA/exec";
-    let data = [], categories = [], curLang = 'en', curCat = '', tmpImg = "", editingIdx = null;
+    let data = [], categories = [], curLang = 'en', curCat = '', tmpImg = "", editingIdx = null, catEditId = null;
 
     async function fetchData() {
         try {
@@ -146,7 +154,6 @@
 
         const list = document.getElementById('menuListing');
         const filtered = data.filter(i => String(i.cat).toLowerCase() === String(curCat).toLowerCase() && !i.hidden);
-        
         list.innerHTML = filtered.length ? filtered.map(i => `
             <div class="card">
                 <img src="${i.img || 'https://via.placeholder.com/105'}" class="food-img">
@@ -156,15 +163,17 @@
                     <div class="price-tag">${i.price} ETB</div>
                 </div>
             </div>`).join('') : `<div style="text-align:center; padding:60px; color:#999; width:100%;">No items available.</div>`;
-        
         renderAdmin();
     }
 
     function renderAdmin() {
         document.getElementById('adminCatList').innerHTML = categories.map(c => `
-            <div style="min-width:90px; text-align:center; border:1px solid #ddd; padding:8px; border-radius:10px; background:white;">
-                <p style="font-size:10px; font-weight:bold;">${c.en}</p>
-                <button onclick="delCat('${c.id}')" style="color:red; border:none; background:none; font-size:10px;">Del</button>
+            <div style="min-width:100px; text-align:center; border:1px solid #ddd; padding:8px; border-radius:10px; background:white; position:relative;">
+                <p style="font-size:10px; font-weight:bold; margin-bottom:5px;">${c.en}</p>
+                <div style="display:flex; gap:4px; justify-content:center;">
+                    <button onclick="openRenameCat('${c.id}')" style="background:#3498db; color:white; border:none; font-size:9px; padding:3px 6px; border-radius:3px;">Rename</button>
+                    <button onclick="delCat('${c.id}')" style="background:#e74c3c; color:white; border:none; font-size:9px; padding:3px 6px; border-radius:3px;">Delete</button>
+                </div>
             </div>`).join('');
 
         document.getElementById('adminItemBody').innerHTML = data.map((i, idx) => `
@@ -189,10 +198,35 @@
         document.getElementById('nItemCat').innerHTML = categories.map(c => `<option value="${c.id}">${c.en}</option>`).join('');
     }
 
+    function openRenameCat(id) {
+        const cat = categories.find(c => c.id === id);
+        if(!cat) return;
+        catEditId = id;
+        document.getElementById('eCatEn').value = cat.en;
+        document.getElementById('eCatAm').value = cat.am;
+        document.getElementById('editCatModal').style.display = 'flex';
+    }
+
+    function saveCatRename() {
+        const cat = categories.find(c => c.id === catEditId);
+        if(cat) {
+            cat.en = document.getElementById('eCatEn').value;
+            cat.am = document.getElementById('eCatAm').value;
+        }
+        closeModals(); render();
+    }
+
+    function delCat(id) {
+        if(confirm("Deleting a category will remove it from navigation. Items assigned to it will still exist but won't be visible until re-assigned. Proceed?")) {
+            categories = categories.filter(c => c.id !== id);
+            if(curCat === id && categories.length > 0) curCat = categories[0].id;
+            render();
+        }
+    }
+
     function setCat(id) { curCat = id; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
     function toggleLang() { curLang = (curLang === 'en') ? 'am' : 'en'; render(); }
     function triggerEditPic(idx) { editingIdx = idx; document.getElementById('editPicInput').click(); }
-    
     function updateItemPhoto(input) {
         const r = new FileReader();
         r.onload = (e) => { data[editingIdx].img = e.target.result; render(); };
@@ -204,7 +238,7 @@
         b.innerText = "Syncing..."; b.disabled = true;
         try {
             await fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ items: data, cats: categories }) });
-            alert("Success!"); closeAdmin(); fetchData();
+            alert("Database Updated!"); closeAdmin(); fetchData();
         } catch (e) { alert("Error"); }
         finally { b.innerText = "💾 SYNC ALL UPDATES"; b.disabled = false; }
     }
@@ -221,24 +255,11 @@
     }
 
     function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
-    
-    function clearLoginFields() {
-        document.getElementById('uIn').value = "";
-        document.getElementById('pIn').value = "";
-    }
-
-    function closeModals() { 
-        document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); 
-        tmpImg = ""; 
-        clearLoginFields();
-    }
-
+    function clearLoginFields() { document.getElementById('uIn').value = ""; document.getElementById('pIn').value = ""; }
+    function closeModals() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); tmpImg = ""; clearLoginFields(); }
     function openCatModal() { document.getElementById('catModal').style.display = 'flex'; }
     function openItemModal() { document.getElementById('itemModal').style.display = 'flex'; }
-    function closeAdmin() { 
-        document.getElementById('adminDashboard').style.display = 'none'; 
-        clearLoginFields();
-    }
+    function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; clearLoginFields(); }
 
     function addCat() { 
         const idVal = document.getElementById('nCatId').value;
@@ -256,7 +277,6 @@
 
     function tglHdn(idx) { data[idx].hidden = !data[idx].hidden; renderAdmin(); }
     function delItm(idx) { if(confirm("Delete?")) { data.splice(idx,1); renderAdmin(); } }
-    function delCat(id) { if(confirm("Delete Category?")) { categories = categories.filter(c => c.id !== id); render(); } }
 
     fetchData();
 </script>
