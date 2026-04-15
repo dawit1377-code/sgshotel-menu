@@ -33,7 +33,6 @@
         .info .ingred { font-size: 12px; color: #777; font-style: italic; margin-top: 2px; font-family: 'Noto Sans Ethiopic', sans-serif; }
         .info .price { font-size: 17px; font-weight: 700; color: var(--dark-orange); margin-top: 5px; }
         
-        /* CALL TO ORDER BUTTON */
         .call-order-btn { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--dark-orange); color: white; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 2000; display: flex; align-items: center; gap: 10px; font-size: 16px; min-width: 200px; justify-content: center; }
 
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:10px; overflow-y: scroll; }
@@ -87,17 +86,19 @@
         <h3>SGS MANAGER</h3>
         <button onclick="closeAdmin()" style="color:white; border:none; background:none; font-size:30px;">×</button>
     </div>
-    <div style="display:flex; gap:5px; margin-top:15px; padding: 0 10px;">
+    <div style="display:flex; gap:5px; margin-top:15px;">
         <button class="action-btn" style="background:#27ae60" onclick="openAddModal()">➕ ADD</button>
+        <button class="action-btn" style="background:#2980b9" onclick="toggleMoveMode()">🔄 MOVE</button>
+        <button class="action-btn" style="background:#f39c12" onclick="toggleHideMode()">👁️ HIDE/SHOW</button>
         <button class="action-btn" style="background:#c0392b" onclick="toggleDeleteMode()">🗑️ DELETE</button>
     </div>
     <div class="table-wrapper">
-        <table id="adminTable">
-            <thead><tr><th>EN Name</th><th>AM Name</th><th>Price</th><th>Action</th></tr></thead>
+        <table>
+            <thead><tr><th>EN Name</th><th>AM Name</th><th>Ingredients</th><th>Price</th><th>Photo</th><th id="actionHeader" style="display:none">Action</th></tr></thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
-    <p style="text-align:center; color:gray; font-size:12px; margin-top:10px;">Changes save instantly to Google Sheets</p>
+    <button id="cloudBtn" onclick="saveToCloud()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; margin-top:20px; font-weight:bold;">💾 SAVE & SYNC TO GOOGLE SHEETS</button>
 </div>
 
 <div id="addModal" class="overlay"><div class="modal">
@@ -107,7 +108,8 @@
     <input type="text" id="newAm" placeholder="Amharic Name">
     <input type="text" id="newIng" placeholder="Ingredients">
     <input type="number" id="newPrice" placeholder="Price">
-    <button id="saveBtn" onclick="submitNewItem()" style="width:100%; padding:15px; background:#27ae60; color:white; border:none; border-radius:8px; margin-top:10px;">SAVE TO SHEET</button>
+    <input type="file" onchange="processFile(this)">
+    <button onclick="submitNewItem()" style="width:100%; padding:15px; background:#27ae60; color:white; border:none; border-radius:8px; margin-top:10px;">ADD ITEM</button>
     <button onclick="closeAddModal()" style="width:100%; border:none; background:none; color:red; margin-top:10px;">Cancel</button>
 </div></div>
 
@@ -120,20 +122,20 @@
 </div></div>
 
 <script>
-    // GOOGLE SHEETS URL
+    // GOOGLE SHEETS DEPLOYMENT URL
     const SHEET_URL = "https://script.google.com/macros/s/AKfycbxEpLqR5cBVOZYnUDNSkjwFy5pNL8a-tF8bNMqakWyy3Kep4Z0Nocq-1hTiUpgOvjGvbg/exec";
 
-    let currentLang = 'en', currentCat = 'breakfast', data = [], deleteMode = false;
+    let currentLang = 'en', currentCat = 'breakfast', adminMode = 'none', data = [], tempImgBase64 = "";
 
+    // INITIAL DATA FETCH FROM GOOGLE SHEETS
     async function fetchMenu() {
         try {
             const response = await fetch(SHEET_URL);
             data = await response.json();
             render();
-            if(document.getElementById('adminDashboard').style.display === 'block') refreshAdminTable();
         } catch (e) { 
-            console.error("Fetch error", e);
-            document.getElementById('menuListing').innerHTML = "<p style='text-align:center; color:red;'>Database Offline</p>";
+            console.error("Database Error", e);
+            document.getElementById('menuListing').innerHTML = "<p style='text-align:center; color:red;'>Sync Error</p>";
         }
     }
 
@@ -150,63 +152,36 @@
         document.getElementById('vat-text').innerText = isEn ? 'All Price Is inclusive of VAT' : 'ሁሉም ዋጋ የተጨማሪ እሴት ታክስ (VAT) ያካትታል';
         document.getElementById('callText').innerText = isEn ? 'Call To Order' : 'ለመዘዝ ይደውሉ';
         
-        const filtered = data.filter(i => i.cat === currentCat);
+        const filtered = data.filter(i => i.cat === currentCat && !i.hidden);
         
         if(filtered.length === 0) {
-            list.innerHTML = `<p style='text-align:center; padding-top:40px; color:#aaa;'>Category is empty.</p>`;
+            list.innerHTML = `<p style='text-align:center; padding-top:40px; color:#aaa;'>${isEn ? 'Category is empty.' : 'በዚህ ክፍል ምንም ዝርዝር የለም::'}</p>`;
             return;
         }
 
         filtered.forEach(item => {
             list.innerHTML += `<div class="card">
-                <img src="https://via.placeholder.com/150" class="food-img">
+                <img src="${item.img || 'https://via.placeholder.com/150'}" class="food-img">
                 <div class="info">
                     <div class="title">${isEn ? item.en : item.am}</div>
+                    <div class="ingred">${item.ing || ''}</div>
                     <div class="price">${item.price} ETB</div>
                 </div>
             </div>`;
         });
     }
 
-    async function submitNewItem() {
-        const btn = document.getElementById('saveBtn');
-        btn.innerText = "Syncing...";
-        btn.disabled = true;
-
-        const newItem = {
-            id: Date.now(),
-            cat: document.getElementById('newCat').value,
-            en: document.getElementById('newEn').value,
-            am: document.getElementById('newAm').value,
-            price: document.getElementById('newPrice').value
-        };
-
-        try {
-            await fetch(SHEET_URL, { 
-                method: 'POST', 
-                mode: 'no-cors', 
-                body: JSON.stringify(newItem) 
-            });
-            alert("Sent to Google Sheets!");
-            closeAddModal();
-            fetchMenu();
-        } catch (e) { alert("Error saving."); }
-        finally { btn.innerText = "SAVE TO SHEET"; btn.disabled = false; }
+    function changeCat(c) {
+        currentCat = c;
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.getElementById('cat-'+c).classList.add('active');
+        render();
     }
 
-    function refreshAdminTable() {
-        const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = "";
-        data.forEach((item, index) => {
-            tbody.innerHTML += `<tr>
-                <td>${item.en}</td>
-                <td>${item.am}</td>
-                <td>${item.price}</td>
-                <td>${deleteMode ? `<button onclick="alert('Manual sheet delete required')" style="color:red">Delete</button>` : '---'}</td>
-            </tr>`;
-        });
-    }
-
+    function toggleLang() { currentLang = (currentLang === 'en' ? 'am' : 'en'); render(); }
+    function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
+    function hideLogin() { document.getElementById('loginOverlay').style.display = 'none'; }
+    
     function handleLogin() {
         if(document.getElementById('userInput').value === "admin" && document.getElementById('passInput').value === "sgs") {
             document.getElementById('adminDashboard').style.display = 'block';
@@ -214,15 +189,93 @@
         } else { alert("Incorrect credentials"); }
     }
 
-    function toggleDeleteMode() { deleteMode = !deleteMode; refreshAdminTable(); }
-    function changeCat(c) { currentCat = c; document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); document.getElementById('cat-'+c).classList.add('active'); render(); }
-    function toggleLang() { currentLang = (currentLang === 'en' ? 'am' : 'en'); render(); }
-    function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
-    function hideLogin() { document.getElementById('loginOverlay').style.display = 'none'; }
-    function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; }
-    function openAddModal() { document.getElementById('addModal').style.display = 'flex'; }
-    function closeAddModal() { document.getElementById('addModal').style.display = 'none'; }
+    function refreshAdminTable() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = "";
+        document.getElementById('actionHeader').style.display = (adminMode === 'none' ? 'none' : 'table-cell');
 
+        data.forEach((item, index) => {
+            let action = "";
+            if(adminMode === 'delete') action = `<button onclick="deleteItem('${item.id}')" style="background:red; color:white; border:none; padding:5px; border-radius:4px;">Del</button>`;
+            if(adminMode === 'move') action = `<select onchange="moveItem('${item.id}', this.value)"><option>Move...</option><option value="breakfast">Breakfast</option><option value="lunchdinner">Lunch</option><option value="beverages">Beverages</option></select>`;
+            if(adminMode === 'hide') action = `<button onclick="toggleHideItem(${index})" style="background:#555; color:white; border:none; padding:5px; border-radius:4px;">${item.hidden ? 'Restore' : 'Hide'}</button>`;
+
+            tbody.innerHTML += `<tr class="${item.hidden ? 'hidden-row' : ''}">
+                <td><input value="${item.en}" onchange="data[${index}].en=this.value" style="width:100%"></td>
+                <td><input value="${item.am}" onchange="data[${index}].am=this.value" style="width:100%"></td>
+                <td><input value="${item.ing || ''}" onchange="data[${index}].ing=this.value" style="width:100%"></td>
+                <td><input type="number" value="${item.price}" onchange="data[${index}].price=this.value" style="width:100%"></td>
+                <td>
+                    <img src="${item.img || 'https://via.placeholder.com/150'}" style="width:50px; height:50px; object-fit:cover; border-radius:4px; display:block; margin-bottom:5px;">
+                    <input type="file" id="file-${index}" style="display:none" onchange="updateItemImage(${index}, this)">
+                    <button onclick="document.getElementById('file-${index}').click()" style="font-size:10px; padding:2px; cursor:pointer;">Change Photo</button>
+                </td>
+                <td style="display:${adminMode === 'none' ? 'none' : 'table-cell'}">${action}</td>
+            </tr>`;
+        });
+    }
+
+    function toggleDeleteMode() { adminMode = (adminMode === 'delete' ? 'none' : 'delete'); refreshAdminTable(); }
+    function toggleMoveMode() { adminMode = (adminMode === 'move' ? 'none' : 'move'); refreshAdminTable(); }
+    function toggleHideMode() { adminMode = (adminMode === 'hide' ? 'none' : 'hide'); refreshAdminTable(); }
+    
+    function deleteItem(id) { data = data.filter(i => i.id != id); refreshAdminTable(); }
+    function moveItem(id, cat) { const item = data.find(i => i.id == id); if(item && cat !== "Move...") { item.cat = cat; refreshAdminTable(); } }
+    function toggleHideItem(index) { data[index].hidden = !data[index].hidden; refreshAdminTable(); }
+
+    function updateItemImage(index, input) {
+        const reader = new FileReader();
+        reader.onload = (e) => { data[index].img = e.target.result; refreshAdminTable(); };
+        if(input.files[0]) reader.readAsDataURL(input.files[0]);
+    }
+
+    function processFile(input) {
+        const reader = new FileReader();
+        reader.onload = (e) => { tempImgBase64 = e.target.result; };
+        if(input.files[0]) reader.readAsDataURL(input.files[0]);
+    }
+
+    function openAddModal() { document.getElementById('addModal').style.display = 'flex'; }
+    function closeAddModal() { document.getElementById('addModal').style.display = 'none'; tempImgBase64 = ""; }
+
+    function submitNewItem() {
+        data.push({ 
+            id: Date.now().toString(), 
+            cat: document.getElementById('newCat').value, 
+            en: document.getElementById('newEn').value, 
+            am: document.getElementById('newAm').value, 
+            ing: document.getElementById('newIng').value, 
+            price: document.getElementById('newPrice').value, 
+            img: tempImgBase64, 
+            hidden: false 
+        });
+        closeAddModal(); refreshAdminTable();
+    }
+
+    // UPDATED: OVERWRITE GOOGLE SHEET WITH FULL ARRAY
+    async function saveToCloud() {
+        const btn = document.getElementById('cloudBtn');
+        btn.innerText = "⏳ SYNCING ALL DATA...";
+        btn.disabled = true;
+
+        try {
+            await fetch(SHEET_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(data) 
+            });
+            alert("SGS Cloud Sync Complete!");
+            document.getElementById('adminDashboard').style.display = 'none';
+        } catch (e) {
+            alert("Error syncing data.");
+        } finally {
+            btn.innerText = "💾 SAVE & SYNC TO GOOGLE SHEETS";
+            btn.disabled = false;
+        }
+    }
+
+    function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; }
+    
     fetchMenu();
 </script>
 </body>
