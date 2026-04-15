@@ -10,16 +10,21 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; padding-bottom: 80px; overflow-x: hidden; }
         
+        /* Header Fixed */
         .header { background: var(--dark-green); color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 115px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .header h1 { font-family: 'Playfair Display'; font-size: 28px; text-align: center; flex-grow: 1; transition: 0.3s; line-height: 1; }
+        .header h1 { font-family: 'Playfair Display'; font-size: 28px; text-align: center; flex-grow: 1; line-height: 1; }
         
-        .nav-bar { display: flex; overflow-x: auto; padding: 15px 10px; background: #fff; position: sticky; top: 115px; z-index: 900; border-bottom: 1px solid #eee; min-height: 115px; scrollbar-width: none; }
+        /* Category Nav - Increased Sizes */
+        .nav-bar { display: flex; overflow-x: auto; padding: 15px 10px; background: #fff; position: sticky; top: 115px; z-index: 900; border-bottom: 1px solid #eee; min-height: 140px; scrollbar-width: none; }
         .nav-bar::-webkit-scrollbar { display: none; }
-        .nav-item { text-align: center; min-width: 100px; opacity: 0.5; cursor: pointer; transition: all 0.3s ease; padding: 5px; border-bottom: 3px solid transparent; flex-shrink: 0; }
-        .nav-item.active { opacity: 1; transform: scale(1.1); font-weight: bold; color: var(--p-green); border-bottom: 3px solid var(--p-green); }
-        .nav-item img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid #eee; margin-bottom: 5px; pointer-events: none; }
+        .nav-item { text-align: center; min-width: 120px; opacity: 0.5; cursor: pointer; transition: all 0.3s ease; padding: 5px; border-bottom: 4px solid transparent; flex-shrink: 0; }
+        .nav-item.active { opacity: 1; transform: scale(1.05); font-weight: bold; color: var(--p-green); border-bottom: 4px solid var(--p-green); }
+        .nav-item img { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 3px solid #eee; margin-bottom: 8px; pointer-events: none; }
+        .nav-item p { font-size: 13px; font-weight: 600; margin-top: 2px; }
         
-        .container { padding: 15px; min-height: 60vh; width: 100%; }
+        /* Container - Added padding-top to prevent hiding first item */
+        .container { padding: 15px; padding-top: 20px; min-height: 60vh; width: 100%; }
+        
         .card { display: flex; align-items: center; background: white; border-radius: 15px; margin-bottom: 15px; padding: 12px; border: 1px solid #f2f2f2; box-shadow: 0 4px 12px rgba(0,0,0,0.05); animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -33,14 +38,11 @@
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:15px; overflow-y: auto; }
         .admin-section { border: 1px solid #eee; padding: 12px; border-radius: 12px; margin-bottom: 25px; background: #fafafa; }
         .btn { padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; font-size: 12px; transition: 0.2s; }
-        .btn:active { transform: scale(0.98); }
         .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:4000; align-items:center; justify-content:center; backdrop-filter: blur(4px); }
-        .modal { background:white; padding:25px; border-radius:20px; width:90%; max-width:400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        
+        .modal { background:white; padding:25px; border-radius:20px; width:90%; max-width:400px; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; background: white; }
         th, td { border: 1px solid #eee; padding: 8px; text-align: left; vertical-align: middle; }
         input, select { width: 100%; padding: 8px; margin: 4px 0; border: 1px solid #ddd; border-radius: 6px; outline: none; }
-        input:focus { border-color: var(--p-green); }
     </style>
 </head>
 <body>
@@ -62,42 +64,38 @@
 
 <div id="adminDashboard">
     <div style="display:flex; justify-content:space-between; align-items:center; background:var(--dark-green); padding:15px; color:white; border-radius:12px; margin-bottom: 15px;">
-        <h3 style="font-family: 'Playfair Display';">SGS MANAGER</h3>
+        <h3>SGS MANAGER</h3>
         <button onclick="closeAdmin()" style="color:white; border:none; background:none; font-size:35px; line-height:1;">&times;</button>
     </div>
-
     <div class="admin-section">
-        <h4 style="margin-bottom:10px; color: var(--dark-green);">1. Category Setup</h4>
+        <h4>1. Category Setup</h4>
         <div id="adminCatList" style="display:flex; overflow-x:auto; gap:12px; margin-bottom:15px; padding-bottom:5px;"></div>
-        <button class="btn" style="background:#8e44ad; width:100%; font-size:14px;" onclick="openCatModal()">+ Add New Category</button>
+        <button class="btn" style="background:#8e44ad; width:100%;" onclick="openCatModal()">+ Add New Category</button>
     </div>
-
     <div class="admin-section">
-        <h4 style="margin-bottom:10px; color: var(--dark-green);">2. Menu Items (Bulk Editor)</h4>
-        <button class="btn" style="background:#27ae60; margin-bottom:15px; width:100%; font-size:14px;" onclick="openItemModal()">+ Add New Food Item</button>
+        <h4>2. Menu Items</h4>
+        <button class="btn" style="background:#27ae60; margin-bottom:15px; width:100%;" onclick="openItemModal()">+ Add Food Item</button>
         <div style="overflow-x:auto;">
             <table>
                 <thead style="background:#f2f2f2;">
-                    <tr><th>Names & Ingredients</th><th>Price</th><th>Re-Categorize</th><th>Action</th></tr>
+                    <tr><th>Names & Ing</th><th>Price</th><th>Category</th><th>Action</th></tr>
                 </thead>
                 <tbody id="adminItemBody"></tbody>
             </table>
         </div>
     </div>
-
-    <button id="cloudBtn" onclick="saveToCloud()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; position:sticky; bottom:0; box-shadow: 0 -5px 15px rgba(0,0,0,0.1);">💾 SYNC ALL UPDATES</button>
+    <button id="cloudBtn" onclick="saveToCloud()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; position:sticky; bottom:0;">💾 SYNC ALL UPDATES</button>
 </div>
 
 <input type="file" id="editPicInput" style="display:none;" onchange="updateItemPhoto(this)">
 
 <div id="catModal" class="overlay"><div class="modal">
     <h3>New Category</h3>
-    <input type="text" id="nCatId" placeholder="Category ID (lowercase)">
+    <input type="text" id="nCatId" placeholder="ID (lowercase)">
     <input type="text" id="nCatEn" placeholder="English Name">
     <input type="text" id="nCatAm" placeholder="Amharic Name">
-    <p style="font-size:10px; color:gray; margin-top:5px;">Category Image:</p>
     <input type="file" onchange="handleImg(this)">
-    <button onclick="addCat()" class="btn" style="background:#8e44ad; width:100%; margin-top:15px;">Create Category</button>
+    <button onclick="addCat()" class="btn" style="background:#8e44ad; width:100%; margin-top:15px;">Create</button>
     <button onclick="closeModals()" class="btn" style="background:#95a5a6; width:100%; margin-top:8px;">Cancel</button>
 </div></div>
 
@@ -106,20 +104,18 @@
     <select id="nItemCat"></select>
     <input type="text" id="nItemEn" placeholder="English Name">
     <input type="text" id="nItemAm" placeholder="Amharic Name">
-    <input type="text" id="nItemIng" placeholder="Ingredients (e.g. Garlic, Beef)">
-    <input type="number" id="nItemPrice" placeholder="Price (ETB)">
-    <p style="font-size:10px; color:gray; margin-top:5px;">Food Image:</p>
+    <input type="text" id="nItemIng" placeholder="Ingredients">
+    <input type="number" id="nItemPrice" placeholder="Price">
     <input type="file" onchange="handleImg(this)">
-    <button onclick="addItem()" class="btn" style="background:#27ae60; width:100%; margin-top:15px;">Add to Menu</button>
+    <button onclick="addItem()" class="btn" style="background:#27ae60; width:100%; margin-top:15px;">Add</button>
     <button onclick="closeModals()" class="btn" style="background:#95a5a6; width:100%; margin-top:8px;">Cancel</button>
 </div></div>
 
 <div id="loginOverlay" class="overlay"><div class="modal" style="text-align:center;">
-    <h3 style="margin-bottom:15px;">MANAGER ACCESS</h3>
-    <input type="text" id="uIn" placeholder="Username" autocomplete="off">
-    <input type="password" id="pIn" placeholder="Password" autocomplete="off">
-    <button onclick="doLogin()" class="btn" style="background:var(--dark-green); width:100%; margin-top:15px; font-size:14px;">LOGIN</button>
-    <button onclick="closeModals()" style="background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">Cancel</button>
+    <h3>MANAGER ACCESS</h3>
+    <input type="text" id="uIn" placeholder="User" autocomplete="off">
+    <input type="password" id="pIn" placeholder="Pass" autocomplete="off">
+    <button onclick="doLogin()" class="btn" style="background:var(--dark-green); width:100%; margin-top:15px;">LOGIN</button>
 </div></div>
 
 <script>
@@ -127,8 +123,6 @@
     let data = [], categories = [], curLang = 'en', curCat = '', tmpImg = "", editingIdx = null;
 
     async function fetchData() {
-        const list = document.getElementById('menuListing');
-        list.innerHTML = `<div style="text-align:center; padding:50px;"><div style="border:4px solid #f3f3f3; border-top:4px solid var(--p-green); border-radius:50%; width:40px; height:40px; animation:spin 1s linear infinite; margin:auto;"></div><p style="margin-top:15px; color:#666;">Synchronizing Menu...</p></div>`;
         try {
             const res = await fetch(`${SHEET_URL}?t=${Date.now()}`);
             const json = await res.json();
@@ -136,7 +130,7 @@
             categories = json.cats || [];
             if(categories.length > 0 && !curCat) curCat = categories[0].id;
             render();
-        } catch (e) { list.innerHTML = "<p style='text-align:center; padding:40px;'>Connection lost. Please refresh.</p>"; }
+        } catch (e) { console.error("Load Error"); }
     }
 
     function render() {
@@ -149,8 +143,8 @@
         const nav = document.getElementById('categoryNav');
         nav.innerHTML = categories.map(c => `
             <div class="nav-item ${curCat === c.id ? 'active' : ''}" onclick="setCat('${c.id}')">
-                <img src="${c.img || 'https://via.placeholder.com/65'}">
-                <p style="font-size:11px; margin-top:4px;">${isEn ? c.en : c.am}</p>
+                <img src="${c.img || 'https://via.placeholder.com/85'}">
+                <p>${isEn ? c.en : c.am}</p>
             </div>`).join('');
 
         const list = document.getElementById('menuListing');
@@ -164,52 +158,43 @@
                     <div class="food-ing">${i.ing || ''}</div>
                     <div class="price-tag">${i.price} ETB</div>
                 </div>
-            </div>`).join('') : `<div style="text-align:center; padding:60px; color:#999; width:100%;">No items available here.</div>`;
+            </div>`).join('') : `<div style="text-align:center; padding:60px; color:#999; width:100%;">No items available.</div>`;
         
         renderAdmin();
     }
 
     function renderAdmin() {
         document.getElementById('adminCatList').innerHTML = categories.map(c => `
-            <div style="min-width:85px; text-align:center; border:1px solid #ddd; padding:8px; border-radius:10px; background:white;">
-                <p style="font-size:10px; font-weight:bold; overflow:hidden; text-overflow:ellipsis;">${c.en}</p>
-                <button onclick="delCat('${c.id}')" style="color:#e74c3c; border:none; background:none; font-size:10px; font-weight:bold; cursor:pointer;">Delete</button>
+            <div style="min-width:90px; text-align:center; border:1px solid #ddd; padding:8px; border-radius:10px; background:white;">
+                <p style="font-size:10px; font-weight:bold;">${c.en}</p>
+                <button onclick="delCat('${c.id}')" style="color:red; border:none; background:none; font-size:10px;">Del</button>
             </div>`).join('');
 
         document.getElementById('adminItemBody').innerHTML = data.map((i, idx) => `
-            <tr style="${i.hidden ? 'background:#fdfdfd; opacity:0.5;' : ''}">
+            <tr style="${i.hidden ? 'opacity:0.5;' : ''}">
                 <td>
-                    <input value="${i.en}" onchange="data[${idx}].en=this.value" placeholder="EN">
-                    <input value="${i.am}" onchange="data[${idx}].am=this.value" placeholder="AM">
-                    <input value="${i.ing || ''}" onchange="data[${idx}].ing=this.value" placeholder="Ingredients" style="font-size:9px;">
+                    <input value="${i.en}" onchange="data[${idx}].en=this.value">
+                    <input value="${i.am}" onchange="data[${idx}].am=this.value">
+                    <input value="${i.ing || ''}" onchange="data[${idx}].ing=this.value" style="font-size:9px;">
                 </td>
-                <td><input type="number" value="${i.price}" onchange="data[${idx}].price=this.value" style="width:60px; font-weight:bold;"></td>
+                <td><input type="number" value="${i.price}" onchange="data[${idx}].price=this.value" style="width:55px;"></td>
                 <td>
                     <select onchange="data[${idx}].cat=this.value; render();" style="font-size:10px;">
                         ${categories.map(c => `<option value="${c.id}" ${String(i.cat).toLowerCase() === String(c.id).toLowerCase() ? 'selected' : ''}>${c.en}</option>`).join('')}
                     </select>
-                    <button class="btn" style="background:#3498db; width:100%; margin-top:4px; padding:4px;" onclick="triggerEditPic(${idx})">Change Pic</button>
+                    <button class="btn" style="background:#3498db; width:100%; padding:4px; margin-top:2px;" onclick="triggerEditPic(${idx})">Pic</button>
                 </td>
                 <td>
-                    <button onclick="tglHdn(${idx})" style="background:#2c3e50; color:white; padding:6px; border:none; border-radius:4px; width:100%; margin-bottom:4px; font-size:10px;">${i.hidden?'Unhide':'Hide'}</button>
-                    <button onclick="delItm(${idx})" style="background:#c0392b; color:white; padding:6px; border:none; border-radius:4px; width:100%; font-size:10px;">Delete</button>
+                    <button onclick="tglHdn(${idx})" style="background:#2c3e50; color:white; padding:5px; width:100%; margin-bottom:2px; border:none;">${i.hidden?'Show':'Hide'}</button>
+                    <button onclick="delItm(${idx})" style="background:#c0392b; color:white; padding:5px; width:100%; border:none;">Del</button>
                 </td>
             </tr>`).join('');
         document.getElementById('nItemCat').innerHTML = categories.map(c => `<option value="${c.id}">${c.en}</option>`).join('');
     }
 
-    function setCat(id) { 
-        curCat = id; render(); window.scrollTo({ top: 115, behavior: 'smooth' });
-    }
-
-    function toggleLang() { 
-        curLang = (curLang === 'en') ? 'am' : 'en'; render(); 
-    }
-
-    function triggerEditPic(idx) { 
-        editingIdx = idx; document.getElementById('editPicInput').click(); 
-    }
-
+    function setCat(id) { curCat = id; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    function toggleLang() { curLang = (curLang === 'en') ? 'am' : 'en'; render(); }
+    function triggerEditPic(idx) { editingIdx = idx; document.getElementById('editPicInput').click(); }
     function updateItemPhoto(input) {
         const r = new FileReader();
         r.onload = (e) => { data[editingIdx].img = e.target.result; render(); };
@@ -218,11 +203,11 @@
 
     async function saveToCloud() {
         const b = document.getElementById('cloudBtn');
-        b.innerText = "Saving to Database..."; b.disabled = true;
+        b.innerText = "Syncing..."; b.disabled = true;
         try {
             await fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ items: data, cats: categories }) });
-            alert("Update Successful!"); closeAdmin(); fetchData();
-        } catch (e) { alert("Error connecting to server."); }
+            alert("Success!"); closeAdmin(); fetchData();
+        } catch (e) { alert("Error"); }
         finally { b.innerText = "💾 SYNC ALL UPDATES"; b.disabled = false; }
     }
 
@@ -233,24 +218,15 @@
     }
 
     function handleImg(input) { 
-        const r = new FileReader(); 
-        r.onload = (e) => { tmpImg = e.target.result; }; 
+        const r = new FileReader(); r.onload = (e) => { tmpImg = e.target.result; }; 
         if(input.files[0]) r.readAsDataURL(input.files[0]); 
     }
 
     function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
-
-    function closeModals() { 
-        document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); 
-        tmpImg = ""; document.getElementById('uIn').value = ""; document.getElementById('pIn').value = ""; 
-    }
-
+    function closeModals() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); tmpImg = ""; }
     function openCatModal() { document.getElementById('catModal').style.display = 'flex'; }
     function openItemModal() { document.getElementById('itemModal').style.display = 'flex'; }
-    function closeAdmin() { 
-        document.getElementById('adminDashboard').style.display = 'none'; 
-        document.getElementById('uIn').value = ""; document.getElementById('pIn').value = ""; 
-    }
+    function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; }
 
     function addCat() { 
         const idVal = document.getElementById('nCatId').value;
@@ -267,12 +243,8 @@
     }
 
     function tglHdn(idx) { data[idx].hidden = !data[idx].hidden; renderAdmin(); }
-    function delItm(idx) { if(confirm("Delete item?")) { data.splice(idx,1); renderAdmin(); } }
-    function delCat(id) { if(confirm("Delete category?")) { categories = categories.filter(c => c.id !== id); render(); } }
-
-    const style = document.createElement('style');
-    style.innerHTML = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
-    document.head.appendChild(style);
+    function delItm(idx) { if(confirm("Delete?")) { data.splice(idx,1); renderAdmin(); } }
+    function delCat(id) { if(confirm("Delete Category?")) { categories = categories.filter(c => c.id !== id); render(); } }
 
     fetchData();
 </script>
