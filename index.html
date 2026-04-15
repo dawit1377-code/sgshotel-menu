@@ -11,7 +11,7 @@
         body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; padding-bottom: 80px; overflow-x: hidden; }
         
         .header { background: var(--dark-green); color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 115px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .header h1 { font-family: 'Playfair Display'; font-size: 28px; text-align: center; flex-grow: 1; transition: 0.3s; }
+        .header h1 { font-family: 'Playfair Display'; font-size: 28px; text-align: center; flex-grow: 1; transition: 0.3s; line-height: 1; }
         
         .nav-bar { display: flex; overflow-x: auto; padding: 15px 10px; background: #fff; position: sticky; top: 115px; z-index: 900; border-bottom: 1px solid #eee; min-height: 115px; scrollbar-width: none; }
         .nav-bar::-webkit-scrollbar { display: none; }
@@ -49,7 +49,8 @@
     <div onclick="showLogin()" style="cursor:pointer; font-size:26px; padding:10px;">☰</div>
     <div style="text-align:center;">
         <h1 id="mainTitle">SGS HOTEL</h1>
-        <div id="vatLabel" style="font-size:11px; opacity:0.9; letter-spacing: 0.5px;">VAT Included</div>
+        <div id="subTitle" style="font-size: 14px; font-weight: bold; letter-spacing: 4px; margin-top: -5px;">MENU</div>
+        <div id="vatLabel" style="font-size:10px; opacity:0.9; margin-top: 2px;">All Price are including VAT</div>
     </div>
     <button onclick="toggleLang()" style="background:white; color:var(--dark-green); border:none; padding:8px 14px; border-radius:20px; font-weight:bold; font-size:12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">EN/አማ</button>
 </header>
@@ -141,10 +142,10 @@
     function render() {
         const isEn = curLang === 'en';
         document.getElementById('mainTitle').innerText = isEn ? "SGS HOTEL" : "ኤስ.ጂ.ኤስ ሆቴል";
-        document.getElementById('vatLabel').innerText = isEn ? "VAT Included" : "ታክስ ያካትታል";
+        document.getElementById('subTitle').innerText = isEn ? "MENU" : "ሜኑ";
+        document.getElementById('vatLabel').innerText = isEn ? "All Price are including VAT" : "ሁሉም ዋጋዎች ታክስ ያካትታሉ";
         document.getElementById('callBtnText').innerText = isEn ? "Call To Order" : "ለመዘዝ ይደውሉ";
         
-        // Render Category Icons
         const nav = document.getElementById('categoryNav');
         nav.innerHTML = categories.map(c => `
             <div class="nav-item ${curCat === c.id ? 'active' : ''}" onclick="setCat('${c.id}')">
@@ -152,7 +153,6 @@
                 <p style="font-size:11px; margin-top:4px;">${isEn ? c.en : c.am}</p>
             </div>`).join('');
 
-        // Render Food Items for Current Category
         const list = document.getElementById('menuListing');
         const filtered = data.filter(i => String(i.cat).toLowerCase() === String(curCat).toLowerCase() && !i.hidden);
         
@@ -164,7 +164,7 @@
                     <div class="food-ing">${i.ing || ''}</div>
                     <div class="price-tag">${i.price} ETB</div>
                 </div>
-            </div>`).join('') : `<div style="text-align:center; padding:60px; color:#999; width:100%;">No items available in ${curCat}.</div>`;
+            </div>`).join('') : `<div style="text-align:center; padding:60px; color:#999; width:100%;">No items available here.</div>`;
         
         renderAdmin();
     }
@@ -181,7 +181,7 @@
                 <td>
                     <input value="${i.en}" onchange="data[${idx}].en=this.value" placeholder="EN">
                     <input value="${i.am}" onchange="data[${idx}].am=this.value" placeholder="AM">
-                    <input value="${i.ing || ''}" onchange="data[${idx}].ing=this.value" placeholder="Ingredients" style="font-size:9px; color:#666;">
+                    <input value="${i.ing || ''}" onchange="data[${idx}].ing=this.value" placeholder="Ingredients" style="font-size:9px;">
                 </td>
                 <td><input type="number" value="${i.price}" onchange="data[${idx}].price=this.value" style="width:60px; font-weight:bold;"></td>
                 <td>
@@ -199,19 +199,15 @@
     }
 
     function setCat(id) { 
-        curCat = id; 
-        render(); 
-        window.scrollTo({ top: 115, behavior: 'smooth' });
+        curCat = id; render(); window.scrollTo({ top: 115, behavior: 'smooth' });
     }
 
     function toggleLang() { 
-        curLang = (curLang === 'en') ? 'am' : 'en'; 
-        render(); 
+        curLang = (curLang === 'en') ? 'am' : 'en'; render(); 
     }
 
     function triggerEditPic(idx) { 
-        editingIdx = idx; 
-        document.getElementById('editPicInput').click(); 
+        editingIdx = idx; document.getElementById('editPicInput').click(); 
     }
 
     function updateItemPhoto(input) {
@@ -225,21 +221,15 @@
         b.innerText = "Saving to Database..."; b.disabled = true;
         try {
             await fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ items: data, cats: categories }) });
-            alert("Update Successful! Changes are now live.");
-            closeAdmin(); fetchData();
-        } catch (e) { alert("Error connecting to server. Try again."); }
+            alert("Update Successful!"); closeAdmin(); fetchData();
+        } catch (e) { alert("Error connecting to server."); }
         finally { b.innerText = "💾 SYNC ALL UPDATES"; b.disabled = false; }
     }
 
     function doLogin() { 
-        const u = document.getElementById('uIn').value;
-        const p = document.getElementById('pIn').value;
-        if(u === "admin" && p === "sgs") { 
-            document.getElementById('adminDashboard').style.display = 'block'; 
-            closeModals(); 
-        } else { 
-            alert("Unauthorized Access"); 
-        } 
+        if(document.getElementById('uIn').value === "admin" && document.getElementById('pIn').value === "sgs") { 
+            document.getElementById('adminDashboard').style.display = 'block'; closeModals(); 
+        } else { alert("Unauthorized"); } 
     }
 
     function handleImg(input) { 
@@ -248,43 +238,37 @@
         if(input.files[0]) r.readAsDataURL(input.files[0]); 
     }
 
-    function showLogin() { 
-        document.getElementById('loginOverlay').style.display = 'flex'; 
-    }
+    function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
 
     function closeModals() { 
         document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); 
-        tmpImg = ""; 
-        document.getElementById('uIn').value = ""; 
-        document.getElementById('pIn').value = ""; 
+        tmpImg = ""; document.getElementById('uIn').value = ""; document.getElementById('pIn').value = ""; 
     }
 
     function openCatModal() { document.getElementById('catModal').style.display = 'flex'; }
     function openItemModal() { document.getElementById('itemModal').style.display = 'flex'; }
-    
     function closeAdmin() { 
         document.getElementById('adminDashboard').style.display = 'none'; 
-        document.getElementById('uIn').value = ""; 
-        document.getElementById('pIn').value = ""; 
+        document.getElementById('uIn').value = ""; document.getElementById('pIn').value = ""; 
     }
 
     function addCat() { 
         const idVal = document.getElementById('nCatId').value;
-        if(!idVal) return alert("ID Required");
+        if(!idVal) return;
         categories.push({id: idVal, en: document.getElementById('nCatEn').value, am: document.getElementById('nCatAm').value, img: tmpImg}); 
         closeModals(); render(); 
     }
 
     function addItem() { 
         const enVal = document.getElementById('nItemEn').value;
-        if(!enVal) return alert("Name Required");
+        if(!enVal) return;
         data.push({id: Date.now(), cat: document.getElementById('nItemCat').value, en: enVal, am: document.getElementById('nItemAm').value, ing: document.getElementById('nItemIng').value, price: document.getElementById('nItemPrice').value, img: tmpImg, hidden: false}); 
         closeModals(); render(); 
     }
 
     function tglHdn(idx) { data[idx].hidden = !data[idx].hidden; renderAdmin(); }
-    function delItm(idx) { if(confirm("Permanently delete this item?")) { data.splice(idx,1); renderAdmin(); } }
-    function delCat(id) { if(confirm("Delete category? Items in this category will remain in the database.")) { categories = categories.filter(c => c.id !== id); render(); } }
+    function delItm(idx) { if(confirm("Delete item?")) { data.splice(idx,1); renderAdmin(); } }
+    function delCat(id) { if(confirm("Delete category?")) { categories = categories.filter(c => c.id !== id); render(); } }
 
     const style = document.createElement('style');
     style.innerHTML = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
