@@ -7,38 +7,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --p-green: #4F7942; --dark-green: #3E5F34; --bg: #ffffff; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; padding-bottom: 80px; overflow-x: hidden; }
         
         .header { background: var(--dark-green); color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 115px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .header h1 { font-family: 'Playfair Display'; font-size: 28px; text-align: center; flex-grow: 1; line-height: 1; }
         
         .nav-bar { display: flex; overflow-x: auto; padding: 15px 10px; background: #fff; position: sticky; top: 115px; z-index: 900; border-bottom: 1px solid #eee; min-height: 140px; scrollbar-width: none; }
-        .nav-bar::-webkit-scrollbar { display: none; }
         .nav-item { text-align: center; min-width: 120px; opacity: 0.5; cursor: pointer; transition: all 0.3s ease; padding: 5px; border-bottom: 4px solid transparent; flex-shrink: 0; }
         .nav-item.active { opacity: 1; transform: scale(1.05); font-weight: bold; color: var(--p-green); border-bottom: 4px solid var(--p-green); }
         .nav-item img { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 3px solid #eee; margin-bottom: 8px; pointer-events: none; }
-        .nav-item p { font-size: 13px; font-weight: 600; margin-top: 2px; }
         
         .container { padding: 15px; padding-top: 20px; min-height: 60vh; width: 100%; }
-        .card { display: flex; align-items: center; background: white; border-radius: 15px; margin-bottom: 15px; padding: 12px; border: 1px solid #f2f2f2; box-shadow: 0 4px 12px rgba(0,0,0,0.05); animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
+        .card { display: flex; align-items: center; background: white; border-radius: 15px; margin-bottom: 15px; padding: 12px; border: 1px solid #f2f2f2; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .food-img { width: 105px; height: 105px; border-radius: 12px; object-fit: cover; margin-right: 15px; background: #f9f9f9; flex-shrink: 0; }
-        .food-title { color: var(--p-green); font-size: 19px; font-weight: 600; line-height: 1.2; margin-bottom: 2px; }
-        .food-ing { font-size: 12px; color: #777; font-style: italic; line-height: 1.3; }
+        .food-title { color: var(--p-green); font-size: 19px; font-weight: 600; line-height: 1.2; }
         .price-tag { font-weight: bold; margin-top: 8px; color: var(--dark-green); font-size: 16px; }
         
         .call-order-btn { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--dark-green); color: white; padding: 16px 35px; border-radius: 50px; text-decoration: none; z-index: 2000; display: flex; align-items: center; gap: 10px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         
+        /* Admin Dashboard Fixes */
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:15px; overflow-y: auto; }
         .admin-section { border: 1px solid #eee; padding: 12px; border-radius: 12px; margin-bottom: 25px; background: #fafafa; }
-        .btn { padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; font-size: 11px; transition: 0.2s; }
+        .btn { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; font-size: 12px; transition: 0.2s; }
         .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:4000; align-items:center; justify-content:center; backdrop-filter: blur(4px); }
         .modal { background:white; padding:25px; border-radius:20px; width:90%; max-width:400px; }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; background: white; }
-        th, td { border: 1px solid #eee; padding: 8px; text-align: left; vertical-align: middle; }
-        input, select { width: 100%; padding: 8px; margin: 4px 0; border: 1px solid #ddd; border-radius: 6px; outline: none; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; background: white; }
+        th, td { border: 1px solid #eee; padding: 10px; text-align: left; }
+        input, select { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 6px; }
     </style>
 </head>
 <body>
@@ -47,10 +43,9 @@
     <div onclick="showLogin()" style="cursor:pointer; font-size:26px; padding:10px;">☰</div>
     <div style="text-align:center;">
         <h1 id="mainTitle">SGS HOTEL</h1>
-        <div id="subTitle" style="font-size: 14px; font-weight: bold; letter-spacing: 4px; margin-top: -5px;">MENU</div>
-        <div id="vatLabel" style="font-size:10px; opacity:0.9; margin-top: 2px;">All Price are including VAT</div>
+        <div id="subTitle" style="font-size:14px; font-weight:bold; letter-spacing:4px;">MENU</div>
     </div>
-    <button onclick="toggleLang()" style="background:white; color:var(--dark-green); border:none; padding:8px 14px; border-radius:20px; font-weight:bold; font-size:12px;">EN/አማ</button>
+    <button onclick="toggleLang()" style="background:white; color:var(--dark-green); border:none; padding:8px 14px; border-radius:20px; font-weight:bold;">EN/አማ</button>
 </header>
 
 <nav class="nav-bar" id="categoryNav"></nav>
@@ -59,25 +54,23 @@
 <a href="tel:+251954954591" class="call-order-btn">📞 <span id="callBtnText">Call To Order</span></a>
 
 <div id="adminDashboard">
-    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--dark-green); padding:15px; color:white; border-radius:12px; margin-bottom: 15px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; background:var(--dark-green); padding:15px; color:white; border-radius:12px; margin-bottom: 20px;">
         <h3>SGS MANAGER</h3>
-        <button onclick="closeAdmin()" style="color:white; border:none; background:none; font-size:35px; line-height:1;">&times;</button>
+        <button onclick="closeAdmin()" style="color:white; border:none; background:none; font-size:35px;">&times;</button>
     </div>
     
     <div class="admin-section">
-        <h4>1. Categories</h4>
-        <div style="overflow-x:auto;">
-            <table>
-                <thead><tr style="background:#eee;"><th>Name</th><th>Action</th></tr></thead>
-                <tbody id="adminCatBody"></tbody>
-            </table>
-        </div>
-        <button class="btn" style="background:#8e44ad; width:100%; margin-top:10px;" onclick="openCatModal()">+ New Category</button>
+        <h4>1. Categories Setup</h4>
+        <table>
+            <thead><tr style="background:#eee;"><th>Category Name</th><th>Action</th></tr></thead>
+            <tbody id="adminCatBody"></tbody>
+        </table>
+        <button class="btn" style="background:#8e44ad; width:100%; margin-top:15px;" onclick="openCatModal()">+ NEW CATEGORY</button>
     </div>
 
     <div class="admin-section">
-        <h4>2. Menu Items</h4>
-        <button class="btn" style="background:#27ae60; margin-bottom:15px; width:100%;" onclick="openItemModal()">+ Add Item</button>
+        <h4>2. Menu Items Setup</h4>
+        <button class="btn" style="background:#27ae60; width:100%; margin-bottom:15px;" onclick="openItemModal()">+ ADD NEW ITEM</button>
         <div style="overflow-x:auto;">
             <table>
                 <thead style="background:#f2f2f2;">
@@ -87,173 +80,130 @@
             </table>
         </div>
     </div>
-    <button id="cloudBtn" onclick="saveToCloud()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; position:sticky; bottom:0;">💾 SYNC TO CLOUD</button>
+    <button id="cloudBtn" onclick="saveToCloud()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; position:sticky; bottom:10px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1);">💾 SYNC ALL UPDATES</button>
 </div>
 
 <div id="editCatModal" class="overlay"><div class="modal">
     <h3>Rename Category</h3>
-    <input type="text" id="eCatEn" placeholder="New English Name">
-    <input type="text" id="eCatAm" placeholder="New Amharic Name">
-    <button onclick="saveCatRename()" class="btn" style="background:#27ae60; width:100%; margin-top:15px;">Apply</button>
-    <button onclick="closeModals()" class="btn" style="background:#95a5a6; width:100%; margin-top:8px;">Cancel</button>
+    <input type="text" id="eCatEn" placeholder="English">
+    <input type="text" id="eCatAm" placeholder="Amharic">
+    <button onclick="applyCatRename()" class="btn" style="background:#27ae60; width:100%; margin-top:15px;">SAVE</button>
+    <button onclick="closeModals()" class="btn" style="background:#95a5a6; width:100%; margin-top:8px;">CANCEL</button>
 </div></div>
 
 <div id="catModal" class="overlay"><div class="modal">
-    <h3>New Category</h3>
-    <input type="text" id="nCatId" placeholder="ID (lowercase)">
-    <input type="text" id="nCatEn" placeholder="English Name">
-    <input type="text" id="nCatAm" placeholder="Amharic Name">
+    <h3>Create Category</h3>
+    <input type="text" id="nCatId" placeholder="ID (no spaces)">
+    <input type="text" id="nCatEn" placeholder="Name English">
+    <input type="text" id="nCatAm" placeholder="Name Amharic">
     <input type="file" onchange="handleImg(this)">
-    <button onclick="addCat()" class="btn" style="background:#8e44ad; width:100%; margin-top:15px;">Create</button>
-    <button onclick="closeModals()" class="btn" style="background:#95a5a6; width:100%; margin-top:8px;">Cancel</button>
+    <button onclick="createNewCat()" class="btn" style="background:#8e44ad; width:100%; margin-top:15px;">CREATE</button>
+    <button onclick="closeModals()" class="btn" style="background:#95a5a6; width:100%; margin-top:8px;">CANCEL</button>
 </div></div>
 
 <div id="itemModal" class="overlay"><div class="modal">
-    <h3>New Item</h3>
+    <h3>Add Item</h3>
     <select id="nItemCat"></select>
-    <input type="text" id="nItemEn" placeholder="English">
-    <input type="text" id="nItemAm" placeholder="Amharic">
-    <input type="text" id="nItemIng" placeholder="Ingredients">
+    <input type="text" id="nItemEn" placeholder="Name English">
+    <input type="text" id="nItemAm" placeholder="Name Amharic">
     <input type="number" id="nItemPrice" placeholder="Price">
     <input type="file" onchange="handleImg(this)">
-    <button onclick="addItem()" class="btn" style="background:#27ae60; width:100%; margin-top:15px;">Add</button>
-    <button onclick="closeModals()" class="btn" style="background:#95a5a6; width:100%; margin-top:8px;">Cancel</button>
+    <button onclick="createNewItem()" class="btn" style="background:#27ae60; width:100%; margin-top:15px;">ADD ITEM</button>
+    <button onclick="closeModals()" class="btn" style="background:#95a5a6; width:100%; margin-top:8px;">CANCEL</button>
 </div></div>
 
 <div id="loginOverlay" class="overlay"><div class="modal" style="text-align:center;">
-    <h3>MANAGER ACCESS</h3>
-    <input type="text" id="uIn" placeholder="User" autocomplete="off">
-    <input type="password" id="pIn" placeholder="Pass" autocomplete="off">
-    <button onclick="doLogin()" class="btn" style="background:var(--dark-green); width:100%; margin-top:15px;">LOGIN</button>
-    <button onclick="closeModals()" style="background:none; border:none; color:gray; margin-top:10px;">Cancel</button>
+    <h3>ADMIN LOGIN</h3>
+    <input type="text" id="uIn" placeholder="User">
+    <input type="password" id="pIn" placeholder="Pass">
+    <button onclick="verifyLogin()" class="btn" style="background:var(--dark-green); width:100%; margin-top:15px;">ENTER</button>
 </div></div>
 
-<input type="file" id="editPicInput" style="display:none;" onchange="updateItemPhoto(this)">
-
 <script>
-    const SHEET_URL = "https://script.google.com/macros/s/AKfycbzUs_R4tSRSWfZN5WWwoUa1_8qxHbs95fQk83xDwd9TZ9wzGnlxxLuEmFpTgfaZ2aKOnA/exec";
-    let data = [], categories = [], curLang = 'en', curCat = '', tmpImg = "", editingIdx = null, catEditId = null;
+    const URL = "https://script.google.com/macros/s/AKfycbzUs_R4tSRSWfZN5WWwoUa1_8qxHbs95fQk83xDwd9TZ9wzGnlxxLuEmFpTgfaZ2aKOnA/exec";
+    let data = [], cats = [], lang = 'en', activeCat = '', imgTmp = '', editCatId = null;
 
-    async function fetchData() {
+    async function load() {
         try {
-            const res = await fetch(`${SHEET_URL}?t=${Date.now()}`);
-            const json = await res.json();
-            data = json.items || [];
-            categories = json.cats || [];
-            if(categories.length > 0 && !curCat) curCat = categories[0].id;
-            render();
-        } catch (e) { console.error("Database unavailable"); }
+            const r = await fetch(`${URL}?t=${Date.now()}`);
+            const j = await r.json();
+            data = j.items || [];
+            cats = j.cats || [];
+            if(cats.length > 0 && !activeCat) activeCat = cats[0].id;
+            ui();
+        } catch(e) { alert("Check Connection"); }
     }
 
-    function render() {
-        const isEn = curLang === 'en';
-        document.getElementById('mainTitle').innerText = isEn ? "SGS HOTEL" : "ኤስ.ጂ.ኤስ ሆቴል";
-        document.getElementById('subTitle').innerText = isEn ? "MENU" : "ሜኑ";
-        document.getElementById('vatLabel').innerText = isEn ? "All Price are including VAT" : "ሁሉም ዋጋዎች ታክስ ያካትታሉ";
-        document.getElementById('callBtnText').innerText = isEn ? "Call To Order" : "ለመዘዝ ይደውሉ";
-        
-        const nav = document.getElementById('categoryNav');
-        nav.innerHTML = categories.map(c => `
-            <div class="nav-item ${curCat === c.id ? 'active' : ''}" onclick="setCat('${c.id}')">
-                <img src="${c.img || 'https://via.placeholder.com/85'}">
-                <p>${isEn ? c.en : c.am}</p>
+    function ui() {
+        const isEn = lang === 'en';
+        document.getElementById('categoryNav').innerHTML = cats.map(c => `
+            <div class="nav-item ${activeCat === c.id ? 'active' : ''}" onclick="setCat('${c.id}')">
+                <img src="${c.img || ''}">
+                <p style="font-size:13px; font-weight:600;">${isEn ? c.en : c.am}</p>
             </div>`).join('');
 
-        const list = document.getElementById('menuListing');
-        const filtered = data.filter(i => String(i.cat).toLowerCase() === String(curCat).toLowerCase() && !i.hidden);
-        list.innerHTML = filtered.length ? filtered.map(i => `
+        document.getElementById('menuListing').innerHTML = data.filter(i => i.cat === activeCat && !i.hidden).map(i => `
             <div class="card">
-                <img src="${i.img || 'https://via.placeholder.com/105'}" class="food-img">
-                <div class="info">
+                <img src="${i.img || ''}" class="food-img">
+                <div>
                     <div class="food-title">${isEn ? i.en : i.am}</div>
-                    <div class="food-ing">${i.ing || ''}</div>
                     <div class="price-tag">${i.price} ETB</div>
                 </div>
-            </div>`).join('') : `<div style="text-align:center; padding:60px; color:#999;">Select a category</div>`;
-        renderAdmin();
+            </div>`).join('');
+        adminUi();
     }
 
-    function renderAdmin() {
-        // Category Table
-        document.getElementById('adminCatBody').innerHTML = categories.map(c => `
+    function adminUi() {
+        document.getElementById('adminCatBody').innerHTML = cats.map(c => `
             <tr>
-                <td style="font-weight:bold;">${c.en} / ${c.am}</td>
+                <td><b>${c.en}</b> / ${c.am}</td>
                 <td>
-                    <button onclick="window.startRenameCat('${c.id}')" style="background:#3498db; color:white; border:none; padding:5px 10px; border-radius:4px; margin-right:5px;">Edit</button>
-                    <button onclick="window.confirmDelCat('${c.id}')" style="background:#e74c3c; color:white; border:none; padding:5px 10px; border-radius:4px;">Del</button>
+                    <button onclick="startRename('${c.id}')" style="background:#3498db; color:white; border:none; padding:8px; border-radius:4px;">Rename</button>
+                    <button onclick="confirmDeleteCat('${c.id}')" style="background:#e74c3c; color:white; border:none; padding:8px; border-radius:4px;">Delete</button>
                 </td>
             </tr>`).join('');
 
-        // Item Table
         document.getElementById('adminItemBody').innerHTML = data.map((i, idx) => `
-            <tr style="${i.hidden ? 'opacity:0.4;' : ''}">
-                <td><input value="${i.en}" onchange="data[${idx}].en=this.value"><input value="${i.am}" onchange="data[${idx}].am=this.value"></td>
-                <td><input type="number" value="${i.price}" onchange="data[${idx}].price=this.value" style="width:50px;"></td>
-                <td>
-                    <select onchange="data[${idx}].cat=this.value; render();">
-                        ${categories.map(c => `<option value="${c.id}" ${String(i.cat).toLowerCase() === String(c.id).toLowerCase() ? 'selected' : ''}>${c.en}</option>`).join('')}
-                    </select>
-                </td>
-                <td><button onclick="tglHdn(${idx})" style="background:#2c3e50; color:white; padding:4px; border:none; margin-bottom:2px;">Hide</button>
-                    <button onclick="delItm(${idx})" style="background:#c0392b; color:white; padding:4px; border:none;">Del</button>
-                </td>
+            <tr style="${i.hidden ? 'opacity:0.4' : ''}">
+                <td><input value="${i.en}" onchange="data[${idx}].en=this.value"></td>
+                <td><input type="number" value="${i.price}" onchange="data[${idx}].price=this.value" style="width:60px"></td>
+                <td><select onchange="data[${idx}].cat=this.value">${cats.map(c=>`<option value="${c.id}" ${i.cat===c.id?'selected':''}>${c.en}</option>`).join('')}</select></td>
+                <td><button onclick="tglH(${idx})" style="background:#2c3e50; color:white; border:none; padding:5px; margin-bottom:2px;">Hide</button>
+                    <button onclick="delI(${idx})" style="background:#c0392b; color:white; border:none; padding:5px;">Del</button></td>
             </tr>`).join('');
-        document.getElementById('nItemCat').innerHTML = categories.map(c => `<option value="${c.id}">${c.en}</option>`).join('');
+        document.getElementById('nItemCat').innerHTML = cats.map(c => `<option value="${c.id}">${c.en}</option>`).join('');
     }
 
-    // Global Registry for buttons
-    window.startRenameCat = function(id) {
-        catEditId = id;
-        const c = categories.find(x => x.id === id);
-        document.getElementById('eCatEn').value = c.en;
-        document.getElementById('eCatAm').value = c.am;
-        document.getElementById('editCatModal').style.display = 'flex';
-    };
+    // Explicit Global Functions for Buttons
+    window.startRename = (id) => { editCatId = id; const c = cats.find(x=>x.id===id); document.getElementById('eCatEn').value=c.en; document.getElementById('eCatAm').value=c.am; document.getElementById('editCatModal').style.display='flex'; };
+    window.applyCatRename = () => { const c = cats.find(x=>x.id===editCatId); c.en=document.getElementById('eCatEn').value; c.am=document.getElementById('eCatAm').value; closeModals(); ui(); };
+    window.confirmDeleteCat = (id) => { if(confirm("Delete Category? Items will stay but be hidden.")) { cats = cats.filter(c=>c.id!==id); ui(); } };
+    window.createNewCat = () => { cats.push({id: document.getElementById('nCatId').value.toLowerCase(), en: document.getElementById('nCatEn').value, am: document.getElementById('nCatAm').value, img: imgTmp}); closeModals(); ui(); };
+    window.createNewItem = () => { data.push({id:Date.now(), cat:document.getElementById('nItemCat').value, en:document.getElementById('nItemEn').value, price:document.getElementById('nItemPrice').value, img:imgTmp, hidden:false}); closeModals(); ui(); };
+    
+    window.setCat = (id) => { activeCat = id; ui(); window.scrollTo(0,0); };
+    window.toggleLang = () => { lang = (lang==='en'?'am':'en'); ui(); };
+    window.showLogin = () => { document.getElementById('loginOverlay').style.display='flex'; };
+    window.verifyLogin = () => { if(document.getElementById('uIn').value==='admin' && document.getElementById('pIn').value==='sgs') { document.getElementById('adminDashboard').style.display='block'; closeModals(); } else alert("Wrong!"); };
+    window.closeAdmin = () => { document.getElementById('adminDashboard').style.display='none'; };
+    window.closeModals = () => { document.querySelectorAll('.overlay').forEach(o=>o.style.display='none'); imgTmp=''; };
+    window.tglH = (idx) => { data[idx].hidden = !data[idx].hidden; ui(); };
+    window.delI = (idx) => { if(confirm("Delete Item?")) { data.splice(idx,1); ui(); } };
+    window.handleImg = (i) => { const r=new FileReader(); r.onload=(e)=>imgTmp=e.target.result; r.readAsDataURL(i.files[0]); };
+    window.openCatModal = () => document.getElementById('catModal').style.display='flex';
+    window.openItemModal = () => document.getElementById('itemModal').style.display='flex';
 
-    window.confirmDelCat = function(id) {
-        if(confirm("Delete this category?")) {
-            categories = categories.filter(c => c.id !== id);
-            render();
-        }
-    };
-
-    function saveCatRename() {
-        const c = categories.find(x => x.id === catEditId);
-        if(c) {
-            c.en = document.getElementById('eCatEn').value;
-            c.am = document.getElementById('eCatAm').value;
-            render(); closeModals();
-        }
-    }
-
-    async function saveToCloud() {
+    window.saveToCloud = async () => {
         const b = document.getElementById('cloudBtn');
-        b.innerText = "Syncing..."; b.disabled = true;
+        b.innerText = "UPDATING..."; b.disabled = true;
         try {
-            await fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ items: data, cats: categories }) });
-            alert("Saved Successfully!"); closeAdmin(); fetchData();
-        } catch (e) { alert("Save Error"); }
-        finally { b.innerText = "💾 SYNC TO CLOUD"; b.disabled = false; }
-    }
+            await fetch(URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ items: data, cats: cats }) });
+            alert("Updated Successfully!"); load();
+        } catch(e) { alert("Error!"); }
+        finally { b.innerText = "💾 SYNC ALL UPDATES"; b.disabled = false; }
+    };
 
-    function doLogin() { 
-        if(document.getElementById('uIn').value === "admin" && document.getElementById('pIn').value === "sgs") { 
-            document.getElementById('adminDashboard').style.display = 'block'; closeModals(); 
-        } else { alert("Denied"); } 
-    }
-    function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
-    function closeModals() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); document.getElementById('uIn').value=""; document.getElementById('pIn').value=""; tmpImg=""; }
-    function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; }
-    function setCat(id) { curCat = id; render(); window.scrollTo(0,0); }
-    function toggleLang() { curLang = (curLang === 'en') ? 'am' : 'en'; render(); }
-    function addCat() { categories.push({id: document.getElementById('nCatId').value.toLowerCase(), en: document.getElementById('nCatEn').value, am: document.getElementById('nCatAm').value, img: tmpImg}); closeModals(); render(); }
-    function addItem() { data.push({id: Date.now(), cat: document.getElementById('nItemCat').value, en: document.getElementById('nItemEn').value, am: document.getElementById('nItemAm').value, ing: document.getElementById('nItemIng').value, price: document.getElementById('nItemPrice').value, img: tmpImg, hidden: false}); closeModals(); render(); }
-    function delItm(idx) { data.splice(idx,1); render(); }
-    function tglHdn(idx) { data[idx].hidden = !data[idx].hidden; render(); }
-    function handleImg(input) { const r = new FileReader(); r.onload = (e) => { tmpImg = e.target.result; }; if(input.files[0]) r.readAsDataURL(input.files[0]); }
-    function updateItemPhoto(input) { const r = new FileReader(); r.onload = (e) => { data[editingIdx].img = e.target.result; render(); }; if(input.files[0]) r.readAsDataURL(input.files[0]); }
-
-    fetchData();
+    load();
 </script>
 </body>
 </html>
