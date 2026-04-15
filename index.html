@@ -78,7 +78,7 @@
         </div>
     </div>
 
-    <button id="cloudBtn" onclick="saveToCloud()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; font-weight:bold; position:sticky; bottom:0; box-shadow: 0 -5px 10px rgba(0,0,0,0.1);">💾 SYNC ALL UPDATES</button>
+    <button id="cloudBtn" onclick="saveToCloud()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; font-weight:bold; position:sticky; bottom:0;">💾 SYNC ALL UPDATES</button>
 </div>
 
 <div id="catModal" class="overlay"><div class="modal">
@@ -116,7 +116,7 @@
 
     async function fetchData() {
         const list = document.getElementById('menuListing');
-        list.innerHTML = "<p style='text-align:center; padding:40px;'>Loading...</p>";
+        list.innerHTML = "<p style='text-align:center; padding:40px;'>Loading Menu...</p>";
         try {
             const res = await fetch(`${SHEET_URL}?t=${Date.now()}`);
             const json = await res.json();
@@ -124,10 +124,11 @@
             categories = json.cats || [];
             if(categories.length > 0 && !currentCat) currentCat = categories[0].id;
             renderAll();
-        } catch (e) { alert("Error connecting to server."); }
+        } catch (e) { alert("Connection Error"); }
     }
 
     function renderAll() {
+        // Fix for disappearing categories
         const nav = document.getElementById('categoryNav');
         nav.innerHTML = categories.map(c => `
             <div class="nav-item ${currentCat === c.id ? 'active' : ''}" onclick="setCat('${c.id}')">
@@ -137,44 +138,49 @@
 
         const list = document.getElementById('menuListing');
         const filtered = data.filter(i => i.cat === currentCat && !i.hidden);
-        list.innerHTML = filtered.length ? filtered.map(i => `
-            <div class="card">
-                <img src="${i.img || 'https://via.placeholder.com/100'}" class="food-img">
-                <div class="info">
-                    <div class="title-group">
-                        <span class="title-en">${i.en}</span>
-                        <span class="title-am">${i.am}</span>
-                    </div>
-                    <p style="font-size:11px; color:gray;">${i.ing || ''}</p>
-                    <p style="font-weight:bold; margin-top:5px; color:var(--dark-green);">${i.price} ETB</p>
-                </div>
-            </div>`).join('') : "<p style='text-align:center; padding:40px; opacity:0.5;'>No items in this category.</p>";
         
+        if (filtered.length > 0) {
+            list.innerHTML = filtered.map(i => `
+                <div class="card">
+                    <img src="${i.img || 'https://via.placeholder.com/100'}" class="food-img">
+                    <div class="info">
+                        <div class="title-group">
+                            <span class="title-en">${i.en}</span>
+                            <span class="title-am">${i.am}</span>
+                        </div>
+                        <p style="font-size:11px; color:gray;">${i.ing || ''}</p>
+                        <p style="font-weight:bold; margin-top:5px; color:var(--dark-green);">${i.price} ETB</p>
+                    </div>
+                </div>`).join('');
+        } else {
+            list.innerHTML = "<p style='text-align:center; padding:40px; opacity:0.5;'>No items in this category.</p>";
+        }
         renderAdmin();
     }
 
     function renderAdmin() {
         document.getElementById('adminCatList').innerHTML = categories.map(c => `
-            <div style="min-width:70px; text-align:center; border:1px solid #ddd; padding:5px; border-radius:8px;">
-                <p style="font-size:9px;">${c.en}</p>
-                <button onclick="removeCat('${c.id}')" style="color:red; border:none; background:none; font-size:9px;">Del</button>
+            <div style="min-width:75px; text-align:center; border:1px solid #ddd; padding:5px; border-radius:8px;">
+                <p style="font-size:9px; font-weight:bold;">${c.en}</p>
+                <button onclick="removeCat('${c.id}')" style="color:red; border:none; background:none; font-size:9px;">Delete</button>
             </div>`).join('');
 
         document.getElementById('adminItemBody').innerHTML = data.map((i, idx) => `
             <tr style="${i.hidden ? 'opacity:0.4' : ''}">
                 <td>
-                    <input value="${i.en}" onchange="data[${idx}].en=this.value">
-                    <input value="${i.am}" onchange="data[${idx}].am=this.value">
-                    <input value="${i.ing || ''}" onchange="data[${idx}].ing=this.value" style="font-size:9px;">
+                    <input value="${i.en}" onchange="data[${idx}].en=this.value" placeholder="EN Name">
+                    <input value="${i.am}" onchange="data[${idx}].am=this.value" placeholder="AM Name">
                 </td>
-                <td><input type="number" value="${i.price}" onchange="data[${idx}].price=this.value" style="width:50px;"></td>
+                <td><input type="number" value="${i.price}" onchange="data[${idx}].price=this.value" style="width:55px;"></td>
                 <td>
-                    <button onclick="moveItem(${idx}, -1)" style="padding:2px; background:#ddd; border:none;">↑</button>
-                    <button onclick="moveItem(${idx}, 1)" style="padding:2px; background:#ddd; border:none;">↓</button>
+                    <div style="display:flex; flex-direction:column; gap:2px;">
+                        <button onclick="moveItem(${idx}, -1)" style="font-size:12px; border:none; background:#eee;">↑</button>
+                        <button onclick="moveItem(${idx}, 1)" style="font-size:12px; border:none; background:#eee;">↓</button>
+                    </div>
                 </td>
                 <td>
-                    <button onclick="toggleHide(${idx})" style="background:#444; color:white; font-size:8px; border:none; padding:4px; display:block; width:100%; margin-bottom:2px;">${i.hidden?'Show':'Hide'}</button>
-                    <button onclick="removeItem(${idx})" style="background:red; color:white; font-size:8px; border:none; padding:4px; display:block; width:100%;">Del</button>
+                    <button onclick="toggleHide(${idx})" style="background:#444; color:white; font-size:8px; border:none; padding:4px; width:100%; margin-bottom:2px;">${i.hidden?'Show':'Hide'}</button>
+                    <button onclick="removeItem(${idx})" style="background:red; color:white; font-size:8px; border:none; padding:4px; width:100%;">Del</button>
                 </td>
             </tr>`).join('');
         
@@ -189,16 +195,25 @@
         }
     }
 
-    function setCat(id) { currentCat = id; renderAll(); }
+    function setCat(id) { 
+        currentCat = id; 
+        renderAll(); 
+    }
     
     function submitCategory() {
-        categories.push({id: document.getElementById('newCatId').value, en: document.getElementById('newCatEn').value, am: document.getElementById('newCatAm').value, img: tempImg});
-        closeModals(); renderAll();
+        const id = document.getElementById('newCatId').value;
+        if(id) {
+            categories.push({id: id, en: document.getElementById('newCatEn').value, am: document.getElementById('newCatAm').value, img: tempImg});
+            closeModals(); renderAll();
+        }
     }
 
     function submitItem() {
-        data.push({id: Date.now(), cat: document.getElementById('newItemCat').value, en: document.getElementById('newItemEn').value, am: document.getElementById('newItemAm').value, ing: document.getElementById('newItemIng').value, price: document.getElementById('newItemPrice').value, img: tempImg, hidden: false});
-        closeModals(); renderAll();
+        const enName = document.getElementById('newItemEn').value;
+        if(enName) {
+            data.push({id: Date.now(), cat: document.getElementById('newItemCat').value, en: enName, am: document.getElementById('newItemAm').value, ing: document.getElementById('newItemIng').value, price: document.getElementById('newItemPrice').value, img: tempImg, hidden: false});
+            closeModals(); renderAll();
+        }
     }
 
     async function saveToCloud() {
@@ -206,9 +221,9 @@
         btn.innerText = "Syncing..."; btn.disabled = true;
         try {
             await fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ items: data, cats: categories }) });
-            alert("Sync Complete!");
+            alert("All changes synced successfully!");
             closeAdmin(); fetchData();
-        } catch (e) { alert("Sync Error"); }
+        } catch (e) { alert("Sync Failed"); }
         finally { btn.innerText = "💾 SYNC ALL UPDATES"; btn.disabled = false; }
     }
 
@@ -216,7 +231,7 @@
         if(document.getElementById('userInput').value === "admin" && document.getElementById('passInput').value === "sgs") {
             document.getElementById('adminDashboard').style.display = 'block';
             closeModals();
-        } else { alert("Failed"); }
+        } else { alert("Login Denied"); }
     }
 
     function handleFile(input) { const reader = new FileReader(); reader.onload = (e) => { tempImg = e.target.result; }; if(input.files[0]) reader.readAsDataURL(input.files[0]); }
@@ -226,8 +241,8 @@
     function openItemModal() { document.getElementById('itemModal').style.display = 'flex'; }
     function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; document.getElementById('userInput').value = ""; document.getElementById('passInput').value = ""; }
     function toggleHide(idx) { data[idx].hidden = !data[idx].hidden; renderAdmin(); }
-    function removeItem(idx) { data.splice(idx, 1); renderAdmin(); }
-    function removeCat(id) { categories = categories.filter(c => c.id !== id); renderAll(); }
+    function removeItem(idx) { if(confirm("Delete item?")) { data.splice(idx, 1); renderAdmin(); } }
+    function removeCat(id) { if(confirm("Delete category?")) { categories = categories.filter(c => c.id !== id); renderAll(); } }
 
     fetchData();
 </script>
