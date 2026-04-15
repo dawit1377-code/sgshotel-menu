@@ -10,11 +10,9 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; padding-bottom: 80px; overflow-x: hidden; }
         
-        /* Header Fixed */
         .header { background: var(--dark-green); color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 115px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .header h1 { font-family: 'Playfair Display'; font-size: 28px; text-align: center; flex-grow: 1; line-height: 1; }
         
-        /* Category Nav - Increased Sizes */
         .nav-bar { display: flex; overflow-x: auto; padding: 15px 10px; background: #fff; position: sticky; top: 115px; z-index: 900; border-bottom: 1px solid #eee; min-height: 140px; scrollbar-width: none; }
         .nav-bar::-webkit-scrollbar { display: none; }
         .nav-item { text-align: center; min-width: 120px; opacity: 0.5; cursor: pointer; transition: all 0.3s ease; padding: 5px; border-bottom: 4px solid transparent; flex-shrink: 0; }
@@ -22,9 +20,7 @@
         .nav-item img { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; border: 3px solid #eee; margin-bottom: 8px; pointer-events: none; }
         .nav-item p { font-size: 13px; font-weight: 600; margin-top: 2px; }
         
-        /* Container - Added padding-top to prevent hiding first item */
         .container { padding: 15px; padding-top: 20px; min-height: 60vh; width: 100%; }
-        
         .card { display: flex; align-items: center; background: white; border-radius: 15px; margin-bottom: 15px; padding: 12px; border: 1px solid #f2f2f2; box-shadow: 0 4px 12px rgba(0,0,0,0.05); animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -116,6 +112,7 @@
     <input type="text" id="uIn" placeholder="User" autocomplete="off">
     <input type="password" id="pIn" placeholder="Pass" autocomplete="off">
     <button onclick="doLogin()" class="btn" style="background:var(--dark-green); width:100%; margin-top:15px;">LOGIN</button>
+    <button onclick="closeModals()" style="background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">Cancel</button>
 </div></div>
 
 <script>
@@ -195,6 +192,7 @@
     function setCat(id) { curCat = id; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
     function toggleLang() { curLang = (curLang === 'en') ? 'am' : 'en'; render(); }
     function triggerEditPic(idx) { editingIdx = idx; document.getElementById('editPicInput').click(); }
+    
     function updateItemPhoto(input) {
         const r = new FileReader();
         r.onload = (e) => { data[editingIdx].img = e.target.result; render(); };
@@ -223,10 +221,24 @@
     }
 
     function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
-    function closeModals() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); tmpImg = ""; }
+    
+    function clearLoginFields() {
+        document.getElementById('uIn').value = "";
+        document.getElementById('pIn').value = "";
+    }
+
+    function closeModals() { 
+        document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); 
+        tmpImg = ""; 
+        clearLoginFields();
+    }
+
     function openCatModal() { document.getElementById('catModal').style.display = 'flex'; }
     function openItemModal() { document.getElementById('itemModal').style.display = 'flex'; }
-    function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; }
+    function closeAdmin() { 
+        document.getElementById('adminDashboard').style.display = 'none'; 
+        clearLoginFields();
+    }
 
     function addCat() { 
         const idVal = document.getElementById('nCatId').value;
