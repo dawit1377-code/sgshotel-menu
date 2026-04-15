@@ -10,21 +10,22 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; padding-bottom: 80px; }
         
+        /* Title Increased */
         .header { background: var(--dark-green); color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 115px; }
-        .header h1 { font-family: 'Playfair Display'; font-size: 25px; text-align: center; width: 100%; }
+        .header h1 { font-family: 'Playfair Display'; font-size: 28px; text-align: center; flex-grow: 1; }
         
-        .nav-bar { display: flex; overflow-x: auto; padding: 15px 5px; background: #fff; position: sticky; top: 115px; z-index: 900; border-bottom: 1px solid #eee; min-height: 120px; }
-        .nav-item { text-align: center; min-width: 110px; opacity: 0.6; cursor: pointer; transition: 0.3s; padding: 5px; }
-        .nav-item.active { opacity: 1; transform: scale(1.05); font-weight: bold; border-bottom: 3px solid var(--p-green); }
-        .nav-item img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #eee; margin-bottom: 5px; pointer-events: none; }
+        .nav-bar { display: flex; overflow-x: auto; padding: 15px 5px; background: #fff; position: sticky; top: 115px; z-index: 900; border-bottom: 1px solid #eee; min-height: 110px; scroll-behavior: smooth; }
+        .nav-item { text-align: center; min-width: 100px; opacity: 0.6; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { opacity: 1; transform: scale(1.1); font-weight: bold; color: var(--p-green); }
+        .nav-item img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid #eee; margin-bottom: 5px; }
         
         .container { padding: 12px; min-height: 60vh; }
         .card { display: flex; align-items: center; background: white; border-radius: 15px; margin-bottom: 15px; padding: 12px; border: 1px solid #f2f2f2; box-shadow: 0 3px 10px rgba(0,0,0,0.04); }
-        .food-img { width: 100px; height: 100px; border-radius: 12px; object-fit: cover; margin-right: 15px; }
+        .food-img { width: 100px; height: 100px; border-radius: 12px; object-fit: cover; margin-right: 15px; background: #f9f9f9; }
         
-        .title-group { display: flex; flex-direction: column; }
-        .title-en { color: var(--p-green); font-size: 17px; font-weight: 600; }
-        .title-am { color: #555; font-size: 14px; margin-top: -2px; }
+        /* Item Titles Increased */
+        .food-title { color: var(--p-green); font-size: 19px; font-weight: 600; line-height: 1.2; }
+        .food-ing { font-size: 11px; color: #777; font-style: italic; margin-top: 3px; }
         
         .call-order-btn { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--dark-green); color: white; padding: 15px 30px; border-radius: 50px; text-decoration: none; z-index: 2000; display: flex; align-items: center; gap: 10px; font-weight: bold; }
         
@@ -34,26 +35,25 @@
         .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:4000; align-items:center; justify-content:center; }
         .modal { background:white; padding:20px; border-radius:15px; width:90%; max-width:400px; }
         table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
-        th, td { border: 1px solid #eee; padding: 5px; text-align: left; }
+        th, td { border: 1px solid #eee; padding: 6px; text-align: left; }
         input, select { width: 100%; padding: 6px; margin: 2px 0; border: 1px solid #ccc; border-radius: 4px; }
     </style>
 </head>
 <body>
 
 <header class="header">
-    <div onclick="showLogin()" style="cursor:pointer; font-size:24px; padding-left:10px;">☰</div>
-    <div style="text-align:center; flex-grow:1;">
+    <div onclick="showLogin()" style="cursor:pointer; font-size:24px; padding:10px;">☰</div>
+    <div style="text-align:center;">
         <h1>SGS HOTEL</h1>
-        <span style="font-size:10px; letter-spacing:2px;">MENU / ሜኑ</span>
-        <div style="font-size:9px; font-style:italic; opacity:0.9;">VAT Included / ታክስ ያካትታል</div>
+        <div id="vatLabel" style="font-size:10px; opacity:0.8;">VAT Included / ታክስ ያካትታል</div>
     </div>
-    <div onclick="location.reload()" style="cursor:pointer; font-size:20px; padding-right:10px;">🔄</div>
+    <button onclick="toggleLang()" style="background:white; color:var(--dark-green); border:none; padding:8px 12px; border-radius:20px; font-weight:bold; font-size:11px; margin-right:10px;">EN/አማ</button>
 </header>
 
 <nav class="nav-bar" id="categoryNav"></nav>
 <div class="container" id="menuListing"></div>
 
-<a href="tel:+251954954591" class="call-order-btn">📞 Call To Order / ለመዘዝ ይደውሉ</a>
+<a href="tel:+251954954591" class="call-order-btn">📞 <span id="callBtnText">Call To Order</span></a>
 
 <div id="adminDashboard">
     <div style="display:flex; justify-content:space-between; align-items:center; background:var(--dark-green); padding:15px; color:white; border-radius:10px;">
@@ -62,107 +62,101 @@
     </div>
 
     <div class="admin-section" style="margin-top:20px;">
-        <h4>1. Categories</h4>
+        <h4>1. Category Management</h4>
         <div id="adminCatList" style="display:flex; overflow-x:auto; gap:10px; margin:10px 0;"></div>
         <button class="btn" style="background:#8e44ad; width:100%;" onclick="openCatModal()">+ Add Category</button>
     </div>
 
     <div class="admin-section">
-        <h4>2. Bulk Edit Items</h4>
-        <button class="btn" style="background:#27ae60; margin-bottom:10px; width:100%;" onclick="openItemModal()">+ Add New Food Item</button>
+        <h4>2. Bulk Edit Items (Move/Ingredients)</h4>
+        <button class="btn" style="background:#27ae60; margin-bottom:10px; width:100%;" onclick="openItemModal()">+ Add New Item</button>
         <div style="overflow-x:auto;">
             <table>
-                <thead><tr style="background:#f9f9f9;"><th>Names/Ing</th><th>Price</th><th>Move</th><th>Action</th></tr></thead>
+                <thead><tr style="background:#f9f9f9;"><th>Names & Ingredients</th><th>Price</th><th>Move</th><th>Action</th></tr></thead>
                 <tbody id="adminItemBody"></tbody>
             </table>
         </div>
     </div>
 
-    <button id="cloudBtn" onclick="saveToCloud()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; font-weight:bold; position:sticky; bottom:0;">💾 SYNC ALL UPDATES</button>
+    <button id="cloudBtn" onclick="saveToCloud()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; font-weight:bold; position:sticky; bottom:0;">💾 SAVE & SYNC TO ALL DEVICES</button>
 </div>
 
 <div id="catModal" class="overlay"><div class="modal">
     <h3>New Category</h3>
-    <input type="text" id="newCatId" placeholder="ID (e.g. pizza)">
-    <input type="text" id="newCatEn" placeholder="English Name">
-    <input type="text" id="newCatAm" placeholder="Amharic Name">
-    <input type="file" onchange="handleFile(this)">
-    <button onclick="submitCategory()" class="btn" style="background:#8e44ad; width:100%; margin-top:10px;">Create</button>
+    <input type="text" id="nCatId" placeholder="ID (e.g. drinks)">
+    <input type="text" id="nCatEn" placeholder="English Name">
+    <input type="text" id="nCatAm" placeholder="Amharic Name">
+    <input type="file" onchange="handleImg(this)">
+    <button onclick="addCat()" class="btn" style="background:#8e44ad; width:100%; margin-top:10px;">Create</button>
     <button onclick="closeModals()" class="btn" style="background:gray; width:100%; margin-top:5px;">Cancel</button>
 </div></div>
 
 <div id="itemModal" class="overlay"><div class="modal">
     <h3>New Item</h3>
-    <select id="newItemCat"></select>
-    <input type="text" id="newItemEn" placeholder="English Name">
-    <input type="text" id="newItemAm" placeholder="Amharic Name">
-    <input type="text" id="newItemIng" placeholder="Ingredients">
-    <input type="number" id="newItemPrice" placeholder="Price">
-    <input type="file" onchange="handleFile(this)">
-    <button onclick="submitItem()" class="btn" style="background:#27ae60; width:100%; margin-top:10px;">Add</button>
+    <select id="nItemCat"></select>
+    <input type="text" id="nItemEn" placeholder="English Name">
+    <input type="text" id="nItemAm" placeholder="Amharic Name">
+    <input type="text" id="nItemIng" placeholder="Ingredients (e.g. Tomato, Onion)">
+    <input type="number" id="nItemPrice" placeholder="Price">
+    <input type="file" onchange="handleImg(this)">
+    <button onclick="addItem()" class="btn" style="background:#27ae60; width:100%; margin-top:10px;">Add Item</button>
     <button onclick="closeModals()" class="btn" style="background:gray; width:100%; margin-top:5px;">Cancel</button>
 </div></div>
 
 <div id="loginOverlay" class="overlay"><div class="modal" style="text-align:center;">
     <h3>STAFF LOGIN</h3>
-    <input type="text" id="userInput" placeholder="Username">
-    <input type="password" id="passInput" placeholder="Password">
-    <button onclick="handleLogin()" class="btn" style="background:var(--dark-green); width:100%; margin-top:10px;">LOGIN</button>
+    <input type="text" id="uIn" placeholder="User">
+    <input type="password" id="pIn" placeholder="Pass">
+    <button onclick="doLogin()" class="btn" style="background:var(--dark-green); width:100%; margin-top:10px;">LOGIN</button>
 </div></div>
 
 <script>
     const SHEET_URL = "https://script.google.com/macros/s/AKfycbzUs_R4tSRSWfZN5WWwoUa1_8qxHbs95fQk83xDwd9TZ9wzGnlxxLuEmFpTgfaZ2aKOnA/exec";
-    let data = [], categories = [], currentCat = '', tempImg = "";
+    let data = [], categories = [], curLang = 'en', curCat = '', tmpImg = "";
 
     async function fetchData() {
-        const list = document.getElementById('menuListing');
-        list.innerHTML = "<p style='text-align:center; padding:40px;'>Loading Menu...</p>";
+        document.getElementById('menuListing').innerHTML = "<p style='text-align:center; padding:40px;'>Syncing...</p>";
         try {
             const res = await fetch(`${SHEET_URL}?t=${Date.now()}`);
             const json = await res.json();
             data = json.items || [];
             categories = json.cats || [];
-            if(categories.length > 0 && !currentCat) currentCat = categories[0].id;
-            renderAll();
-        } catch (e) { alert("Connection Error"); }
+            if(categories.length > 0 && !curCat) curCat = categories[0].id;
+            render();
+        } catch (e) { alert("Offline / Connection Error"); }
     }
 
-    function renderAll() {
-        // Fix for disappearing categories
-        const nav = document.getElementById('categoryNav');
-        nav.innerHTML = categories.map(c => `
-            <div class="nav-item ${currentCat === c.id ? 'active' : ''}" onclick="setCat('${c.id}')">
-                <img src="${c.img || 'https://via.placeholder.com/70'}">
-                <p style="font-size:10px;">${c.en}<br>${c.am}</p>
+    function render() {
+        const isEn = curLang === 'en';
+        document.getElementById('callBtnText').innerText = isEn ? "Call To Order" : "ለመዘዝ ይደውሉ";
+        
+        // Nav
+        document.getElementById('categoryNav').innerHTML = categories.map(c => `
+            <div class="nav-item ${curCat === c.id ? 'active' : ''}" onclick="setCat('${c.id}')">
+                <img src="${c.img || ''}">
+                <p style="font-size:11px;">${isEn ? c.en : c.am}</p>
             </div>`).join('');
 
-        const list = document.getElementById('menuListing');
-        const filtered = data.filter(i => i.cat === currentCat && !i.hidden);
+        // Items
+        const filtered = data.filter(i => i.cat === curCat && !i.hidden);
+        document.getElementById('menuListing').innerHTML = filtered.length ? filtered.map(i => `
+            <div class="card">
+                <img src="${i.img || ''}" class="food-img">
+                <div class="info">
+                    <div class="food-title">${isEn ? i.en : i.am}</div>
+                    <div class="food-ing">${i.ing || ''}</div>
+                    <div style="font-weight:bold; margin-top:8px; color:var(--dark-green);">${i.price} ETB</div>
+                </div>
+            </div>`).join('') : "<p style='text-align:center; padding:40px; opacity:0.5;'>Empty Category</p>";
         
-        if (filtered.length > 0) {
-            list.innerHTML = filtered.map(i => `
-                <div class="card">
-                    <img src="${i.img || 'https://via.placeholder.com/100'}" class="food-img">
-                    <div class="info">
-                        <div class="title-group">
-                            <span class="title-en">${i.en}</span>
-                            <span class="title-am">${i.am}</span>
-                        </div>
-                        <p style="font-size:11px; color:gray;">${i.ing || ''}</p>
-                        <p style="font-weight:bold; margin-top:5px; color:var(--dark-green);">${i.price} ETB</p>
-                    </div>
-                </div>`).join('');
-        } else {
-            list.innerHTML = "<p style='text-align:center; padding:40px; opacity:0.5;'>No items in this category.</p>";
-        }
         renderAdmin();
     }
 
     function renderAdmin() {
         document.getElementById('adminCatList').innerHTML = categories.map(c => `
-            <div style="min-width:75px; text-align:center; border:1px solid #ddd; padding:5px; border-radius:8px;">
-                <p style="font-size:9px; font-weight:bold;">${c.en}</p>
-                <button onclick="removeCat('${c.id}')" style="color:red; border:none; background:none; font-size:9px;">Delete</button>
+            <div style="min-width:80px; text-align:center; border:1px solid #ddd; padding:5px; border-radius:8px;">
+                <p style="font-size:10px; font-weight:bold;">${c.en}</p>
+                <button onclick="delCat('${c.id}')" style="color:red; border:none; background:none; font-size:10px;">Delete</button>
             </div>`).join('');
 
         document.getElementById('adminItemBody').innerHTML = data.map((i, idx) => `
@@ -170,79 +164,55 @@
                 <td>
                     <input value="${i.en}" onchange="data[${idx}].en=this.value" placeholder="EN Name">
                     <input value="${i.am}" onchange="data[${idx}].am=this.value" placeholder="AM Name">
+                    <input value="${i.ing || ''}" onchange="data[${idx}].ing=this.value" placeholder="Ingredients" style="font-size:10px;">
                 </td>
                 <td><input type="number" value="${i.price}" onchange="data[${idx}].price=this.value" style="width:55px;"></td>
                 <td>
-                    <div style="display:flex; flex-direction:column; gap:2px;">
-                        <button onclick="moveItem(${idx}, -1)" style="font-size:12px; border:none; background:#eee;">↑</button>
-                        <button onclick="moveItem(${idx}, 1)" style="font-size:12px; border:none; background:#eee;">↓</button>
-                    </div>
+                    <button onclick="move(${idx}, -1)" style="padding:5px; margin-bottom:2px; display:block; width:100%; border:1px solid #ccc;">↑</button>
+                    <button onclick="move(${idx}, 1)" style="padding:5px; display:block; width:100%; border:1px solid #ccc;">↓</button>
                 </td>
                 <td>
-                    <button onclick="toggleHide(${idx})" style="background:#444; color:white; font-size:8px; border:none; padding:4px; width:100%; margin-bottom:2px;">${i.hidden?'Show':'Hide'}</button>
-                    <button onclick="removeItem(${idx})" style="background:red; color:white; font-size:8px; border:none; padding:4px; width:100%;">Del</button>
+                    <button onclick="tglHdn(${idx})" style="background:#444; color:white; font-size:9px; padding:5px; border:none; width:100%; margin-bottom:3px;">${i.hidden?'Show':'Hide'}</button>
+                    <button onclick="delItm(${idx})" style="background:red; color:white; font-size:9px; padding:5px; border:none; width:100%;">Del</button>
                 </td>
             </tr>`).join('');
         
-        document.getElementById('newItemCat').innerHTML = categories.map(c => `<option value="${c.id}">${c.en}</option>`).join('');
+        document.getElementById('nItemCat').innerHTML = categories.map(c => `<option value="${c.id}">${c.en}</option>`).join('');
     }
 
-    function moveItem(index, direction) {
-        let newIdx = index + direction;
-        if (newIdx >= 0 && newIdx < data.length) {
-            [data[index], data[newIdx]] = [data[newIdx], data[index]];
+    function move(idx, dir) {
+        let target = idx + dir;
+        if(target >= 0 && target < data.length) {
+            [data[idx], data[target]] = [data[target], data[idx]];
             renderAdmin();
         }
     }
 
-    function setCat(id) { 
-        currentCat = id; 
-        renderAll(); 
-    }
-    
-    function submitCategory() {
-        const id = document.getElementById('newCatId').value;
-        if(id) {
-            categories.push({id: id, en: document.getElementById('newCatEn').value, am: document.getElementById('newCatAm').value, img: tempImg});
-            closeModals(); renderAll();
-        }
-    }
-
-    function submitItem() {
-        const enName = document.getElementById('newItemEn').value;
-        if(enName) {
-            data.push({id: Date.now(), cat: document.getElementById('newItemCat').value, en: enName, am: document.getElementById('newItemAm').value, ing: document.getElementById('newItemIng').value, price: document.getElementById('newItemPrice').value, img: tempImg, hidden: false});
-            closeModals(); renderAll();
-        }
-    }
-
     async function saveToCloud() {
-        const btn = document.getElementById('cloudBtn');
-        btn.innerText = "Syncing..."; btn.disabled = true;
+        const b = document.getElementById('cloudBtn');
+        b.innerText = "Saving..."; b.disabled = true;
         try {
             await fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ items: data, cats: categories }) });
-            alert("All changes synced successfully!");
+            alert("Success! Updates live on all devices.");
             closeAdmin(); fetchData();
-        } catch (e) { alert("Sync Failed"); }
-        finally { btn.innerText = "💾 SYNC ALL UPDATES"; btn.disabled = false; }
+        } catch (e) { alert("Error Syncing"); }
+        finally { b.innerText = "💾 SAVE & SYNC TO ALL DEVICES"; b.disabled = false; }
     }
 
-    function handleLogin() {
-        if(document.getElementById('userInput').value === "admin" && document.getElementById('passInput').value === "sgs") {
-            document.getElementById('adminDashboard').style.display = 'block';
-            closeModals();
-        } else { alert("Login Denied"); }
-    }
-
-    function handleFile(input) { const reader = new FileReader(); reader.onload = (e) => { tempImg = e.target.result; }; if(input.files[0]) reader.readAsDataURL(input.files[0]); }
+    function toggleLang() { curLang = curLang === 'en' ? 'am' : 'en'; render(); }
+    function setCat(id) { curCat = id; render(); }
+    function doLogin() { if(document.getElementById('uIn').value==="admin" && document.getElementById('pIn').value==="sgs") { document.getElementById('adminDashboard').style.display='block'; closeModals(); } else { alert("Failed"); } }
+    function handleImg(input) { const r = new FileReader(); r.onload = (e) => { tmpImg = e.target.result; }; if(input.files[0]) r.readAsDataURL(input.files[0]); }
     function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
-    function closeModals() { document.querySelectorAll('.overlay').forEach(o => o.style.display = 'none'); tempImg = ""; }
+    function closeModals() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); tmpImg = ""; }
     function openCatModal() { document.getElementById('catModal').style.display = 'flex'; }
     function openItemModal() { document.getElementById('itemModal').style.display = 'flex'; }
-    function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; document.getElementById('userInput').value = ""; document.getElementById('passInput').value = ""; }
-    function toggleHide(idx) { data[idx].hidden = !data[idx].hidden; renderAdmin(); }
-    function removeItem(idx) { if(confirm("Delete item?")) { data.splice(idx, 1); renderAdmin(); } }
-    function removeCat(id) { if(confirm("Delete category?")) { categories = categories.filter(c => c.id !== id); renderAll(); } }
+    function closeAdmin() { document.getElementById('adminDashboard').style.display='none'; }
+    function addCat() { categories.push({id: document.getElementById('nCatId').value, en: document.getElementById('nCatEn').value, am: document.getElementById('nCatAm').value, img: tmpImg}); closeModals(); render(); }
+    function addItem() { data.push({id: Date.now(), cat: document.getElementById('nItemCat').value, en: document.getElementById('nItemEn').value, am: document.getElementById('nItemAm').value, ing: document.getElementById('nItemIng').value, price: document.getElementById('nItemPrice').value, img: tmpImg, hidden: false}); closeModals(); render(); }
+    function tglHdn(idx) { data[idx].hidden = !data[idx].hidden; renderAdmin(); }
+    function delItm(idx) { if(confirm("Delete?")) { data.splice(idx,1); renderAdmin(); } }
+    function delCat(id) { if(confirm("Delete Category?")) { categories = categories.filter(c => c.id !== id); render(); } }
 
     fetchData();
 </script>
