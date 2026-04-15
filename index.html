@@ -10,20 +10,18 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; padding-bottom: 80px; }
         
-        /* Title Increased */
         .header { background: var(--dark-green); color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 115px; }
         .header h1 { font-family: 'Playfair Display'; font-size: 28px; text-align: center; flex-grow: 1; }
         
         .nav-bar { display: flex; overflow-x: auto; padding: 15px 5px; background: #fff; position: sticky; top: 115px; z-index: 900; border-bottom: 1px solid #eee; min-height: 110px; scroll-behavior: smooth; }
-        .nav-item { text-align: center; min-width: 100px; opacity: 0.6; cursor: pointer; transition: 0.3s; }
-        .nav-item.active { opacity: 1; transform: scale(1.1); font-weight: bold; color: var(--p-green); }
-        .nav-item img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid #eee; margin-bottom: 5px; }
+        .nav-item { text-align: center; min-width: 100px; opacity: 0.6; cursor: pointer; transition: 0.3s; padding: 5px; }
+        .nav-item.active { opacity: 1; transform: scale(1.1); font-weight: bold; color: var(--p-green); border-bottom: 3px solid var(--p-green); }
+        .nav-item img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid #eee; margin-bottom: 5px; pointer-events: none; }
         
         .container { padding: 12px; min-height: 60vh; }
         .card { display: flex; align-items: center; background: white; border-radius: 15px; margin-bottom: 15px; padding: 12px; border: 1px solid #f2f2f2; box-shadow: 0 3px 10px rgba(0,0,0,0.04); }
         .food-img { width: 100px; height: 100px; border-radius: 12px; object-fit: cover; margin-right: 15px; background: #f9f9f9; }
         
-        /* Item Titles Increased */
         .food-title { color: var(--p-green); font-size: 19px; font-weight: 600; line-height: 1.2; }
         .food-ing { font-size: 11px; color: #777; font-style: italic; margin-top: 3px; }
         
@@ -44,8 +42,8 @@
 <header class="header">
     <div onclick="showLogin()" style="cursor:pointer; font-size:24px; padding:10px;">☰</div>
     <div style="text-align:center;">
-        <h1>SGS HOTEL</h1>
-        <div id="vatLabel" style="font-size:10px; opacity:0.8;">VAT Included / ታክስ ያካትታል</div>
+        <h1 id="mainTitle">SGS HOTEL</h1>
+        <div id="vatLabel" style="font-size:10px; opacity:0.8;">VAT Included</div>
     </div>
     <button onclick="toggleLang()" style="background:white; color:var(--dark-green); border:none; padding:8px 12px; border-radius:20px; font-weight:bold; font-size:11px; margin-right:10px;">EN/አማ</button>
 </header>
@@ -68,11 +66,11 @@
     </div>
 
     <div class="admin-section">
-        <h4>2. Bulk Edit Items (Move/Ingredients)</h4>
+        <h4>2. Bulk Edit Items (Move & Ingredients)</h4>
         <button class="btn" style="background:#27ae60; margin-bottom:10px; width:100%;" onclick="openItemModal()">+ Add New Item</button>
         <div style="overflow-x:auto;">
             <table>
-                <thead><tr style="background:#f9f9f9;"><th>Names & Ingredients</th><th>Price</th><th>Move</th><th>Action</th></tr></thead>
+                <thead><tr style="background:#f9f9f9;"><th>Names & Ingredients</th><th>Price</th><th>Category</th><th>Action</th></tr></thead>
                 <tbody id="adminItemBody"></tbody>
             </table>
         </div>
@@ -96,7 +94,7 @@
     <select id="nItemCat"></select>
     <input type="text" id="nItemEn" placeholder="English Name">
     <input type="text" id="nItemAm" placeholder="Amharic Name">
-    <input type="text" id="nItemIng" placeholder="Ingredients (e.g. Tomato, Onion)">
+    <input type="text" id="nItemIng" placeholder="Ingredients">
     <input type="number" id="nItemPrice" placeholder="Price">
     <input type="file" onchange="handleImg(this)">
     <button onclick="addItem()" class="btn" style="background:#27ae60; width:100%; margin-top:10px;">Add Item</button>
@@ -123,21 +121,23 @@
             categories = json.cats || [];
             if(categories.length > 0 && !curCat) curCat = categories[0].id;
             render();
-        } catch (e) { alert("Offline / Connection Error"); }
+        } catch (e) { console.error(e); }
     }
 
     function render() {
         const isEn = curLang === 'en';
+        document.getElementById('mainTitle').innerText = isEn ? "SGS HOTEL" : "ኤስ.ጂ.ኤስ ሆቴል";
+        document.getElementById('vatLabel').innerText = isEn ? "VAT Included" : "ታክስ ያካትታል";
         document.getElementById('callBtnText').innerText = isEn ? "Call To Order" : "ለመዘዝ ይደውሉ";
         
-        // Nav
+        // Category Nav
         document.getElementById('categoryNav').innerHTML = categories.map(c => `
             <div class="nav-item ${curCat === c.id ? 'active' : ''}" onclick="setCat('${c.id}')">
                 <img src="${c.img || ''}">
                 <p style="font-size:11px;">${isEn ? c.en : c.am}</p>
             </div>`).join('');
 
-        // Items
+        // Items Display
         const filtered = data.filter(i => i.cat === curCat && !i.hidden);
         document.getElementById('menuListing').innerHTML = filtered.length ? filtered.map(i => `
             <div class="card">
@@ -162,14 +162,15 @@
         document.getElementById('adminItemBody').innerHTML = data.map((i, idx) => `
             <tr style="${i.hidden ? 'opacity:0.4' : ''}">
                 <td>
-                    <input value="${i.en}" onchange="data[${idx}].en=this.value" placeholder="EN Name">
-                    <input value="${i.am}" onchange="data[${idx}].am=this.value" placeholder="AM Name">
+                    <input value="${i.en}" onchange="data[${idx}].en=this.value" placeholder="EN">
+                    <input value="${i.am}" onchange="data[${idx}].am=this.value" placeholder="AM">
                     <input value="${i.ing || ''}" onchange="data[${idx}].ing=this.value" placeholder="Ingredients" style="font-size:10px;">
                 </td>
                 <td><input type="number" value="${i.price}" onchange="data[${idx}].price=this.value" style="width:55px;"></td>
                 <td>
-                    <button onclick="move(${idx}, -1)" style="padding:5px; margin-bottom:2px; display:block; width:100%; border:1px solid #ccc;">↑</button>
-                    <button onclick="move(${idx}, 1)" style="padding:5px; display:block; width:100%; border:1px solid #ccc;">↓</button>
+                    <select onchange="data[${idx}].cat=this.value; render();">
+                        ${categories.map(c => `<option value="${c.id}" ${i.cat === c.id ? 'selected' : ''}>${c.en}</option>`).join('')}
+                    </select>
                 </td>
                 <td>
                     <button onclick="tglHdn(${idx})" style="background:#444; color:white; font-size:9px; padding:5px; border:none; width:100%; margin-bottom:3px;">${i.hidden?'Show':'Hide'}</button>
@@ -180,27 +181,20 @@
         document.getElementById('nItemCat').innerHTML = categories.map(c => `<option value="${c.id}">${c.en}</option>`).join('');
     }
 
-    function move(idx, dir) {
-        let target = idx + dir;
-        if(target >= 0 && target < data.length) {
-            [data[idx], data[target]] = [data[target], data[idx]];
-            renderAdmin();
-        }
-    }
-
+    function setCat(id) { curCat = id; render(); }
+    function toggleLang() { curLang = curLang === 'en' ? 'am' : 'en'; render(); }
+    
     async function saveToCloud() {
         const b = document.getElementById('cloudBtn');
-        b.innerText = "Saving..."; b.disabled = true;
+        b.innerText = "Syncing..."; b.disabled = true;
         try {
             await fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ items: data, cats: categories }) });
-            alert("Success! Updates live on all devices.");
+            alert("Success! Updates live.");
             closeAdmin(); fetchData();
         } catch (e) { alert("Error Syncing"); }
         finally { b.innerText = "💾 SAVE & SYNC TO ALL DEVICES"; b.disabled = false; }
     }
 
-    function toggleLang() { curLang = curLang === 'en' ? 'am' : 'en'; render(); }
-    function setCat(id) { curCat = id; render(); }
     function doLogin() { if(document.getElementById('uIn').value==="admin" && document.getElementById('pIn').value==="sgs") { document.getElementById('adminDashboard').style.display='block'; closeModals(); } else { alert("Failed"); } }
     function handleImg(input) { const r = new FileReader(); r.onload = (e) => { tmpImg = e.target.result; }; if(input.files[0]) r.readAsDataURL(input.files[0]); }
     function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
