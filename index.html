@@ -8,26 +8,26 @@
     <style>
         :root { --p-orange: #4F7942; --dark-orange: #3E5F34; --bg: #ffffff; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; padding-bottom: 80px; overflow-x: hidden; }
-        .header { background: var(--dark-orange); color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 90px; }
-        .nav-bar { display: flex; overflow-x: auto; padding: 15px 5px; background: #fff; position: sticky; top: 90px; z-index: 900; border-bottom: 1px solid #eee; }
-        .nav-item { text-align: center; min-width: 120px; opacity: 0.5; cursor: pointer; transition: 0.3s; }
-        .nav-item.active { opacity: 1; transform: scale(1.05); }
-        .nav-item img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #eee; margin-bottom: 5px; }
+        body { background: var(--bg); color: #333; font-family: 'Poppins', sans-serif; padding-bottom: 80px; }
+        .header { background: var(--dark-orange); color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 100px; }
+        .nav-bar { display: flex; overflow-x: auto; padding: 15px 5px; background: #fff; position: sticky; top: 100px; z-index: 900; border-bottom: 1px solid #eee; scroll-behavior: smooth; }
+        .nav-item { text-align: center; min-width: 110px; opacity: 0.5; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { opacity: 1; transform: scale(1.05); font-weight: bold; }
+        .nav-item img { width: 75px; height: 75px; border-radius: 50%; object-fit: cover; border: 2px solid #eee; margin-bottom: 5px; }
         .container { padding: 12px; min-height: 60vh; }
         .card { display: flex; align-items: center; background: white; border-radius: 15px; margin-bottom: 15px; padding: 12px; border: 1px solid #f2f2f2; box-shadow: 0 3px 10px rgba(0,0,0,0.04); }
         .food-img { width: 100px; height: 100px; border-radius: 12px; object-fit: cover; margin-right: 15px; }
         .call-order-btn { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--dark-orange); color: white; padding: 15px 30px; border-radius: 50px; text-decoration: none; z-index: 2000; display: flex; align-items: center; gap: 10px; }
         
-        /* Admin Panel Styles */
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:10px; overflow-y: auto; }
         .admin-section { border: 1px solid #eee; padding: 10px; border-radius: 10px; margin-bottom: 20px; }
         .btn { padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; font-size: 11px; }
         .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:4000; align-items:center; justify-content:center; }
         .modal { background:white; padding:20px; border-radius:15px; width:90%; max-width:400px; max-height: 90vh; overflow-y: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
         th, td { border: 1px solid #eee; padding: 8px; text-align: left; }
         input, select { width: 100%; padding: 8px; margin: 4px 0; border: 1px solid #ccc; border-radius: 4px; }
+        .hidden-item { opacity: 0.4; background: #f0f0f0; }
     </style>
 </head>
 <body>
@@ -36,14 +36,15 @@
     <div onclick="showLogin()" style="cursor:pointer; font-size:24px;">☰</div>
     <div style="text-align:center;">
         <h1 style="font-family:'Playfair Display'; font-size:20px;">SGS HOTEL</h1>
-        <span style="font-size:12px;">MENU</span>
+        <span style="font-size:10px; letter-spacing:2px; display:block;">MENU / ሜኑ</span>
+        <span id="vatNote" style="font-size:9px; font-style:italic; color:#e8f5e9;"></span>
     </div>
-    <button onclick="toggleLang()" style="background:white; color:var(--dark-orange); border:none; padding:5px 10px; border-radius:15px; font-weight:bold;">EN/አማ</button>
+    <button onclick="toggleLang()" style="background:white; color:var(--dark-orange); border:none; padding:5px 10px; border-radius:15px; font-weight:bold; font-size:10px;">EN/አማ</button>
 </header>
 
 <nav class="nav-bar" id="categoryNav"></nav>
 <div class="container" id="menuListing"></div>
-<a href="tel:+251954954591" class="call-order-btn">📞 <span id="callText">Call To Order</span></a>
+<a href="tel:+251954954591" class="call-order-btn">📞 <span id="callText"></span></a>
 
 <div id="adminDashboard">
     <div style="display:flex; justify-content:space-between; align-items:center; background:var(--dark-orange); padding:15px; color:white; border-radius:10px;">
@@ -52,23 +53,23 @@
     </div>
 
     <div class="admin-section" style="margin-top:20px;">
-        <h4>1. Categories</h4>
+        <h4>1. Category Manager</h4>
         <div id="adminCatList" style="display:flex; overflow-x:auto; gap:10px; margin:10px 0;"></div>
         <button class="btn" style="background:#8e44ad; width:100%;" onclick="openCatModal()">+ Add New Category</button>
     </div>
 
     <div class="admin-section">
-        <h4>2. Bulk Edit Items</h4>
+        <h4>2. Menu Items (Bulk Update)</h4>
         <button class="btn" style="background:#27ae60; margin-bottom:10px;" onclick="openItemModal()">+ Add New Item</button>
         <div style="overflow-x:auto;">
             <table>
-                <thead><tr style="background:#f9f9f9;"><th>Name (EN/AM)</th><th>Price</th><th>Action</th></tr></thead>
+                <thead><tr style="background:#f9f9f9;"><th>Details</th><th>Price</th><th>Category</th><th>Action</th></tr></thead>
                 <tbody id="adminItemBody"></tbody>
             </table>
         </div>
     </div>
 
-    <button id="cloudBtn" onclick="saveToCloud()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; font-weight:bold;">💾 SAVE ALL CHANGES TO CLOUD</button>
+    <button id="cloudBtn" onclick="saveToCloud()" style="width:100%; padding:20px; background:#27ae60; color:white; border:none; border-radius:10px; font-weight:bold; position:sticky; bottom:0;">💾 SAVE ALL CHANGES TO CLOUD</button>
 </div>
 
 <div id="catModal" class="overlay"><div class="modal">
@@ -86,6 +87,7 @@
     <select id="itemCatSelect"></select>
     <input type="text" id="itemEn" placeholder="English Name">
     <input type="text" id="itemAm" placeholder="Amharic Name">
+    <input type="text" id="itemIng" placeholder="Ingredients">
     <input type="number" id="itemPrice" placeholder="Price">
     <input type="file" onchange="processFile(this)">
     <button onclick="addItem()" class="btn" style="background:#27ae60; width:100%; margin-top:10px;">Add Item</button>
@@ -100,34 +102,46 @@
 </div></div>
 
 <script>
-    const SHEET_URL = "https://script.google.com/macros/s/AKfycbyLxXSiQjahxWI7_hMuwaQmkinCOMCr462bnITjUa10uAhRuw4liNutxDlcdTMH0yAn7w/exec";
-    let data = [], categories = [], currentLang = 'en', currentCat = '', tempImg = "";
+    const SHEET_URL = "https://script.google.com/macros/s/AKfycbyLxXSiQjahxWI7_hMuwaQmkinCOMCr462bnITjUa10uAhRuw4liNutxDlcdTMH0yAn7w/execE";
+    let data = JSON.parse(localStorage.getItem('sgs_items')) || [];
+    let categories = JSON.parse(localStorage.getItem('sgs_cats')) || [];
+    let currentLang = 'en', currentCat = '', tempImg = "";
 
     async function fetchData() {
-        const res = await fetch(SHEET_URL);
-        const json = await res.json();
-        data = json.items || [];
-        categories = json.cats || [];
-        if(categories.length > 0 && !currentCat) currentCat = categories[0].id;
-        render();
+        try {
+            const res = await fetch(SHEET_URL);
+            const json = await res.json();
+            data = json.items || [];
+            categories = json.cats || [];
+            localStorage.setItem('sgs_items', JSON.stringify(data));
+            localStorage.setItem('sgs_cats', JSON.stringify(categories));
+            if(categories.length > 0 && !currentCat) currentCat = categories[0].id;
+            renderAll();
+        } catch (e) { console.log("Offline mode or error"); renderAll(); }
     }
 
-    function render() {
-        document.getElementById('categoryNav').innerHTML = categories.map(c => `
+    function renderAll() {
+        const isEn = currentLang === 'en';
+        document.getElementById('vatNote').innerText = isEn ? "All Price inclusive of VAT" : "ሁሉም ዋጋ የተጨማሪ እሴት ታክስ (VAT) ያካትታል";
+        document.getElementById('callText').innerText = isEn ? "Call To Order" : "ለመዘዝ ይደውሉ";
+
+        const nav = document.getElementById('categoryNav');
+        nav.innerHTML = categories.map(c => `
             <div class="nav-item ${currentCat === c.id ? 'active' : ''}" onclick="setCat('${c.id}')">
                 <img src="${c.img || 'https://via.placeholder.com/80'}">
-                <p>${currentLang === 'en' ? c.en : c.am}</p>
+                <p style="font-size:11px;">${isEn ? c.en : c.am}</p>
             </div>`).join('');
 
-        document.getElementById('menuListing').innerHTML = data.filter(i => i.cat === currentCat && !i.hidden).map(i => `
+        const list = document.getElementById('menuListing');
+        list.innerHTML = data.filter(i => i.cat === currentCat && !i.hidden).map(i => `
             <div class="card">
                 <img src="${i.img}" class="food-img">
                 <div class="info">
-                    <h3 style="color:var(--p-orange)">${currentLang === 'en' ? i.en : i.am}</h3>
-                    <p style="font-weight:bold;">${i.price} ETB</p>
+                    <h3 style="color:var(--p-orange); font-size:16px;">${isEn ? i.en : i.am}</h3>
+                    <p style="font-size:11px; color:gray; font-style:italic;">${i.ing || ''}</p>
+                    <p style="font-weight:bold; margin-top:5px;">${i.price} ETB</p>
                 </div>
             </div>`).join('');
-        
         renderAdmin();
     }
 
@@ -135,49 +149,66 @@
         document.getElementById('adminCatList').innerHTML = categories.map(c => `
             <div style="min-width:80px; text-align:center; border:1px solid #ddd; padding:5px; border-radius:5px;">
                 <p style="font-size:10px;">${c.en}</p>
-                <button onclick="removeCat('${c.id}')" style="color:red; border:none; background:none; font-size:10px;">Remove</button>
+                <button onclick="removeCat('${c.id}')" style="color:red; border:none; background:none; font-size:10px;">Delete</button>
             </div>`).join('');
 
         document.getElementById('adminItemBody').innerHTML = data.map((i, idx) => `
-            <tr>
-                <td><input value="${i.en}" onchange="data[${idx}].en=this.value"><input value="${i.am}" onchange="data[${idx}].am=this.value"></td>
+            <tr class="${i.hidden ? 'hidden-item' : ''}">
+                <td>
+                    <input value="${i.en}" onchange="data[${idx}].en=this.value" placeholder="EN">
+                    <input value="${i.am}" onchange="data[${idx}].am=this.value" placeholder="AM">
+                    <input value="${i.ing || ''}" onchange="data[${idx}].ing=this.value" placeholder="Ingredients" style="font-size:10px;">
+                </td>
                 <td><input type="number" value="${i.price}" onchange="data[${idx}].price=this.value" style="width:60px;"></td>
-                <td><button onclick="removeItem(${idx})" style="background:red; color:white; border:none; padding:4px;">Del</button></td>
+                <td>
+                    <select onchange="data[${idx}].cat=this.value">
+                        ${categories.map(c => `<option value="${c.id}" ${i.cat === c.id ? 'selected' : ''}>${c.en}</option>`).join('')}
+                    </select>
+                </td>
+                <td>
+                    <button onclick="toggleHide(${idx})" class="btn" style="background:#555; display:block; width:100%; margin-bottom:2px;">${i.hidden?'Show':'Hide'}</button>
+                    <button onclick="removeItem(${idx})" class="btn" style="background:red; display:block; width:100%;">Del</button>
+                </td>
             </tr>`).join('');
-
         document.getElementById('itemCatSelect').innerHTML = categories.map(c => `<option value="${c.id}">${c.en}</option>`).join('');
-    }
-
-    async function saveToCloud() {
-        const btn = document.getElementById('cloudBtn');
-        btn.innerText = "⏳ SAVING..."; btn.disabled = true;
-        await fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ items: data, cats: categories }) });
-        alert("Synced to Cloud!");
-        btn.innerText = "💾 SAVE ALL CHANGES TO CLOUD"; btn.disabled = false;
-        fetchData();
     }
 
     function handleLogin() {
         if(document.getElementById('userInput').value === "admin" && document.getElementById('passInput').value === "sgs") {
+            sessionStorage.setItem('isAdmin', 'true');
+            alert("Welcome To SGS Hotel Admin");
             document.getElementById('adminDashboard').style.display = 'block';
             closeModals();
-        }
+        } else { alert("Wrong credentials"); }
     }
 
+    async function saveToCloud() {
+        const btn = document.getElementById('cloudBtn');
+        btn.innerText = "⏳ SYNCING..."; btn.disabled = true;
+        await fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ items: data, cats: categories }) });
+        alert("All changes saved to cloud!");
+        btn.innerText = "💾 SAVE ALL CHANGES TO CLOUD"; btn.disabled = false;
+        fetchData();
+    }
+
+    window.onload = () => {
+        if(sessionStorage.getItem('isAdmin') === 'true') document.getElementById('adminDashboard').style.display = 'block';
+        fetchData();
+    };
+
     function processFile(input) { const reader = new FileReader(); reader.onload = (e) => { tempImg = e.target.result; }; if(input.files[0]) reader.readAsDataURL(input.files[0]); }
-    function setCat(c) { currentCat = c; render(); }
-    function toggleLang() { currentLang = currentLang === 'en' ? 'am' : 'en'; render(); }
+    function setCat(c) { currentCat = c; renderAll(); }
+    function toggleLang() { currentLang = (currentLang === 'en' ? 'am' : 'en'); renderAll(); }
     function showLogin() { document.getElementById('loginOverlay').style.display = 'flex'; }
     function closeModals() { document.querySelectorAll('.overlay').forEach(o => o.style.display = 'none'); }
     function openCatModal() { document.getElementById('catModal').style.display = 'flex'; }
     function openItemModal() { document.getElementById('itemModal').style.display = 'flex'; }
     function closeAdmin() { document.getElementById('adminDashboard').style.display = 'none'; }
-    function addCategory() { categories.push({id: document.getElementById('catId').value, en: document.getElementById('catEn').value, am: document.getElementById('catAm').value, img: tempImg}); render(); closeModals(); }
-    function addItem() { data.push({id: Date.now(), cat: document.getElementById('itemCatSelect').value, en: document.getElementById('itemEn').value, am: document.getElementById('itemAm').value, price: document.getElementById('itemPrice').value, img: tempImg, hidden: false}); render(); closeModals(); }
-    function removeItem(idx) { data.splice(idx, 1); renderAdmin(); }
-    function removeCat(id) { categories = categories.filter(c => c.id !== id); render(); }
-
-    fetchData();
+    function toggleHide(idx) { data[idx].hidden = !data[idx].hidden; renderAdmin(); }
+    function removeItem(idx) { if(confirm("Delete item?")) { data.splice(idx, 1); renderAdmin(); } }
+    function removeCat(id) { if(confirm("Delete category?")) { categories = categories.filter(c => c.id !== id); renderAll(); } }
+    function addCategory() { categories.push({id: document.getElementById('catId').value, en: document.getElementById('catEn').value, am: document.getElementById('catAm').value, img: tempImg}); renderAll(); closeModals(); }
+    function addItem() { data.push({id: Date.now(), cat: document.getElementById('itemCatSelect').value, en: document.getElementById('itemEn').value, am: document.getElementById('itemAm').value, ing: document.getElementById('itemIng').value, price: document.getElementById('itemPrice').value, img: tempImg, hidden: false}); renderAll(); closeModals(); }
 </script>
 </body>
 </html>
