@@ -1,258 +1,622 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SGS Hotel Menu - MASTER PROFESSIONAL</title>
+
+    <title>SGS HOTEL Menu - MASTER PROFESSIONAL</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
-        /* BRAND SETTINGS */
-        :root { --p-green: #4F7942; --dark-green: #3E5F34; --bg: #ffffff; }
+
+        /* BRAND SETTINGS - These are now controlled by the
+
+            Javascript Configuration at the bottom.
+
+        */
+
+        :root {
+
+            --p-green: #4F7942;
+
+            --dark-green: #3E5F34;
+
+            --bg: #ffffff;
+
+        }
+
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
         body { background: var(--bg); color: #333; font-family: 'Poppins', 'Noto Sans Ethiopic', sans-serif; padding-bottom: 100px; }
-        
+
+       
+
+        /* FIX 1: LOADING CSS */
+
+        #pageLoader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+        .spinner { width: 45px; height: 45px; border: 5px solid #eee; border-top: 5px solid var(--p-green); border-radius: 50%; animation: spin 1s linear infinite; }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+
         /* HEADER */
-        .header { background: var(--dark-green); color: white; padding: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 130px; }
-        .header h1 { font-family: 'Playfair Display'; font-size: 32px; font-weight: 800; text-align: center; flex-grow: 1; }
-        
-        /* NAVIGATION - 125px icons */
+
+        .header { background: var(--dark-green); color: var(--p-green); padding: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; height: 130px; }
+
+        .header h1 { font-family: 'Playfair Display'; font-size: 28px; font-weight: 800; text-align: center; flex-grow: 1; }
+
+       
+
+        /* NAVIGATION */
+
         .nav-bar { display: flex; overflow-x: auto; padding: 15px 10px; background: #fff; position: sticky; top: 130px; z-index: 900; border-bottom: 1px solid #eee; min-height: 195px; scrollbar-width: none; }
+
         .nav-item { text-align: center; min-width: 150px; opacity: 0.5; cursor: pointer; flex-shrink: 0; border-bottom: 4px solid transparent; }
+
         .nav-item.active { opacity: 1; font-weight: bold; color: var(--p-green); border-bottom-color: var(--p-green); }
+
         .nav-item img { width: 125px; height: 125px; border-radius: 50%; object-fit: cover; border: 3px solid #eee; margin-bottom: 8px; }
+
         .nav-item p { font-size: 16px; font-weight: 600; }
 
-        /* MENU CARDS - 125px food images */
+
+        /* MENU CARDS */
+
         .container { padding: 15px; }
-        .card { display: flex; align-items: center; background: white; border-radius: 12px; margin-bottom: 15px; padding: 12px; border: 1px solid #f0f0f0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+
+        .card { display: flex;
+
+    align-items: flex-start;
+
+    background: white;
+
+    border-radius: 12px;
+
+    margin-bottom: 15px;
+
+    padding: 12px;
+
+    border: 1px solid #f0f0f0;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+    overflow: hidden; /* Prevents anything from leaking out */ } .card > div:last-child {
+
+    flex: 1;
+
+    min-width: 0;
+
+}
+
         .food-img { width: 125px; height: 125px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
-        .food-title { color: var(--p-green); font-size: 20px; font-weight: 600; }
-        .food-ing { font-size: 14px; color: #777; font-style: italic; }
+
+        .food-title { color: var(--p-green);
+
+    font-size: 20px;
+
+    font-weight: 600;
+
+    white-space: normal; /* Forces text to wrap */
+
+    word-wrap: break-word;
+
+    overflow-wrap: break-word; }
+
+        .food-ing { font-size: 14px;
+
+    color: #777;
+
+    font-style: italic;
+
+    white-space: normal;
+
+    word-wrap: break-word; }
+
         .price-tag { font-weight: bold; color: var(--dark-green); margin-top: 5px; font-size: 18px; }
+
 
         .call-order-btn { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); background: var(--dark-green); color: white; padding: 16px 35px; border-radius: 50px; text-decoration: none; z-index: 2000; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
+
         /* ADMIN DASHBOARD */
+
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:15px; overflow-y: auto; }
+
         .admin-section { border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin-bottom: 25px; background: #fafafa; }
+
         .btn { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; text-align: center; }
-        
+
+       
+
         .cat-row { background: white; padding: 15px; border: 1px solid #eee; margin-bottom: 10px; border-radius: 8px; }
+
         .cat-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        
+
+       
+
         table { width: 100%; border-collapse: collapse; }
+
         td { padding: 12px 5px; border-bottom: 1px solid #eee; }
-        
-        .price-box { width: 90px !important; height: 45px; font-weight: bold; text-align: center; border: 2px solid var(--p-green) !important; color: var(--dark-green); }
+
+       
+
+        .price-box { width: 130px !important; height: 45px; font-weight: bold; text-align: center; border: 2px solid var(--p-green) !important; color: var(--dark-green); }
+
         input, select { width: 100%; padding: 12px; margin: 4px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
-        
+
+       
+
         .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:4000; align-items:center; justify-content:center; }
+
         .modal { background:white; padding:25px; border-radius:15px; width:92%; max-width:400px; }
+
     </style>
+
 </head>
+
 <body onclick="APP.closeOnOutside(event)">
 
+
+<div id="pageLoader">
+
+    <div class="spinner"></div>
+
+    <p style="margin-top:10px; font-size:12px; font-weight:600; color:var(--dark-green)">Connecting...</p>
+
+</div>
+
+
 <header class="header">
+
     <div onclick="APP.showLogin(event)" style="cursor:pointer; font-size:28px; padding:10px;">☰</div>
+
     <div style="text-align:center;">
+
         <h1 id="mainTitle">SGS HOTEL</h1>
+
         <div id="subTitle" style="font-size:12px; font-weight:bold; letter-spacing:3px;">MENU</div>
+
         <div id="vatNote" style="font-size:10px; opacity:0.8; margin-top:4px;">All prices include VAT</div>
+
     </div>
+
     <button onclick="APP.toggleLang()" style="background:white; color:var(--dark-green); border:none; padding:10px 15px; border-radius:20px; font-weight:bold;">EN/አማ</button>
+
 </header>
 
+
 <nav class="nav-bar" id="categoryNav"></nav>
+
 <div class="container" id="menuListing"></div>
+
 
 <a href="tel:+251954954591" class="call-order-btn">📞 <span id="callBtnText">Call To Order</span></a>
 
+
 <div id="adminDashboard">
+
     <div style="display:flex; justify-content:space-between; align-items:center; background:var(--dark-green); padding:20px; color:white; border-radius:12px; margin-bottom: 20px;">
-        <h3 style="margin:0">SGS MANAGER</h3>
+
+        <h3 id="managerHeaderTitle">SGS MANAGER</h3>
+
         <button onclick="APP.closeAdmin()" style="color:white; border:none; background:none; font-size:40px;">&times;</button>
-    </div>
-    
-    <div class="admin-section">
-        <h4>1. Category Management</h4>
-        <div id="adminCatList"></div>
-        <button class="btn" style="background:#8e44ad; width:100%; margin-top:15px; height:55px;" onclick="APP.openModal('catModal')">+ ADD NEW CATEGORY</button>
+
     </div>
 
+   
+
     <div class="admin-section">
-        <h4>2. Menu Items Management</h4>
-        <button class="btn" style="background:#27ae60; width:100%; margin-bottom:20px; height:55px;" onclick="APP.openModal('itemModal')">+ ADD NEW FOOD ITEM</button>
-        <div style="overflow-x:auto;">
-            <table><tbody id="adminItemBody"></tbody></table>
-        </div>
+
+        <h4>1. Category Management</h4>
+
+        <div id="adminCatList"></div>
+
+        <button class="btn" style="background:#8e44ad; width:100%; margin-top:15px; height:55px;" onclick="APP.openModal('catModal')">+ ADD NEW CATEGORY</button>
+
     </div>
+
+
+    <div class="admin-section">
+
+        <h4>2. Menu Items Management</h4>
+
+        <button class="btn" style="background:#27ae60; width:100%; margin-bottom:20px; height:55px;" onclick="APP.openModal('itemModal')">+ ADD NEW FOOD ITEM</button>
+
+        <div style="overflow-x:auto;">
+
+            <table><tbody id="adminItemBody"></tbody></table>
+
+        </div>
+
+    </div>
+
     <button id="cloudBtn" onclick="APP.saveToCloud()" style="width:100%; padding:22px; background:#27ae60; color:white; border:none; border-radius:12px; font-weight:bold; font-size:18px; position:sticky; bottom:10px; box-shadow: 0 -5px 15px rgba(0,0,0,0.2);">💾 SYNC ALL CHANGES</button>
+
 </div>
 
+
 <div id="editCatModal" class="overlay"><div class="modal" onclick="event.stopPropagation()">
+
     <h3>Rename Category</h3>
+
     <input type="text" id="eCatEn" placeholder="English Name">
+
     <input type="text" id="eCatAm" placeholder="Amharic Name">
+
     <button onclick="APP.applyCatRename()" class="btn" style="background:#27ae60; width:100%; margin-top:15px;">SAVE RENAME</button>
+
 </div></div>
+
 
 <div id="catModal" class="overlay"><div class="modal" onclick="event.stopPropagation()">
+
     <h3>New Category</h3>
+
     <input type="text" id="nCatId" placeholder="ID (e.g. food)">
+
     <input type="text" id="nCatEn" placeholder="English Name">
+
     <input type="text" id="nCatAm" placeholder="Amharic Name">
+
     <input type="file" onchange="APP.handleImg(this)">
+
     <button onclick="APP.createNewCat()" class="btn" style="background:#8e44ad; width:100%; margin-top:15px;">CREATE</button>
+
 </div></div>
+
 
 <div id="itemModal" class="overlay"><div class="modal" onclick="event.stopPropagation()">
+
     <h3>Add New Food Item</h3>
+
     <select id="nItemCat"></select>
+
     <input type="text" id="nItemEn" placeholder="Name (English)">
+
     <input type="text" id="nItemAm" placeholder="Name (Amharic)">
+
     <input type="text" id="nItemIng" placeholder="Ingredients">
-    <input type="number" id="nItemPrice" placeholder="Price">
+
+    <input type="text" id="nItemPrice" placeholder="Price">
+
     <input type="file" onchange="APP.handleImg(this)">
+
     <button onclick="APP.createNewItem()" class="btn" style="background:#27ae60; width:100%; margin-top:15px;">ADD TO MENU</button>
+
 </div></div>
+
 
 <div id="loginOverlay" class="overlay"><div class="modal" onclick="event.stopPropagation()" style="text-align:center;">
-    <h2 style="color:var(--dark-green); margin-bottom:5px;">Welcome To SGS Hotel</h2>
+
+    <h2 id="loginWelcomeText" style="color:var(--dark-green); margin-bottom:5px;">Welcome</h2>
+
     <input type="text" id="uIn" placeholder="Username" style="text-align:center;">
+
     <input type="password" id="pIn" placeholder="Password" style="text-align:center;">
+
     <button onclick="APP.verifyLogin()" class="btn" style="background:var(--dark-green); width:100%; margin-top:15px; height:50px;">LOGIN</button>
+
 </div></div>
 
+
 <script>
+
+    /** * ============================================================
+
+     * MASTER CONFIGURATION - CHANGE ONLY THESE 3 THINGS
+
+     * ============================================================
+
+     */
+
+    const CONFIG = {
+
+        HOTEL_NAME_EN: "SGS HOTEL",
+
+        HOTEL_NAME_AM: "ኤስ.ጂ.ኤስ ሆቴል",
+
+       
+
+        BRAND_COLOR_PRIMARY: "#4F7942",   // --Green
+
+        BRAND_COLOR_SECONDARY: "#3E5F34", // --Dark Moss Green
+
+       
+
+        GOOGLE_SHEET_URL: "https://script.google.com/macros/s/AKfycbyLxXSiQjahxWI7_hMuwaQmkinCOMCr462bnITjUa10uAhRuw4liNutxDlcdTMH0yAn7w/exec"
+
+    };
+
+
+    /** * APP LOGIC - DO NOT TOUCH BELOW UNLESS NECESSARY
+
+     */
+
     const APP = {
-        URL: "https://script.google.com/macros/s/AKfycbzUs_R4tSRSWfZN5WWwoUa1_8qxHbs95fQk83xDwd9TZ9wzGnlxxLuEmFpTgfaZ2aKOnA/exec",
+
+        URL: CONFIG.GOOGLE_SHEET_URL,
+
         data: [], cats: [], lang: 'en', activeCat: '', imgTmp: '', editId: null,
 
+
         init: async function() {
+
+            // Apply Brand Colors from Config
+
+            document.documentElement.style.setProperty('--p-green', CONFIG.BRAND_COLOR_PRIMARY);
+
+            document.documentElement.style.setProperty('--dark-green', CONFIG.BRAND_COLOR_SECONDARY);
+
+           
+
             try {
+
+                // FIX 2: ?t= Cache-Buster for Category Stability
+
                 const r = await fetch(`${this.URL}?t=${Date.now()}`);
+
                 const j = await r.json();
+
                 this.data = j.items || [];
+
                 this.cats = j.cats || [];
+
                 if(this.cats.length > 0 && !this.activeCat) this.activeCat = this.cats[0].id;
+
+               
+
+                // FIX 1: HIDE THE LOADER
+
+                document.getElementById('pageLoader').style.display = 'none';
+
                 this.render();
-            } catch(e) { console.error("Sync Error"); }
+
+            } catch(e) {
+
+                console.error("Sync Error");
+
+                document.getElementById('pageLoader').innerText = "Connection Error.";
+
+            }
+
         },
+
 
         render: function() {
+
             const isEn = this.lang === 'en';
-            // Header Translation Fix
-            document.getElementById('mainTitle').innerText = isEn ? "SGS HOTEL" : "ኤስ.ጂ.ኤስ ሆቴል";
+
+           
+
+            // Dynamic Header/Text from Config
+
+            document.getElementById('mainTitle').innerText = isEn ? CONFIG.HOTEL_NAME_EN : CONFIG.HOTEL_NAME_AM;
+
+            document.getElementById('managerHeaderTitle').innerText = isEn ? `${CONFIG.HOTEL_NAME_EN} MANAGER` : `${CONFIG.HOTEL_NAME_AM} መቆጣጠሪያ`;
+
+            document.getElementById('loginWelcomeText').innerText = isEn ? `Welcome to ${CONFIG.HOTEL_NAME_EN}` : `ወደ ${CONFIG.HOTEL_NAME_AM} እንኳን ደህና መጡ`;
+
+           
+
             document.getElementById('subTitle').innerText = isEn ? "MENU" : "ሜኑ";
+
             document.getElementById('vatNote').innerText = isEn ? "All prices include VAT" : "ሁሉም ዋጋዎች ቫትን ያካትታሉ";
+
             document.getElementById('callBtnText').innerText = isEn ? "Call To Order" : "ለመዘዝ ይደውሉ";
 
+
             document.getElementById('categoryNav').innerHTML = this.cats.map(c => `
+
                 <div class="nav-item ${this.activeCat == c.id ? 'active' : ''}" onclick="APP.setCat('${c.id}')">
+
                     <img src="${c.img || ''}" onerror="this.src='https://via.placeholder.com/150'">
+
                     <p>${isEn ? c.en : c.am}</p>
+
                 </div>`).join('');
+
 
             const filtered = this.data.filter(i => String(i.cat) === String(this.activeCat) && !i.hidden);
+
             document.getElementById('menuListing').innerHTML = filtered.map(i => `
+
                 <div class="card">
+
                     <img src="${i.img || ''}" class="food-img" onerror="this.src='https://via.placeholder.com/150'">
+
                     <div>
+
                         <div class="food-title">${isEn ? i.en : i.am}</div>
+
                         <div class="food-ing">${i.ing || ''}</div>
+
                         <div class="price-tag">${i.price} ETB</div>
+
                     </div>
+
                 </div>`).join('');
+
             this.renderAdmin();
+
         },
+
 
         renderAdmin: function() {
+
             document.getElementById('adminCatList').innerHTML = this.cats.map((c, idx) => `
+
                 <div class="cat-row">
+
                     <div class="cat-info">
+
                         <span><b>${c.en}</b> / ${c.am}</span>
+
                         <div>
+
                             <button onclick="APP.prepRename('${c.id}')" style="background:#3498db; color:white; border:none; padding:8px 12px; border-radius:6px;">Rename</button>
+
                             <button onclick="APP.deleteCat('${c.id}')" style="background:#e74c3c; color:white; border:none; padding:8px 12px; border-radius:6px; margin-left:5px;">Del</button>
+
                         </div>
+
                     </div>
+
                     <label style="font-size:11px; color:#666;">Update Cat Photo:</label>
+
                     <input type="file" onchange="APP.updateCatImg(${idx}, this)" style="font-size:11px;">
+
                 </div>`).join('');
 
+
             document.getElementById('adminItemBody').innerHTML = this.data.map((i, idx) => `
+
                 <tr style="${i.hidden ? 'opacity:0.3' : ''}">
+
                     <td style="width:55%">
+
                         <input value="${i.en}" onchange="APP.data[${idx}].en=this.value" placeholder="EN Title" style="font-weight:bold; height:35px;">
+
                         <input value="${i.am}" onchange="APP.data[${idx}].am=this.value" placeholder="AM Title" style="height:35px;">
+
                         <input value="${i.ing || ''}" onchange="APP.data[${idx}].ing=this.value" placeholder="Ingredients" style="font-size:11px; height:35px;">
+
                         <select onchange="APP.data[${idx}].cat=this.value" style="font-size:11px; height:35px; color:blue;">
+
                             ${this.cats.map(c => `<option value="${c.id}" ${c.id==i.cat?'selected':''}>Move to: ${c.en}</option>`).join('')}
+
                         </select>
+
                         <input type="file" onchange="APP.updateItemImg(${idx}, this)" style="font-size:10px; border:none;">
+
                     </td>
-                    <td><input type="number" class="price-box" value="${i.price}" onchange="APP.data[${idx}].price=this.value"></td>
+
+                    <td><input type="text" class="price-box" value="${i.price}" onchange="APP.data[${idx}].price=this.value"></td>
+
                     <td style="text-align:right">
+
                         <button onclick="APP.toggleHide(${idx})" style="background:#555; color:white; border:none; padding:8px; width:100%; margin-bottom:5px;">${i.hidden?'Show':'Hide'}</button>
+
                         <button onclick="APP.deleteItem(${idx})" style="background:red; color:white; border:none; padding:8px; width:100%;">Del</button>
+
                     </td>
+
                 </tr>`).join('');
+
             document.getElementById('nItemCat').innerHTML = this.cats.map(c => `<option value="${c.id}">${c.en}</option>`).join('');
+
         },
+
 
         setCat: function(id) { this.activeCat = id; this.render(); },
+
         toggleLang: function() { this.lang = (this.lang === 'en' ? 'am' : 'en'); this.render(); },
+
         showLogin: function(e) { e.stopPropagation(); document.getElementById('loginOverlay').style.display='flex'; },
-        closeOnOutside: function(e) { if(document.getElementById('loginOverlay').style.display==='flex') this.closeModals(); },
-        verifyLogin: function() { 
-            if(document.getElementById('uIn').value==='admin' && document.getElementById('pIn').value==='sgs'){ 
-                document.getElementById('adminDashboard').style.display='block'; 
+
+        closeOnOutside: function(e) { if(document.getElementById('loginOverlay').style.display==='flex' && e.target.className==='overlay') this.closeModals(); },
+
+        verifyLogin: function() {
+
+            if(document.getElementById('uIn').value==='admin' && document.getElementById('pIn').value==='taem'){
+
+                document.getElementById('adminDashboard').style.display='block';
+
                 document.getElementById('uIn').value=''; document.getElementById('pIn').value='';
-                this.closeModals(); 
+
+                this.closeModals();
+
             } else { alert("Login Failed"); }
+
         },
+
 
         closeAdmin: function() { document.getElementById('adminDashboard').style.display='none'; },
+
         closeModals: function() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); this.imgTmp = ''; },
+
         openModal: function(id) { document.getElementById(id).style.display='flex'; },
+
         handleImg: function(input) { const r = new FileReader(); r.onload = (e) => this.imgTmp = e.target.result; r.readAsDataURL(input.files[0]); },
-        
+
+       
+
         updateCatImg: function(idx, input) {
+
             const r = new FileReader();
-            r.onload = (e) => { this.cats[idx].img = e.target.result; alert("Category image updated. Click Sync to save."); };
+
+            r.onload = (e) => { this.cats[idx].img = e.target.result; alert("Image captured! Click Sync to save."); };
+
             r.readAsDataURL(input.files[0]);
+
         },
+
 
         updateItemImg: function(idx, input) {
+
             const r = new FileReader();
+
             r.onload = (e) => { this.data[idx].img = e.target.result; this.renderAdmin(); };
+
             r.readAsDataURL(input.files[0]);
+
         },
+
 
         prepRename: function(id) { this.editId = id; const c = this.cats.find(x => x.id == id); document.getElementById('eCatEn').value=c.en; document.getElementById('eCatAm').value=c.am; this.openModal('editCatModal'); },
+
         applyCatRename: function() { const c = this.cats.find(x => x.id == this.editId); if(c){ c.en=document.getElementById('eCatEn').value; c.am=document.getElementById('eCatAm').value; this.closeModals(); this.render(); } },
+
         deleteCat: function(id) { if(confirm("Delete Category?")) { this.cats = this.cats.filter(c => c.id != id); this.render(); } },
+
         createNewCat: function() { const id = document.getElementById('nCatId').value.trim().toLowerCase(); if(id){ this.cats.push({id, en:document.getElementById('nCatEn').value, am:document.getElementById('nCatAm').value, img:this.imgTmp}); this.closeModals(); this.render(); } },
 
+
         createNewItem: function() {
+
             this.data.push({ id: Date.now(), cat: document.getElementById('nItemCat').value, en: document.getElementById('nItemEn').value, am: document.getElementById('nItemAm').value, ing: document.getElementById('nItemIng').value, price: document.getElementById('nItemPrice').value, img: this.imgTmp, hidden: false });
+
             this.closeModals(); this.render();
+
         },
+
         toggleHide: function(idx) { this.data[idx].hidden = !this.data[idx].hidden; this.render(); },
+
         deleteItem: function(idx) { if(confirm("Delete Item?")) { this.data.splice(idx, 1); this.render(); } },
 
+
         saveToCloud: async function() {
+
             const b = document.getElementById('cloudBtn');
+
             b.innerText = "UPDATING..."; b.disabled = true;
+
             try {
+
+                // FIX 2: SENDS BOTH DATA AND CATS TO PERSIST
+
                 await fetch(this.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ items: this.data, cats: this.cats, lastUpdate: Date.now() }) });
-                alert("Master Version Updated!"); this.init();
+
+                alert("Cloud Updated Successfully!"); this.init();
+
             } catch(e) { alert("Sync Failed"); }
+
             finally { b.innerText = "💾 SYNC ALL CHANGES"; b.disabled = false; }
+
         }
+
     };
+
     window.onload = () => APP.init();
+
 </script>
+
 </body>
-</html>
+
+</html> 
