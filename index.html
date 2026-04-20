@@ -8,29 +8,12 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>SGS HOTEL Menu - MASTER PROFESSIONAL</title>
+    <title>HIMMA COFFEE Menu - MASTER PROFESSIONAL</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-/* HIGH-QUALITY WIDE MODAL FIX */
-.modal { 
-    width: 95% !important; 
-    max-width: 800px !important; /* Wide screen support */
-    padding: 10px !important;
-}
 
-#modalImg { 
-    width: 100%; 
-    max-height: 80vh; /* Uses more vertical space */
-    object-fit: contain; 
-    display: block;
-    margin: 0 auto 15px;
-    /* HD SHARPENING */
-    image-rendering: -webkit-optimize-contrast; 
-    image-rendering: high-quality;
-    transform: translateZ(0); 
-}
         /* BRAND SETTINGS - These are now controlled by the
 
             Javascript Configuration at the bottom.
@@ -335,15 +318,15 @@
 
     const CONFIG = {
 
-        HOTEL_NAME_EN: "SGS HOTEL",
+        HOTEL_NAME_EN: "HIMMA COFFEE",
 
-        HOTEL_NAME_AM: "ኤስ.ጂ.ኤስ ሆቴል",
+        HOTEL_NAME_AM: "ሂማ ቡና",
 
        
 
         BRAND_COLOR_PRIMARY: "#FEC20C",   // --Honey
 
-        BRAND_COLOR_SECONDARY: "#3B270C", // --Dark Mocha
+        BRAND_COLOR_SECONDARY: "#2E1503", // --Chocolate
 
        
 
@@ -437,21 +420,8 @@
 
                     <p>${isEn ? c.en : c.am}</p>
 
-                </div>`).join('');},
-openFoodDetail: function(index) {
-    const item = this.data[index];
-    const isEn = this.lang === 'en';
-    const mImg = document.getElementById('modalImg');
+                </div>`).join('');
 
-    // Forces the browser to load the image in high-quality
-    mImg.src = item.img || '';
-    
-    document.getElementById('modalTitle').innerText = isEn ? item.en : item.am;
-    document.getElementById('modalPrice').innerText = item.price + " ETB";
-    
-    // Shows the wide-screen modal
-    document.getElementById('foodModal').style.display = 'flex';
-},
 
             const filtered = this.data.filter(i => String(i.cat) === String(this.activeCat) && !i.hidden);
 
@@ -554,7 +524,7 @@ openFoodDetail: function(index) {
 
         verifyLogin: function() {
 
-            if(document.getElementById('uIn').value==='admin' && document.getElementById('pIn').value==='sgs'){
+            if(document.getElementById('uIn').value==='admin' && document.getElementById('pIn').value==='himma'){
 
                 document.getElementById('adminDashboard').style.display='block';
 
