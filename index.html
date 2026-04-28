@@ -62,7 +62,7 @@
 
         .call-order-btn { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); background: var(--header-bg); color: white; padding: 16px 35px; border-radius: 50px; text-decoration: none; z-index: 2000; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
-        /* ADMIN DASHBOARD RESTORED */
+        /* ADMIN DASHBOARD */
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:15px; overflow-y: auto; }
         .admin-section { border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin-bottom: 25px; background: #fafafa; }
         .btn { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; text-align: center; }
@@ -79,12 +79,17 @@
 <div id="pageLoader">
     <div class="spinner"></div>
     <p style="margin-top:10px; font-size:12px; font-weight:600; color:var(--header-bg)">Connecting...</p>
-    <button id="bypassBtn" onclick="APP.hideLoader()" style="margin-top:20px; display:none; background:none; border:1px solid #ccc; padding:5px 10px; border-radius:5px; font-size:10px;">Skip Wait</button>
+    <button id="bypassBtn" onclick="APP.hideLoader()" style="margin-top:20px; display:none; background:none; border:1px solid #ccc; padding:5px 10px; border-radius:5px; font-size:10px;">Enter Offline</button>
 </div>
 
 <header class="header">
     <div onclick="APP.showLogin(event)" style="cursor:pointer; font-size:28px; padding:10px; color:white;">☰</div>
-    <img src="logo.png" class="logo-img" alt="" onerror="this.style.display='none'">
+    
+    <div id="logoContainer" style="display: flex; align-items: center; justify-content: center;">
+        <img src="logo.jpg" class="logo-img" alt="Logo" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex'">
+        <div id="logoFallback" style="display:none; height:70px; width:70px; background: rgba(255,255,255,0.1); border-radius: 50%; align-items: center; justify-content: center; font-size: 30px; margin-right: 10px; border: 2px dashed rgba(255,255,255,0.3);">🍔</div>
+    </div>
+
     <div class="header-center-area">
         <h1 id="mainTitle"><span class="w1" id="w1"></span> <span class="w2" id="w2"></span></h1>
         <div id="subTitle" style="font-size:12px; font-weight:bold; letter-spacing:3px; color:white;">MENU</div>
