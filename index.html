@@ -7,39 +7,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* ============================================================
-           1. MASTER CONTROL CENTER (EDIT EVERYTHING HERE)
+           1. MASTER CONTROL CENTER
            ============================================================
         */
         :root {
-            /* GOOGLE SHEET DEPLOYMENT ID */
             --google-sheet-url: "https://script.google.com/macros/s/AKfycbyLxXSiQjahxWI7_hMuwaQmkinCOMCr462bnITjUa10uAhRuw4liNutxDlcdTMH0yAn7w/exec";
-
-            /* HOTEL NAMES */
             --hotel-en-1: "DIBORA";
             --hotel-en-2: "JUICE & BURGER";
             --hotel-am-1: "ዲቦራ";
             --hotel-am-2: "ጁስ እና በርገር";
-
-            /* COLORS */
-            --header-bg: #616569;        /* Top Bar Background */
-            --word-1-color: #FC6A03;     /* First word color */
-            --word-2-color: #028A0F;     /* Second word color */
-            --page-bg: #795C34;          /* App background */
-            --price-color: #3E5F34;      /* Price text color */
-            --ing-color: #777777;        /* Ingredients text color */
-            --brand-primary: #4F7942;    /* Primary branding */
-
-            /* CONTACT & SECURITY */
+            --header-bg: #616569;
+            --word-1-color: #FC6A03;
+            --word-2-color: #028A0F;
+            --page-bg: #795C34;
+            --price-color: #3E5F34;
+            --ing-color: #777777;
+            --brand-primary: #4F7942;
             --phone-number: "+251954954591";
             --admin-user: "admin";
             --admin-pass: "212121";
         }
 
-        /* --- UI CORE STYLES --- */
+        /* --- UI CORE --- */
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { background: var(--page-bg); color: #333; font-family: 'Poppins', 'Noto Sans Ethiopic', sans-serif; padding-bottom: 100px; }
         
-        #pageLoader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #pageLoader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.4s; }
         .spinner { width: 45px; height: 45px; border: 5px solid #eee; border-top: 5px solid var(--brand-primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -69,16 +62,14 @@
 
         .call-order-btn { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); background: var(--header-bg); color: white; padding: 16px 35px; border-radius: 50px; text-decoration: none; z-index: 2000; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
-        /* ADMIN DASHBOARD (RESTORED) */
+        /* ADMIN DASHBOARD */
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:15px; overflow-y: auto; }
         .admin-section { border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin-bottom: 25px; background: #fafafa; }
         .btn { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; text-align: center; }
-        .cat-row { background: white; padding: 15px; border: 1px solid #eee; margin-bottom: 10px; border-radius: 8px; }
-        .cat-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        input, select { width: 100%; padding: 12px; margin: 4px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
         table { width: 100%; border-collapse: collapse; }
         td { padding: 12px 5px; border-bottom: 1px solid #eee; }
-        .price-box { width: 100px !important; font-weight: bold; text-align: center; border: 2px solid var(--brand-primary) !important; }
-        input, select { width: 100%; padding: 12px; margin: 4px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
+        .price-box { width: 80px; font-weight: bold; text-align: center; border: 2px solid var(--brand-primary); }
     </style>
 </head>
 <body onclick="APP.closeOnOutside(event)">
@@ -86,16 +77,16 @@
 <div id="pageLoader">
     <div class="spinner"></div>
     <p style="margin-top:10px; font-size:12px; font-weight:600; color:var(--header-bg)">Connecting...</p>
-    <button id="bypassBtn" onclick="APP.hideLoader()" style="margin-top:20px; display:none; background:none; border:1px solid #ccc; padding:5px 10px; border-radius:5px; font-size:10px;">Enter Offline</button>
+    <button id="bypassBtn" onclick="APP.hideLoader()" style="margin-top:20px; background:none; border:1px solid #ccc; padding:5px 10px; border-radius:5px; font-size:10px;">Skip Connection</button>
 </div>
 
 <header class="header">
     <div onclick="APP.showLogin(event)" style="cursor:pointer; font-size:28px; padding:10px; color:white;">☰</div>
-    <img src="logo.png" class="logo-img" alt="Logo" onerror="this.src='https://via.placeholder.com/80?text=Logo'">
+    <img src="logo.png" class="logo-img" alt="" onerror="this.style.display='none'">
     <div class="header-center-area">
         <h1 id="mainTitle"><span class="w1" id="w1"></span> <span class="w2" id="w2"></span></h1>
         <div id="subTitle" style="font-size:12px; font-weight:bold; letter-spacing:3px; color:white;">MENU</div>
-        <div id="vatNote" style="font-size:10px; opacity:0.8; margin-top:4px; color:white;">All prices include VAT</div>
+        <div id="vatNote" style="font-size:10px; opacity:0.8; margin-top:4px; color:white;"></div>
     </div>
     <button onclick="APP.toggleLang()" style="background:white; color:var(--header-bg); border:none; padding:10px 15px; border-radius:20px; font-weight:bold;">EN/አማ</button>
 </header>
@@ -113,7 +104,7 @@
     </div>
 </div>
 
-<a href="#" id="callLink" class="call-order-btn">📞 <span id="callBtnText">Call To Order</span></a>
+<a href="#" id="callLink" class="call-order-btn">📞 <span id="callBtnText"></span></a>
 
 <div id="adminDashboard">
     <div style="display:flex; justify-content:space-between; align-items:center; background:var(--header-bg); padding:20px; color:white; border-radius:12px; margin-bottom: 20px;">
@@ -135,12 +126,14 @@
     <button id="cloudBtn" onclick="APP.saveToCloud()" style="width:100%; padding:22px; background:#27ae60; color:white; border:none; border-radius:12px; font-weight:bold;">💾 SYNC ALL CHANGES</button>
 </div>
 
-<div id="loginOverlay" class="overlay"><div class="modal" onclick="event.stopPropagation()" style="text-align:center;">
-    <h2 id="loginWelcomeText" style="margin-bottom:15px; color:var(--header-bg);"></h2>
-    <input type="text" id="uIn" placeholder="User" autocomplete="off">
-    <input type="password" id="pIn" placeholder="Pass" autocomplete="off">
-    <button onclick="APP.verifyLogin()" class="btn" style="background:var(--header-bg); width:100%; margin-top:15px;">LOGIN</button>
-</div></div>
+<div id="loginOverlay" class="overlay">
+    <div class="modal" onclick="event.stopPropagation()" style="text-align:center;">
+        <h2 id="loginWelcomeText" style="margin-bottom:15px; color:var(--header-bg);"></h2>
+        <input type="text" id="uIn" placeholder="User" autocomplete="off">
+        <input type="password" id="pIn" placeholder="Pass" autocomplete="off">
+        <button onclick="APP.verifyLogin()" class="btn" style="background:var(--header-bg); width:100%; margin-top:15px;">LOGIN</button>
+    </div>
+</div>
 
 <div id="editCatModal" class="overlay"><div class="modal" onclick="event.stopPropagation()"><h3>Rename Category</h3><input type="text" id="eCatEn"><input type="text" id="eCatAm"><button onclick="APP.applyCatRename()" class="btn" style="background:#27ae60; width:100%;">SAVE RENAME</button></div></div>
 <div id="catModal" class="overlay"><div class="modal" onclick="event.stopPropagation()"><h3>New Category</h3><input type="text" id="nCatId" placeholder="ID"><input type="text" id="nCatEn"><input type="text" id="nCatAm"><input type="file" onchange="APP.handleImg(this)"><button onclick="APP.createNewCat()" class="btn" style="background:#8e44ad; width:100%;">CREATE</button></div></div>
@@ -151,7 +144,9 @@
         data: [], cats: [], lang: 'en', activeCat: '', imgTmp: '', editId: null,
 
         init: async function() {
-            setTimeout(() => { document.getElementById('bypassBtn').style.display = 'block'; }, 5000);
+            // Safety: Hide loader if Sheet doesn't load in 4 seconds
+            setTimeout(() => { this.hideLoader(); }, 4000);
+
             const root = getComputedStyle(document.documentElement);
             const sheetUrl = root.getPropertyValue('--google-sheet-url').trim().replace(/"/g, '');
             document.getElementById('callLink').href = "tel:" + root.getPropertyValue('--phone-number').trim().replace(/"/g, '');
@@ -164,10 +159,14 @@
                 if(this.cats.length > 0) this.activeCat = this.cats[0].id;
                 this.hideLoader();
                 this.render();
-            } catch(e) { console.log("Offline mode"); this.hideLoader(); }
+            } catch(e) { this.hideLoader(); }
         },
 
-        hideLoader: function() { document.getElementById('pageLoader').style.display = 'none'; this.render(); },
+        hideLoader: function() { 
+            const l = document.getElementById('pageLoader');
+            if(l) l.style.display = 'none'; 
+            this.render(); 
+        },
 
         render: function() {
             const isEn = this.lang === 'en';
@@ -177,7 +176,6 @@
 
             document.getElementById('w1').innerText = isEn ? root.getPropertyValue('--hotel-en-1').trim().replace(/"/g, '') : root.getPropertyValue('--hotel-am-1').trim().replace(/"/g, '');
             document.getElementById('w2').innerText = isEn ? root.getPropertyValue('--hotel-en-2').trim().replace(/"/g, '') : root.getPropertyValue('--hotel-am-2').trim().replace(/"/g, '');
-            document.getElementById('subTitle').innerText = isEn ? "MENU" : "ሜኑ";
             document.getElementById('vatNote').innerText = isEn ? "All prices include VAT" : "ሁሉም ዋጋዎች ቫትን ያካትታሉ";
             document.getElementById('callBtnText').innerText = isEn ? "Call To Order" : "ለማዘዝ ይደውሉ";
             document.getElementById('loginWelcomeText').innerText = isEn ? `Welcome to "${hEn}"` : `እንኳን ወደ "${hAm}" በደህና መጡ`;
@@ -217,31 +215,17 @@
         renderAdmin: function() {
             document.getElementById('adminCatList').innerHTML = this.cats.map((c, idx) => `
                 <div class="cat-row">
-                    <div class="cat-info"><span><b>${c.en}</b> / ${c.am}</span>
-                        <div>
-                            <button onclick="APP.prepRename('${c.id}')" style="background:#3498db; color:white; border:none; padding:8px; border-radius:6px;">Rename</button>
-                            <button onclick="APP.deleteCat('${c.id}')" style="background:#e74c3c; color:white; border:none; padding:8px; border-radius:6px;">Del</button>
-                        </div>
+                    <div class="cat-info"><span><b>${c.en}</b></span>
+                        <button onclick="APP.deleteCat('${c.id}')" style="background:red; color:white; border:none; padding:5px; border-radius:4px;">Del</button>
                     </div>
                     <input type="file" onchange="APP.updateCatImg(${idx}, this)">
                 </div>`).join('');
 
             document.getElementById('adminItemBody').innerHTML = this.data.map((i, idx) => `
-                <tr style="${i.hidden ? 'opacity:0.3' : ''}">
-                    <td>
-                        <input value="${i.en}" onchange="APP.data[${idx}].en=this.value" placeholder="EN Name">
-                        <input value="${i.am}" onchange="APP.data[${idx}].am=this.value" placeholder="AM Name">
-                        <input value="${i.ing || ''}" onchange="APP.data[${idx}].ing=this.value" placeholder="Ingredients" style="font-size:11px;">
-                        <select onchange="APP.data[${idx}].cat=this.value">
-                            ${this.cats.map(c => `<option value="${c.id}" ${c.id==i.cat?'selected':''}>${c.en}</option>`).join('')}
-                        </select>
-                        <input type="file" onchange="APP.updateItemImg(${idx}, this)" style="font-size:10px; border:none;">
-                    </td>
-                    <td><input type="text" class="price-box" value="${i.price}" onchange="APP.data[${idx}].price=this.value"></td>
-                    <td>
-                        <button onclick="APP.toggleHide(${idx})" style="background:#555; color:white; border:none; padding:5px; width:100%; margin-bottom:5px;">Hide</button>
-                        <button onclick="APP.deleteItem(${idx})" style="background:red; color:white; border:none; padding:5px; width:100%;">Del</button>
-                    </td>
+                <tr>
+                    <td><input value="${i.en}" onchange="APP.data[${idx}].en=this.value"></td>
+                    <td><input value="${i.price}" class="price-box" onchange="APP.data[${idx}].price=this.value"></td>
+                    <td><button onclick="APP.deleteItem(${idx})">🗑️</button></td>
                 </tr>`).join('');
             document.getElementById('nItemCat').innerHTML = this.cats.map(c => `<option value="${c.id}">${c.en}</option>`).join('');
         },
@@ -250,14 +234,9 @@
             const root = getComputedStyle(document.documentElement);
             const user = root.getPropertyValue('--admin-user').trim().replace(/"/g, '');
             const pass = root.getPropertyValue('--admin-pass').trim().replace(/"/g, '');
-            const u = document.getElementById('uIn').value;
-            const p = document.getElementById('pIn').value;
-            
-            if(u === user && p === pass){
+            if(document.getElementById('uIn').value === user && document.getElementById('pIn').value === pass){
                 document.getElementById('adminDashboard').style.display='block';
-                // Clear fields for security
-                document.getElementById('uIn').value = "";
-                document.getElementById('pIn').value = "";
+                document.getElementById('uIn').value = ""; document.getElementById('pIn').value = "";
                 this.closeModals();
             } else { alert("Error"); }
         },
@@ -269,14 +248,9 @@
         closeModals: function() { document.querySelectorAll('.overlay').forEach(o => o.style.display='none'); },
         openModal: function(id) { document.getElementById(id).style.display='flex'; },
         handleImg: function(input) { const r = new FileReader(); r.onload = (e) => this.imgTmp = e.target.result; r.readAsDataURL(input.files[0]); },
-        updateCatImg: function(idx, input) { const r = new FileReader(); r.onload = (e) => { this.cats[idx].img = e.target.result; alert("Image Captured!"); }; r.readAsDataURL(input.files[0]); },
-        updateItemImg: function(idx, input) { const r = new FileReader(); r.onload = (e) => { this.data[idx].img = e.target.result; this.renderAdmin(); }; r.readAsDataURL(input.files[0]); },
-        prepRename: function(id) { this.editId = id; const c = this.cats.find(x => x.id == id); document.getElementById('eCatEn').value=c.en; document.getElementById('eCatAm').value=c.am; this.openModal('editCatModal'); },
-        applyCatRename: function() { const c = this.cats.find(x => x.id == this.editId); if(c){ c.en=document.getElementById('eCatEn').value; c.am=document.getElementById('eCatAm').value; this.closeModals(); this.render(); } },
-        deleteCat: function(id) { if(confirm("Delete Category?")) { this.cats = this.cats.filter(c => c.id != id); this.render(); } },
-        createNewCat: function() { this.cats.push({id:document.getElementById('nCatId').value, en:document.getElementById('nCatEn').value, am:document.getElementById('nCatAm').value, img:this.imgTmp}); this.closeModals(); this.render(); },
+        updateCatImg: function(idx, input) { const r = new FileReader(); r.onload = (e) => { this.cats[idx].img = e.target.result; }; r.readAsDataURL(input.files[0]); },
+        createNewCat: function() { this.cats.push({id:Date.now(), en:document.getElementById('nCatEn').value, am:document.getElementById('nCatAm').value, img:this.imgTmp}); this.closeModals(); this.render(); },
         createNewItem: function() { this.data.push({id:Date.now(), cat:document.getElementById('nItemCat').value, en:document.getElementById('nItemEn').value, am:document.getElementById('nItemAm').value, ing:document.getElementById('nItemIng').value, price:document.getElementById('nItemPrice').value, img:this.imgTmp, hidden:false}); this.closeModals(); this.render(); },
-        toggleHide: function(idx) { this.data[idx].hidden = !this.data[idx].hidden; this.render(); },
         deleteItem: function(idx) { if(confirm("Delete Item?")) { this.data.splice(idx, 1); this.render(); } },
         saveToCloud: async function() {
             const root = getComputedStyle(document.documentElement);
@@ -285,7 +259,7 @@
             try {
                 await fetch(sheetUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ items: this.data, cats: this.cats }) });
                 alert("Saved Successfully!"); this.init();
-            } catch(e) { alert("Error saving to cloud"); } finally { b.innerText = "💾 SYNC ALL CHANGES"; }
+            } catch(e) { alert("Error saving"); } finally { b.innerText = "💾 SYNC ALL CHANGES"; }
         },
         closeOnOutside: function(e) { if(e.target.className==='overlay') this.closeModals(); }
     };
