@@ -32,7 +32,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { background: var(--page-bg); color: #333; font-family: 'Poppins', 'Noto Sans Ethiopic', sans-serif; padding-bottom: 100px; }
         
-        #pageLoader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.4s; }
+        #pageLoader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .spinner { width: 45px; height: 45px; border: 5px solid #eee; border-top: 5px solid var(--brand-primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -62,14 +62,16 @@
 
         .call-order-btn { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); background: var(--header-bg); color: white; padding: 16px 35px; border-radius: 50px; text-decoration: none; z-index: 2000; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
-        /* ADMIN DASHBOARD */
+        /* ADMIN DASHBOARD RESTORED */
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:15px; overflow-y: auto; }
         .admin-section { border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin-bottom: 25px; background: #fafafa; }
         .btn { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; text-align: center; }
-        input, select { width: 100%; padding: 12px; margin: 4px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
+        .cat-row { background: white; padding: 15px; border: 1px solid #eee; margin-bottom: 10px; border-radius: 8px; }
+        .cat-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         table { width: 100%; border-collapse: collapse; }
         td { padding: 12px 5px; border-bottom: 1px solid #eee; }
-        .price-box { width: 80px; font-weight: bold; text-align: center; border: 2px solid var(--brand-primary); }
+        .price-box { width: 100px !important; font-weight: bold; text-align: center; border: 2px solid var(--brand-primary) !important; }
+        input, select { width: 100%; padding: 12px; margin: 4px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
     </style>
 </head>
 <body onclick="APP.closeOnOutside(event)">
@@ -77,7 +79,7 @@
 <div id="pageLoader">
     <div class="spinner"></div>
     <p style="margin-top:10px; font-size:12px; font-weight:600; color:var(--header-bg)">Connecting...</p>
-    <button id="bypassBtn" onclick="APP.hideLoader()" style="margin-top:20px; background:none; border:1px solid #ccc; padding:5px 10px; border-radius:5px; font-size:10px;">Skip Connection</button>
+    <button id="bypassBtn" onclick="APP.hideLoader()" style="margin-top:20px; display:none; background:none; border:1px solid #ccc; padding:5px 10px; border-radius:5px; font-size:10px;">Skip Wait</button>
 </div>
 
 <header class="header">
@@ -144,9 +146,7 @@
         data: [], cats: [], lang: 'en', activeCat: '', imgTmp: '', editId: null,
 
         init: async function() {
-            // Safety: Hide loader if Sheet doesn't load in 4 seconds
-            setTimeout(() => { this.hideLoader(); }, 4000);
-
+            setTimeout(() => { document.getElementById('bypassBtn').style.display = 'block'; }, 4000);
             const root = getComputedStyle(document.documentElement);
             const sheetUrl = root.getPropertyValue('--google-sheet-url').trim().replace(/"/g, '');
             document.getElementById('callLink').href = "tel:" + root.getPropertyValue('--phone-number').trim().replace(/"/g, '');
@@ -163,8 +163,8 @@
         },
 
         hideLoader: function() { 
-            const l = document.getElementById('pageLoader');
-            if(l) l.style.display = 'none'; 
+            const loader = document.getElementById('pageLoader');
+            if(loader) loader.style.display = 'none'; 
             this.render(); 
         },
 
@@ -215,17 +215,31 @@
         renderAdmin: function() {
             document.getElementById('adminCatList').innerHTML = this.cats.map((c, idx) => `
                 <div class="cat-row">
-                    <div class="cat-info"><span><b>${c.en}</b></span>
-                        <button onclick="APP.deleteCat('${c.id}')" style="background:red; color:white; border:none; padding:5px; border-radius:4px;">Del</button>
+                    <div class="cat-info"><span><b>${c.en}</b> / ${c.am}</span>
+                        <div>
+                            <button onclick="APP.prepRename('${c.id}')" style="background:#3498db; color:white; border:none; padding:8px; border-radius:6px;">Rename</button>
+                            <button onclick="APP.deleteCat('${c.id}')" style="background:#e74c3c; color:white; border:none; padding:8px; border-radius:6px;">Del</button>
+                        </div>
                     </div>
                     <input type="file" onchange="APP.updateCatImg(${idx}, this)">
                 </div>`).join('');
 
             document.getElementById('adminItemBody').innerHTML = this.data.map((i, idx) => `
-                <tr>
-                    <td><input value="${i.en}" onchange="APP.data[${idx}].en=this.value"></td>
-                    <td><input value="${i.price}" class="price-box" onchange="APP.data[${idx}].price=this.value"></td>
-                    <td><button onclick="APP.deleteItem(${idx})">🗑️</button></td>
+                <tr style="${i.hidden ? 'opacity:0.3' : ''}">
+                    <td>
+                        <input value="${i.en}" onchange="APP.data[${idx}].en=this.value" placeholder="EN Name">
+                        <input value="${i.am}" onchange="APP.data[${idx}].am=this.value" placeholder="AM Name">
+                        <input value="${i.ing || ''}" onchange="APP.data[${idx}].ing=this.value" placeholder="Ingredients" style="font-size:11px;">
+                        <select onchange="APP.data[${idx}].cat=this.value">
+                            ${this.cats.map(c => `<option value="${c.id}" ${c.id==i.cat?'selected':''}>${c.en}</option>`).join('')}
+                        </select>
+                        <input type="file" onchange="APP.updateItemImg(${idx}, this)" style="font-size:10px; border:none;">
+                    </td>
+                    <td><input type="text" class="price-box" value="${i.price}" onchange="APP.data[${idx}].price=this.value"></td>
+                    <td>
+                        <button onclick="APP.toggleHide(${idx})" style="background:#555; color:white; border:none; padding:5px; width:100%; margin-bottom:5px;">Hide</button>
+                        <button onclick="APP.deleteItem(${idx})" style="background:red; color:white; border:none; padding:5px; width:100%;">Del</button>
+                    </td>
                 </tr>`).join('');
             document.getElementById('nItemCat').innerHTML = this.cats.map(c => `<option value="${c.id}">${c.en}</option>`).join('');
         },
@@ -238,7 +252,7 @@
                 document.getElementById('adminDashboard').style.display='block';
                 document.getElementById('uIn').value = ""; document.getElementById('pIn').value = "";
                 this.closeModals();
-            } else { alert("Error"); }
+            } else { alert("Login Error"); }
         },
 
         setCat: function(id) { this.activeCat = id; this.render(); },
@@ -249,8 +263,13 @@
         openModal: function(id) { document.getElementById(id).style.display='flex'; },
         handleImg: function(input) { const r = new FileReader(); r.onload = (e) => this.imgTmp = e.target.result; r.readAsDataURL(input.files[0]); },
         updateCatImg: function(idx, input) { const r = new FileReader(); r.onload = (e) => { this.cats[idx].img = e.target.result; }; r.readAsDataURL(input.files[0]); },
-        createNewCat: function() { this.cats.push({id:Date.now(), en:document.getElementById('nCatEn').value, am:document.getElementById('nCatAm').value, img:this.imgTmp}); this.closeModals(); this.render(); },
+        updateItemImg: function(idx, input) { const r = new FileReader(); r.onload = (e) => { this.data[idx].img = e.target.result; this.renderAdmin(); }; r.readAsDataURL(input.files[0]); },
+        prepRename: function(id) { this.editId = id; const c = this.cats.find(x => x.id == id); document.getElementById('eCatEn').value=c.en; document.getElementById('eCatAm').value=c.am; this.openModal('editCatModal'); },
+        applyCatRename: function() { const c = this.cats.find(x => x.id == this.editId); if(c){ c.en=document.getElementById('eCatEn').value; c.am=document.getElementById('eCatAm').value; this.closeModals(); this.render(); } },
+        deleteCat: function(id) { if(confirm("Delete Category?")) { this.cats = this.cats.filter(c => c.id != id); this.render(); } },
+        createNewCat: function() { this.cats.push({id:document.getElementById('nCatId').value, en:document.getElementById('nCatEn').value, am:document.getElementById('nCatAm').value, img:this.imgTmp}); this.closeModals(); this.render(); },
         createNewItem: function() { this.data.push({id:Date.now(), cat:document.getElementById('nItemCat').value, en:document.getElementById('nItemEn').value, am:document.getElementById('nItemAm').value, ing:document.getElementById('nItemIng').value, price:document.getElementById('nItemPrice').value, img:this.imgTmp, hidden:false}); this.closeModals(); this.render(); },
+        toggleHide: function(idx) { this.data[idx].hidden = !this.data[idx].hidden; this.render(); },
         deleteItem: function(idx) { if(confirm("Delete Item?")) { this.data.splice(idx, 1); this.render(); } },
         saveToCloud: async function() {
             const root = getComputedStyle(document.documentElement);
