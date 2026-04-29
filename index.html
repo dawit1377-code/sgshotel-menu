@@ -12,13 +12,23 @@
         */
         :root {
             --google-sheet-url: "https://script.google.com/macros/s/AKfycbwRn-MSEXk-ZCUKcE50wj4xUnvH17FtddoBxL8f1YgednJYnzuRPP-LFEfZaRrqATJ3/exec";
+            
+            /* Hotel Name Parts */
             --hotel-en-1: "DIBORA";
-            --hotel-en-2: "JUICE & BURGER";
+            --hotel-en-2: "JUICE & ";
+            --hotel-en-3: "BURGER"; 
+            
             --hotel-am-1: "ዲቦራ";
-            --hotel-am-2: "ጁስ እና በርገር";
-            --header-bg: #616569;
+            --hotel-am-2: "ጁስ እና ";
+            --hotel-am-3: "በርገር";
+
+            /* Color Controls */
             --word-1-color: #FC6A03;
             --word-2-color: #028A0F;
+            --word-3-color: #ffff00; 
+            --nav-bg-color: #66350f; 
+            
+            --header-bg: #616569;
             --page-bg: #000000;
             --price-color: #3E5F34;
             --ing-color: #4A0000;
@@ -38,22 +48,26 @@
 
         .header { background: var(--header-bg); padding: 10px; display: flex; align-items: center; position: sticky; top: 0; z-index: 1000; height: 130px; }
         .logo-img { height: 80px; width: 80px; object-fit: contain; margin-right: 10px; flex-shrink: 0; }
-        .header-center-area { text-align: center; flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .header h1 { font-family: 'Playfair Display'; font-size: 24px; font-weight: 800; }
+        .header-center-area { text-align: center; flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+        .header h1 { font-family: 'Playfair Display'; font-size: 22px; font-weight: 800; }
         .w1 { color: var(--word-1-color); }
         .w2 { color: var(--word-2-color); }
+        .w3 { color: var(--word-3-color); }
         
-        .nav-bar { display: flex; overflow-x: auto; padding: 15px 10px; background: #fff; position: sticky; top: 130px; z-index: 900; border-bottom: 1px solid #eee; min-height: 195px; scrollbar-width: none; }
+        .nav-bar { display: flex; overflow-x: auto; padding: 15px 10px; background: var(--nav-bg-color); position: sticky; top: 130px; z-index: 900; border-bottom: 1px solid #eee; min-height: 195px; scrollbar-width: none; }
         .nav-item { text-align: center; min-width: 150px; opacity: 0.5; cursor: pointer; flex-shrink: 0; border-bottom: 4px solid transparent; }
         .nav-item.active { opacity: 1; font-weight: bold; color: var(--brand-primary); border-bottom-color: var(--brand-primary); }
         .nav-item img { width: 125px; height: 125px; border-radius: 50%; object-fit: cover; border: 3px solid #eee; margin-bottom: 8px; }
 
         .container { padding: 15px; }
-        .card { display: flex; align-items: flex-start; background: white; border-radius: 12px; margin-bottom: 15px; padding: 12px; border: 1px solid #f0f0f0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); } 
-        .food-img { width: 125px; height: 125px; border-radius: 10px; object-fit: cover; margin-right: 15px; }
-        .food-title { color: var(--brand-primary); font-size: 20px; font-weight: 600; }
-        .food-ing { font-size: 14px; color: var(--ing-color); font-style: italic; }
-        .price-tag { font-weight: bold; color: var(--price-color); margin-top: 5px; font-size: 18px; }
+        .card { display: flex; align-items: flex-start; background: white; border-radius: 12px; margin-bottom: 15px; padding: 12px; border: 1px solid #f0f0f0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; } 
+        .food-img { width: 110px; height: 110px; border-radius: 10px; object-fit: cover; margin-right: 15px; flex-shrink: 0; }
+        
+        .food-info-area { flex-grow: 1; min-width: 0; }
+        .food-title { color: var(--brand-primary); font-size: 19px; font-weight: 600; line-height: 1.2; margin-bottom: 4px; }
+        .food-ing { font-size: 13px; color: var(--ing-color); font-style: italic; line-height: 1.3; word-wrap: break-word; overflow-wrap: break-word; }
+        
+        .price-tag { font-weight: bold; color: var(--price-color); margin-top: 8px; font-size: 17px; }
 
         .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:4000; align-items:center; justify-content:center; }
         .modal { background:white; padding:25px; border-radius:15px; width:92%; max-width:750px; position: relative; }
@@ -91,7 +105,7 @@
     </div>
 
     <div class="header-center-area">
-        <h1 id="mainTitle"><span class="w1" id="w1"></span> <span class="w2" id="w2"></span></h1>
+        <h1 id="mainTitle"><span class="w1" id="w1"></span> <span class="w2" id="w2"></span> <span class="w3" id="w3"></span></h1>
         <div id="subTitle" style="font-size:12px; font-weight:bold; letter-spacing:3px; color:white;">MENU</div>
         <div id="vatNote" style="font-size:10px; opacity:0.8; margin-top:4px; color:white;"></div>
     </div>
@@ -176,11 +190,24 @@
         render: function() {
             const isEn = this.lang === 'en';
             const root = getComputedStyle(document.documentElement);
-            const hEn = root.getPropertyValue('--hotel-en-1').trim().replace(/"/g, '') + " " + root.getPropertyValue('--hotel-en-2').trim().replace(/"/g, '');
-            const hAm = root.getPropertyValue('--hotel-am-1').trim().replace(/"/g, '') + " " + root.getPropertyValue('--hotel-am-2').trim().replace(/"/g, '');
+            
+            // Build Full Hotel Names
+            const hEn = [
+                root.getPropertyValue('--hotel-en-1').trim().replace(/"/g, ''),
+                root.getPropertyValue('--hotel-en-2').trim().replace(/"/g, ''),
+                root.getPropertyValue('--hotel-en-3').trim().replace(/"/g, '')
+            ].filter(Boolean).join(' ');
+
+            const hAm = [
+                root.getPropertyValue('--hotel-am-1').trim().replace(/"/g, ''),
+                root.getPropertyValue('--hotel-am-2').trim().replace(/"/g, ''),
+                root.getPropertyValue('--hotel-am-3').trim().replace(/"/g, '')
+            ].filter(Boolean).join(' ');
 
             document.getElementById('w1').innerText = isEn ? root.getPropertyValue('--hotel-en-1').trim().replace(/"/g, '') : root.getPropertyValue('--hotel-am-1').trim().replace(/"/g, '');
             document.getElementById('w2').innerText = isEn ? root.getPropertyValue('--hotel-en-2').trim().replace(/"/g, '') : root.getPropertyValue('--hotel-am-2').trim().replace(/"/g, '');
+            document.getElementById('w3').innerText = isEn ? root.getPropertyValue('--hotel-en-3').trim().replace(/"/g, '') : root.getPropertyValue('--hotel-am-3').trim().replace(/"/g, '');
+            
             document.getElementById('vatNote').innerText = isEn ? "All prices include VAT" : "ሁሉም ዋጋዎች ቫትን ያካትታሉ";
             document.getElementById('callBtnText').innerText = isEn ? "Call To Order" : "ለማዘዝ ይደውሉ";
             document.getElementById('loginWelcomeText').innerText = isEn ? `Welcome to "${hEn}"` : `እንኳን ወደ "${hAm}" በደህና መጡ`;
@@ -197,7 +224,7 @@
                 return `
                 <div class="card" onclick="APP.openDetail(${globalIdx})">
                     <img src="${i.img || ''}" class="food-img" onerror="this.src='https://via.placeholder.com/150'">
-                    <div>
+                    <div class="food-info-area">
                         <div class="food-title">${isEn ? i.en : i.am}</div>
                         <div class="food-ing">${i.ing || ''}</div>
                         <div class="price-tag">${i.price} ETB</div>
