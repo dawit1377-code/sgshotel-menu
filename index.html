@@ -13,7 +13,7 @@
         :root {
             --google-sheet-url: "https://script.google.com/macros/s/AKfycbwRn-MSEXk-ZCUKcE50wj4xUnvH17FtddoBxL8f1YgednJYnzuRPP-LFEfZaRrqATJ3/exec";
             
-            /* Hotel Name Parts */
+/* Hotel Name Parts */
             --hotel-en-1: "DIBORA";
             --hotel-en-2: "JUICE & ";
             --hotel-en-3: "BURGER"; 
@@ -26,7 +26,8 @@
             --word-1-color: #FC6A03;
             --word-2-color: #028A0F;
             --word-3-color: #ffff00; 
-            --nav-bg-color: #ffffff; 
+            --nav-bg-color: #ffffff;
+            --call-btn-color: #FEBE00; /* Color for the floating Call Button */
             
             --header-bg: #616569;
             --page-bg: #000000;
@@ -74,7 +75,7 @@
         #modalImgHD { width: 100%; max-height: 65vh; object-fit: contain; border-radius: 10px; margin-bottom: 15px; display: block; image-rendering: -webkit-optimize-contrast; }
         .close-x { position: absolute; top: 10px; right: 20px; font-size: 35px; cursor: pointer; color: #000; }
 
-        .call-order-btn { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); background: var(--header-bg); color: white; padding: 16px 35px; border-radius: 50px; text-decoration: none; z-index: 2000; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .call-order-btn { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); background: var(--call-btn-color); color: white; padding: 16px 35px; border-radius: 50px; text-decoration: none; z-index: 2000; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
         /* ADMIN DASHBOARD */
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:15px; overflow-y: auto; }
