@@ -94,7 +94,7 @@
 <div id="pageLoader">
     <div class="spinner"></div>
     <p style="margin-top:10px; font-size:12px; font-weight:600; color:var(--header-bg)">Connecting...</p>
-    <button id="bypassBtn" onclick="APP.hideLoader()" style="margin-top:20px; display:none; background:none; border:1px solid #ccc; padding:5px 10px; border-radius:5px; font-size:10px;">Enter Offline</button>
+    
 </div>
 
 <header class="header">
@@ -166,7 +166,7 @@
         data: [], cats: [], lang: 'en', activeCat: '', imgTmp: '', editId: null,
 
         init: async function() {
-            setTimeout(() => { document.getElementById('bypassBtn').style.display = 'block'; }, 4000);
+            
             const root = getComputedStyle(document.documentElement);
             const sheetUrl = root.getPropertyValue('--google-sheet-url').trim().replace(/"/g, '');
             document.getElementById('callLink').href = "tel:" + root.getPropertyValue('--phone-number').trim().replace(/"/g, '');
