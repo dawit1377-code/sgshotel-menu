@@ -13,7 +13,7 @@
         :root {
             --google-sheet-url: "https://script.google.com/macros/s/AKfycbwRn-MSEXk-ZCUKcE50wj4xUnvH17FtddoBxL8f1YgednJYnzuRPP-LFEfZaRrqATJ3/exec";
             
-/* Hotel Name Parts */
+            /* Hotel Name Parts */
             --hotel-en-1: "DIBORA";
             --hotel-en-2: "JUICE & ";
             --hotel-en-3: "BURGER"; 
@@ -27,7 +27,7 @@
             --word-2-color: #028A0F;
             --word-3-color: #FFBA00; 
             --nav-bg-color: #ffffff;
-            --call-btn-color: #ED7014; /* Color for the floating Call Button */
+            --call-btn-color: #ED7014;
             
             --header-bg: #564C4D;
             --page-bg: #ffffff;
@@ -77,7 +77,6 @@
 
         .call-order-btn { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); background: var(--call-btn-color); color: white; padding: 16px 35px; border-radius: 50px; text-decoration: none; z-index: 2000; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
-        /* ADMIN DASHBOARD */
         #adminDashboard { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:3000; padding:15px; overflow-y: auto; }
         .admin-section { border: 1px solid #ddd; padding: 15px; border-radius: 10px; margin-bottom: 25px; background: #fafafa; }
         .btn { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; text-align: center; }
@@ -93,22 +92,18 @@
 
 <div id="pageLoader">
     <div class="spinner"></div>
-    <p style="margin-top:10px; font-size:12px; font-weight:600; color:var(--header-bg)">Connecting...</p>
-    
+    <p id="loadText" style="margin-top:10px; font-size:12px; font-weight:600; color:var(--header-bg)">Connecting... 0%</p>
 </div>
 
 <header class="header">
     <div onclick="APP.showLogin(event)" style="cursor:pointer; font-size:28px; padding:10px; color:white;">☰</div>
-    
     <div id="logoContainer" style="display: flex; align-items: center; justify-content: center;">
         <img src="logo.jpg" class="logo-img" alt="Logo" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex'">
         <div id="logoFallback" style="display:none; height:70px; width:70px; background: rgba(255,255,255,0.1); border-radius: 50%; align-items: center; justify-content: center; font-size: 30px; margin-right: 10px; border: 2px dashed rgba(255,255,255,0.3);">🍔</div>
     </div>
-
     <div class="header-center-area">
         <h1 id="mainTitle"><span class="w1" id="w1"></span> <span class="w2" id="w2"></span> <span class="w3" id="w3"></span></h1>
         <div id="subTitle" style="font-size:12px; font-weight:bold; letter-spacing:3px; color:white;">MENU</div>
-       
     </div>
     <button onclick="APP.toggleLang()" style="background:white; color:var(--header-bg); border:none; padding:10px 15px; border-radius:20px; font-weight:bold;">EN/አማ</button>
 </header>
@@ -166,20 +161,31 @@
         data: [], cats: [], lang: 'en', activeCat: '', imgTmp: '', editId: null,
 
         init: async function() {
+            const loadTxt = document.getElementById('loadText');
+            loadTxt.innerText = "Connecting... 15%";
             
             const root = getComputedStyle(document.documentElement);
             const sheetUrl = root.getPropertyValue('--google-sheet-url').trim().replace(/"/g, '');
             document.getElementById('callLink').href = "tel:" + root.getPropertyValue('--phone-number').trim().replace(/"/g, '');
             
             try {
-                const r = await fetch(`${sheetUrl}?t=${Date.now()}`);
+                loadTxt.innerText = "Connecting... 40%";
+                // High Speed Fix: Removed ?t= timestamp to allow browser caching
+                const r = await fetch(sheetUrl); 
+                
+                loadTxt.innerText = "Connecting... 75%";
                 const j = await r.json();
+                
+                loadTxt.innerText = "Connecting... 95%";
                 this.data = j.items || [];
                 this.cats = j.cats || [];
                 if(this.cats.length > 0) this.activeCat = this.cats[0].id;
+                
                 this.hideLoader();
-                this.render();
-            } catch(e) { this.hideLoader(); }
+            } catch(e) { 
+                console.error(e);
+                this.hideLoader(); 
+            }
         },
 
         hideLoader: function() { 
@@ -192,7 +198,6 @@
             const isEn = this.lang === 'en';
             const root = getComputedStyle(document.documentElement);
             
-            // Build Full Hotel Names
             const hEn = [
                 root.getPropertyValue('--hotel-en-1').trim().replace(/"/g, ''),
                 root.getPropertyValue('--hotel-en-2').trim().replace(/"/g, ''),
@@ -208,7 +213,6 @@
             document.getElementById('w1').innerText = isEn ? root.getPropertyValue('--hotel-en-1').trim().replace(/"/g, '') : root.getPropertyValue('--hotel-am-1').trim().replace(/"/g, '');
             document.getElementById('w2').innerText = isEn ? root.getPropertyValue('--hotel-en-2').trim().replace(/"/g, '') : root.getPropertyValue('--hotel-am-2').trim().replace(/"/g, '');
             document.getElementById('w3').innerText = isEn ? root.getPropertyValue('--hotel-en-3').trim().replace(/"/g, '') : root.getPropertyValue('--hotel-am-3').trim().replace(/"/g, '');
-            
             
             document.getElementById('callBtnText').innerText = isEn ? "Call To Order" : "ለማዘዝ ይደውሉ";
             document.getElementById('loginWelcomeText').innerText = isEn ? `Welcome to "${hEn}"` : `እንኳን ወደ "${hAm}" በደህና መጡ`;
